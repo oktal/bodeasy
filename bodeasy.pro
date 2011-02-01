@@ -10,9 +10,9 @@ TARGET = bodeasy
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        usersdialog.cpp
+SOURCES += src/main.cpp \
+        src/usersdialog.cpp
 
-HEADERS  += usersdialog.h
+HEADERS  += src/usersdialog.h
 
-FORMS    += usersdialog.ui
+FORMS    += src/usersdialog.ui
