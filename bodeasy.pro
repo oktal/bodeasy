@@ -16,3 +16,22 @@ SOURCES += src/main.cpp \
 HEADERS  += src/usersdialog.h
 
 FORMS    += src/usersdialog.ui
+
+CONFIG(debug)
+{
+    MOC_DIR = bin/debug/moc
+    RCC_DIR = bin/debug/rcc
+    OBJECTS_DIR = bin/debug/obj
+    DESTDIR = bin/debug
+    UI_DIR = bin/debug/ui
+}
+
+CONFIG(release)
+{
+    MOC_DIR = bin/release/moc
+    RCC_DIR = bin/release/rcc
+    OBJECTS_DIR = bin/release/obj
+    DESTDIR = bin/release
+    UI_DIR = bin/release/ui
+}
+

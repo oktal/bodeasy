@@ -9,16 +9,18 @@ UsersDialog::UsersDialog(QWidget *parent) :
 {
     setupUi(this);
 
-    connect(txtUser, SIGNAL(textEdited(const QString &)),
-            this, SLOT(on_txtUser_textEdited()));
-
     if (createConnection())
     {
         initModel();
-        loadCmbUsers();
     }
 
     btnDelete->setEnabled(m_model->rowCount() > 0);
+
+
+    connect(txtUser, SIGNAL(textEdited(const QString &)),
+            this, SLOT(on_txtUser_textEdited()));
+    connect(txtUser, SIGNAL(returnPressed()), this,
+            SLOT(on_btnAdd_clicked()));
 }
 
 UsersDialog::~UsersDialog()
@@ -39,10 +41,7 @@ void UsersDialog::initModel()
     m_model->setEditStrategy(QSqlTableModel::OnManualSubmit);
     m_model->setTable("user");
     m_model->select();
-}
 
-void UsersDialog::loadCmbUsers()
-{
     cmbUsers->setModel(m_model);
     cmbUsers->setModelColumn(m_model->fieldIndex("name"));
 }
@@ -56,8 +55,9 @@ void UsersDialog::on_btnAdd_clicked()
         if (newUser == m_model->data(m_model->index(i, m_model->fieldIndex("name"))))
         {
             QMessageBox::information(this,
-                                     "Ajout d'utilisateur",
-                                     "L'utilisateur "+newUser+" existe déjà, impossible de l'ajouter à nouveau.");
+                                     tr("Ajout d'utilisateur"),
+                                     tr("L'utilisateur %1 existe dÃ©jÃ , impossible de l'ajouter Ã  nouveau.")
+                                     .arg(newUser));
             return;
         }
     }
@@ -68,31 +68,29 @@ void UsersDialog::on_btnAdd_clicked()
     rec.setNull("id_user");
     rec.setValue("name", txtUser->text());
     m_model->insertRecord(rowCount, rec);
-    m_model->submit();
-    btnDelete->setEnabled(m_model->rowCount() > 0);
+    if (m_model->submitAll())
+    {
+        btnDelete->setEnabled(m_model->rowCount() > 0);
+        txtUser->clear();
+        btnAdd->setEnabled(false);
+        cmbUsers->setCurrentIndex(cmbUsers->count() - 1);
+    }
 }
 
 void UsersDialog::on_btnDelete_clicked()
 {
     int r = QMessageBox::question(this,
-                                  "Suppression d'utilisateur",
-                                  "Supprimer définitivement l'utilisateur "+cmbUsers->currentText()+"?",
+                                  tr("Suppression d'utilisateur"),
+                                  tr("Supprimer dÃ©finitivement l'utilisateur %1 ?")
+                                  .arg(cmbUsers->currentText()),
                                   QMessageBox::Yes, QMessageBox::Cancel);
 
     if (r == QMessageBox::Yes)
     {
         m_model->removeRow(cmbUsers->currentIndex());
-        m_model->submit();
+        m_model->submitAll();
         btnDelete->setEnabled(m_model->rowCount() > 0);
     }
-    else if (r == QMessageBox::Cancel)
-    {
-        return;
-    }
-
-    m_model->removeRow(cmbUsers->currentIndex());
-    m_model->submit();
-    btnDelete->setEnabled(m_model->rowCount() > 0);
 }
 
 void UsersDialog::on_txtUser_textEdited()
@@ -100,3 +98,7 @@ void UsersDialog::on_txtUser_textEdited()
     btnAdd->setEnabled(!txtUser->text().isEmpty());
 }
 
+
+void UsersDialog::on_btnStart_clicked()
+{
+}

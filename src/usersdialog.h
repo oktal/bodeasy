@@ -23,13 +23,13 @@ private:
 
     bool createConnection();
     void initModel();
-    void loadCmbUsers();
 
 private slots:
     void on_btnAdd_clicked();
     void on_btnDelete_clicked();
     void on_txtUser_textEdited();
 
+    void on_btnStart_clicked();
 
 };
 
