@@ -48,6 +48,9 @@ void UsersDialog::initModel()
 
 void UsersDialog::on_btnAdd_clicked()
 {
+    if (!btnAdd->isEnabled())
+        return;
+
     QString newUser = txtUser->text();
 
     for (int i = 0; i < m_model->rowCount(); ++i)
