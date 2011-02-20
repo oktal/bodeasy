@@ -2,13 +2,17 @@
 #define USERSDIALOG_H
 
 #include <QDialog>
+#include <QScopedPointer>
 #include <QSqlDatabase>
 
-#include "ui_usersdialog.h"
+namespace Ui
+{
+    class UsersDialog;
+}
 
 class QSqlTableModel;
 
-class UsersDialog : public QDialog, private Ui::UsersDialog
+class UsersDialog : public QDialog
 {
     Q_OBJECT
 
@@ -18,6 +22,7 @@ public:
 
 private:
 
+    QScopedPointer<Ui::UsersDialog> ui;
     QSqlDatabase m_db;
     QSqlTableModel *m_model;
 

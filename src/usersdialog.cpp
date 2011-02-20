@@ -5,21 +5,19 @@
 #include <QtSql>
 
 UsersDialog::UsersDialog(QWidget *parent) :
-    QDialog(parent)
+    QDialog(parent),
+    ui(new Ui::UsersDialog)
 {
-    setupUi(this);
+    ui->setupUi(this);
 
     if (createConnection())
     {
         initModel();
     }
 
-    btnDelete->setEnabled(m_model->rowCount() > 0);
+    ui->btnDelete->setEnabled(m_model->rowCount() > 0);
 
-
-    connect(txtUser, SIGNAL(textEdited(const QString &)),
-            this, SLOT(on_txtUser_textEdited()));
-    connect(txtUser, SIGNAL(returnPressed()), this,
+    connect(ui->txtUser, SIGNAL(returnPressed()), this,
             SLOT(on_btnAdd_clicked()));
 }
 
@@ -42,16 +40,16 @@ void UsersDialog::initModel()
     m_model->setTable("user");
     m_model->select();
 
-    cmbUsers->setModel(m_model);
-    cmbUsers->setModelColumn(m_model->fieldIndex("name"));
+    ui->cmbUsers->setModel(m_model);
+    ui->cmbUsers->setModelColumn(m_model->fieldIndex("name"));
 }
 
 void UsersDialog::on_btnAdd_clicked()
 {
-    if (!btnAdd->isEnabled())
+    if (!ui->btnAdd->isEnabled())
         return;
 
-    QString newUser = txtUser->text();
+    QString newUser = ui->txtUser->text();
 
     for (int i = 0; i < m_model->rowCount(); ++i)
     {
@@ -69,14 +67,14 @@ void UsersDialog::on_btnAdd_clicked()
     QSqlRecord rec = m_model->record();
 
     rec.setNull("id_user");
-    rec.setValue("name", txtUser->text());
+    rec.setValue("name", ui->txtUser->text());
     m_model->insertRecord(rowCount, rec);
     if (m_model->submitAll())
     {
-        btnDelete->setEnabled(m_model->rowCount() > 0);
-        txtUser->clear();
-        btnAdd->setEnabled(false);
-        cmbUsers->setCurrentIndex(cmbUsers->count() - 1);
+        ui->btnDelete->setEnabled(m_model->rowCount() > 0);
+        ui->txtUser->clear();
+        ui->btnAdd->setEnabled(false);
+        ui->cmbUsers->setCurrentIndex(ui->cmbUsers->count() - 1);
     }
 }
 
@@ -85,20 +83,20 @@ void UsersDialog::on_btnDelete_clicked()
     int r = QMessageBox::question(this,
                                   tr("Suppression d'utilisateur"),
                                   tr("Supprimer définitivement l'utilisateur %1 ?")
-                                  .arg(cmbUsers->currentText()),
+                                  .arg(ui->cmbUsers->currentText()),
                                   QMessageBox::Yes, QMessageBox::Cancel);
 
     if (r == QMessageBox::Yes)
     {
-        m_model->removeRow(cmbUsers->currentIndex());
+        m_model->removeRow(ui->cmbUsers->currentIndex());
         m_model->submitAll();
-        btnDelete->setEnabled(m_model->rowCount() > 0);
+        ui->btnDelete->setEnabled(m_model->rowCount() > 0);
     }
 }
 
 void UsersDialog::on_txtUser_textEdited()
 {
-    btnAdd->setEnabled(!txtUser->text().isEmpty());
+    ui->btnAdd->setEnabled(!ui->txtUser->text().isEmpty());
 }
 
 
