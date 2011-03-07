@@ -1,6 +1,9 @@
 #include "usersdialog.h"
 #include "ui_usersdialog.h"
 
+#include "usersmodel.h"
+#include "user.h"
+
 #include <QtGui>
 #include <QtSql>
 
@@ -14,6 +17,7 @@ UsersDialog::UsersDialog(QWidget *parent) :
     {
         initModel();
     }
+
 
     ui->btnDelete->setEnabled(m_model->rowCount() > 0);
 
@@ -35,13 +39,8 @@ bool UsersDialog::createConnection()
 
 void UsersDialog::initModel()
 {
-    m_model = new QSqlTableModel(this);
-    m_model->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    m_model->setTable("user");
-    m_model->select();
-
+    m_model = new UsersModel(this);
     ui->cmbUsers->setModel(m_model);
-    ui->cmbUsers->setModelColumn(m_model->fieldIndex("name"));
 }
 
 void UsersDialog::on_btnAdd_clicked()
@@ -53,7 +52,7 @@ void UsersDialog::on_btnAdd_clicked()
 
     for (int i = 0; i < m_model->rowCount(); ++i)
     {
-        if (newUser == m_model->data(m_model->index(i, m_model->fieldIndex("name"))))
+        if (newUser == m_model->data(m_model->index(i, 0)))
         {
             QMessageBox::information(this,
                                      tr("Ajout d'utilisateur"),
@@ -63,13 +62,8 @@ void UsersDialog::on_btnAdd_clicked()
         }
     }
 
-    int rowCount = m_model->rowCount();
-    QSqlRecord rec = m_model->record();
-
-    rec.setNull("id_user");
-    rec.setValue("name", ui->txtUser->text());
-    m_model->insertRecord(rowCount, rec);
-    if (m_model->submitAll())
+    User user(-1, ui->txtUser->text());
+    if (m_model->addUser(user))
     {
         ui->btnDelete->setEnabled(m_model->rowCount() > 0);
         ui->txtUser->clear();
@@ -89,7 +83,6 @@ void UsersDialog::on_btnDelete_clicked()
     if (r == QMessageBox::Yes)
     {
         m_model->removeRow(ui->cmbUsers->currentIndex());
-        m_model->submitAll();
         ui->btnDelete->setEnabled(m_model->rowCount() > 0);
     }
 }

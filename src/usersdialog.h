@@ -10,7 +10,7 @@ namespace Ui
     class UsersDialog;
 }
 
-class QSqlTableModel;
+class UsersModel;
 
 class UsersDialog : public QDialog
 {
@@ -24,7 +24,7 @@ private:
 
     QScopedPointer<Ui::UsersDialog> ui;
     QSqlDatabase m_db;
-    QSqlTableModel *m_model;
+    UsersModel *m_model;
 
     bool createConnection();
     void initModel();

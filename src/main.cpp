@@ -1,4 +1,5 @@
 #include <QtGui/QApplication>
+#include <QTextCodec>
 #include "usersdialog.h"
 #include <QTextCodec>
 

@@ -11,9 +11,17 @@ TEMPLATE = app
 
 
 SOURCES += src/main.cpp \
-        src/usersdialog.cpp
+        src/usersdialog.cpp \
+    src/exercise.cpp \
+    src/user.cpp \
+    src/usersmanager.cpp \
+    src/usersmodel.cpp
 
-HEADERS  += src/usersdialog.h
+HEADERS  += src/usersdialog.h \
+    src/exercise.h \
+    src/user.h \
+    src/usersmanager.h \
+    src/usersmodel.h
 
 FORMS    += src/usersdialog.ui
 
@@ -34,4 +42,3 @@ CONFIG(release)
     DESTDIR = bin/release
     UI_DIR = bin/release/ui
 }
-
