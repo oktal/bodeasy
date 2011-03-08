@@ -14,12 +14,16 @@ SOURCES += src/main.cpp \
         src/usersdialog.cpp \
         src/user.cpp \
         src/usersmanager.cpp \
-        src/usersmodel.cpp
+        src/usersmodel.cpp \
+        src/exercise.cpp \
+    src/exercisesmanager.cpp
 
 HEADERS  += src/usersdialog.h \
          src/user.h \
          src/usersmanager.h \
-         src/usersmodel.h
+         src/usersmodel.h \
+         src/exercise.h \
+    src/exercisesmanager.h
 
 FORMS    += src/usersdialog.ui
 

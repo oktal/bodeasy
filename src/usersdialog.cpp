@@ -56,7 +56,7 @@ void UsersDialog::on_btnAdd_clicked()
         {
             QMessageBox::information(this,
                                      tr("Ajout d'utilisateur"),
-                                     tr("L'utilisateur %1 existe déjà, impossible de l'ajouter à nouveau.")
+                                     tr("L'utilisateur %1 existe déj� , impossible de l'ajouter �  nouveau.")
                                      .arg(newUser));
             return;
         }

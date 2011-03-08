@@ -1,7 +1,7 @@
 #include <QtGui/QApplication>
 #include <QTextCodec>
+
 #include "usersdialog.h"
-#include <QTextCodec>
 
 int main(int argc, char *argv[])
 {
