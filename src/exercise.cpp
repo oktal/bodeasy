@@ -1,29 +1,28 @@
 #include "exercise.h"
 
-Exercise::Exercise()
-{
-    id_ = -1;
-    name_ = QString::null;
-    type_ = QString::null;
-    difficulty_ = QString::null;
-    load_ = false;
-    description_ = QString::null;
-}
+Exercise::Exercise() :
+    id_(-1),
+    name_(QString::null),
+    type_(QString::null),
+    difficulty_(QString::null),
+    load_(false),
+    description_(QString::null)
+
+{}
 
 Exercise::Exercise(qint64 id,
     const QString &name,
     const QString &type,
     const QString &difficulty,
     const bool load,
-    const QString &description)
-{
-    id_ = id;
-    name_ = name;
-    type_ = type;
-    difficulty_ = difficulty;
-    load_ = load;
-    description_ = description;
-}
+    const QString &description) :
+    id_(id),
+    name_(name),
+    type_(type),
+    difficulty_(difficulty),
+    load_(load),
+    description_(description)
+{}
 
 QString Exercise::description() const
 {

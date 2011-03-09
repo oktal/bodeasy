@@ -14,27 +14,27 @@ public:
         const bool load,
         const QString &description = QString::null);
 
-    QString description() const;
-    QString difficulty() const;
     qint64 id() const;
-    bool load() const;
     QString name() const;
     QString type() const;
+    QString difficulty() const;
+    bool load() const;
+    QString description() const;
 
-    void setDescription(const QString &description);
-    void setDifficulty(const QString &difficulty);
     void setId(qint64 id);
-    void setLoad(const bool load);
     void setName(const QString &name);
     void setType(const QString &type);
+    void setDifficulty(const QString &difficulty);
+    void setLoad(const bool load);
+    void setDescription(const QString &description);
 
 private:
-    QString description_;
-    QString difficulty_;
     qint64 id_;
-    bool load_;
     QString name_;
     QString type_;
+    QString difficulty_;
+    bool load_;
+    QString description_;
 };
 
 #endif // EXERCICE_H
