@@ -1,4 +1,4 @@
-#include "ExercisesManager.h"
+#include "exercisesmanager.h"
 #include "exercise.h"
 
 #include <QtCore>
