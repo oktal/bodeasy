@@ -2,7 +2,7 @@
 -- Author:        Disk1
 -- Caption:       New Model
 -- Project:       Name of the project
--- Changed:       2011-03-22 15:24
+-- Changed:       2011-03-24 20:14
 -- Created:       2010-12-11 20:09
 PRAGMA foreign_keys = OFF;
 
@@ -20,7 +20,7 @@ CREATE TABLE "exercise"(
   "id_exercice" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL CHECK("id_exercice">=0),
   "name" TEXT NOT NULL,
   "type" TEXT NOT NULL,
-  "load" INTEGER,
+  "load" INTEGER NOT NULL,
   "difficulty" TEXT NOT NULL,
   "description" TEXT,
   CONSTRAINT "id_exercice_UNIQUE"
@@ -108,6 +108,7 @@ CREATE INDEX "session_exercise.id_exercise_INDEX" ON "session_exercise"("id_exer
 CREATE TABLE "exercise_result"(
   "id_result" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL CHECK("id_result">=0),
   "result" INTEGER NOT NULL,
+  "serie_number" INTEGER NOT NULL,
   "load" INTEGER,
   "date" DATETIME NOT NULL,
   "id_exercice" INTEGER NOT NULL CHECK("id_exercice">=0),
