@@ -2,7 +2,7 @@
 -- Author:        Disk1
 -- Caption:       New Model
 -- Project:       Name of the project
--- Changed:       2011-01-19 13:47
+-- Changed:       2011-03-22 15:24
 -- Created:       2010-12-11 20:09
 PRAGMA foreign_keys = OFF;
 
@@ -87,6 +87,10 @@ CREATE INDEX "exercise_muscle_group.id_muscle_group_INDEX" ON "exercise_muscle_g
 CREATE TABLE "session_exercise"(
   "id_session" INTEGER NOT NULL CHECK("id_session">=0),
   "id_exercise" INTEGER NOT NULL CHECK("id_exercise">=0),
+  "series" INTEGER NOT NULL,
+  "repetitions" INTEGER,
+  "load" INTEGER,
+  "duration" INTEGER,
   PRIMARY KEY("id_session","id_exercise"),
   CONSTRAINT "id_session_UNIQUE"
     UNIQUE("id_session"),
