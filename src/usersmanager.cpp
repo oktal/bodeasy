@@ -12,10 +12,10 @@ UsersManager::UsersManager(QObject *parent) :
 bool UsersManager::createUser(User &user)
 {
     query.prepare("INSERT INTO user(name) VALUES(:name)");
-    query.bindValue(":name", user.name());
+    query.bindValue(":name", user.name);
     if (query.exec())
     {
-        user.setId(query.lastInsertId().toLongLong());
+        user.id = query.lastInsertId().toLongLong();
         return true;
     }
     return false;
@@ -29,8 +29,10 @@ QList<User> UsersManager::selectUsers()
     {
         while (query.next())
         {
-            users.append(User(query.value(0).toInt(),
-                              query.value(1).toString()));
+            User user;
+            user.id = query.value(0).toInt();
+            user.name = query.value(1).toString();
+            users.append(user);
         }
     }
 
@@ -42,8 +44,8 @@ bool UsersManager::updateUser(const User &user)
     query.prepare("UPDATE user "
                   "SET name=:name "
                   "WHERE id_user=:id");
-    query.bindValue(":name", user.name());
-    query.bindValue(":id", user.id());
+    query.bindValue(":name", user.name);
+    query.bindValue(":id", user.id);
     return query.exec();
 }
 

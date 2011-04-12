@@ -1,5 +1,6 @@
 #include "user.h"
 
+/*
 User::User() : id_(-1), name_(QString::null)
 {
 }
@@ -28,3 +29,4 @@ void User::setName(const QString &name)
 {
     name_ = name;
 }
+*/
