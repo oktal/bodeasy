@@ -3,13 +3,16 @@
 
 #include "usersdialog.h"
 
+#include "exercisesdialog.h"
+
 int main(int argc, char *argv[])
 {
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
     QApplication a(argc, argv);
-    UsersDialog w;
-    w.show();
+
+    ExercisesDialog dialog;
+    dialog.exec();
 
     return a.exec();
 }

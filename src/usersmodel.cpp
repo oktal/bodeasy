@@ -18,7 +18,7 @@ QVariant UsersModel::data(const QModelIndex &index, int role) const
    {
        if (index.row() < users.count())
        {
-            return users[index.row()].name();
+            return users[index.row()].name;
        }
    }
    return QVariant();
@@ -37,7 +37,7 @@ void UsersModel::removeRow(int row, const QModelIndex &parent)
     }
 
     beginRemoveRows(parent, row, row);
-    if (manager->removeUserById(users[row].id()))
+    if (manager->removeUserById(users[row].id))
     {
         users.removeAt(row);
     }

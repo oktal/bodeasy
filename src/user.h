@@ -3,6 +3,13 @@
 
 #include <QString>
 
+struct User
+{
+    qint64 id;
+    QString name;
+};
+
+/*
 class User
 {
 public:
@@ -19,5 +26,6 @@ private:
     qint64 id_;
     QString name_;
 };
+*/
 
 #endif // USER_H

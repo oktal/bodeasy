@@ -27,7 +27,7 @@ UsersDialog::UsersDialog(QWidget *parent) :
 
 UsersDialog::~UsersDialog()
 {
-
+    delete ui;
 }
 
 bool UsersDialog::createConnection()
@@ -56,13 +56,15 @@ void UsersDialog::on_btnAdd_clicked()
         {
             QMessageBox::information(this,
                                      tr("Ajout d'utilisateur"),
-                                     tr("L'utilisateur %1 existe déj� , impossible de l'ajouter �  nouveau.")
+                                     tr("L'utilisateur %1 existe dÃ©jÃ , impossible de l'ajouter Ã  nouveau.")
                                      .arg(newUser));
             return;
         }
     }
 
-    User user(-1, ui->txtUser->text());
+    User user;
+    user.id = -1;
+    user.name = ui->txtUser->text();
     if (m_model->addUser(user))
     {
         ui->btnDelete->setEnabled(m_model->rowCount() > 0);
@@ -76,7 +78,7 @@ void UsersDialog::on_btnDelete_clicked()
 {
     int r = QMessageBox::question(this,
                                   tr("Suppression d'utilisateur"),
-                                  tr("Supprimer définitivement l'utilisateur %1 ?")
+                                  tr("Supprimer dÃ©finitivement l'utilisateur %1 ?")
                                   .arg(ui->cmbUsers->currentText()),
                                   QMessageBox::Yes, QMessageBox::Cancel);
 

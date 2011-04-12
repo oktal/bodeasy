@@ -1,5 +1,6 @@
 #include "exercise.h"
 
+/*
 Exercise::Exercise() :
     id_(-1),
     name_(QString::null),
@@ -83,3 +84,5 @@ void Exercise::setType(const QString &type)
 {
     type_ = type;
 }
+
+*/

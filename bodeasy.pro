@@ -9,9 +9,11 @@ TEMPLATE = app
 DESTDIR = .
 BUILD_PATH = build
 
-CONFIG -= warn_on warn_off release debug debug_and_release
+!win32: CONFIG -= warn_on warn_off release debug debug_and_release
 CONFIG	*= qt warn_on release
+
 QT       *= core gui sql
+
 
 CONFIG( debug, debug|release ) {
     message( "Debug build." )
@@ -28,14 +30,18 @@ CONFIG( debug, debug|release ) {
     UI_DIR = $${BUILD_PATH}/release/ui
 }
 
-FORMS    *= src/usersdialog.ui
+FORMS    *= src/usersdialog.ui \
+            src/exercisewidget.ui \
+    src/exercisesdialog.ui
 
 HEADERS  *= src/usersdialog.h \
          src/user.h \
          src/usersmanager.h \
          src/usersmodel.h \
          src/exercise.h \
-         src/exercisesmanager.h
+         src/exercisesmanager.h \
+    src/exercisewidget.h \
+    src/exercisesdialog.h
 
 SOURCES *= src/main.cpp \
         src/usersdialog.cpp \
@@ -43,4 +49,9 @@ SOURCES *= src/main.cpp \
         src/usersmanager.cpp \
         src/usersmodel.cpp \
         src/exercise.cpp \
-        src/exercisesmanager.cpp
+        src/exercisesmanager.cpp \
+    src/exercisewidget.cpp \
+    src/exercisesdialog.cpp
+
+RESOURCES += \
+    src/ressources.qrc
