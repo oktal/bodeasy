@@ -12,9 +12,9 @@ class ExercisesManager : public QObject
     Q_OBJECT
 public:
     explicit ExercisesManager(QObject *parent = 0);
-    bool createExercise(Exercise &Exercise);
+    bool createExercise(Exercise &exercise);
     QList<Exercise> selectExercises();
-    bool updateExercise(const Exercise &Exercise);
+    bool updateExercise(const Exercise &exercise);
     bool removeExerciseById(int id);
 
 signals:
