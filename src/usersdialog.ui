@@ -27,17 +27,34 @@
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
-       <widget class="QComboBox" name="cmbUsers"/>
+       <widget class="QComboBox" name="cmbUsers">
+        <property name="maximumSize">
+         <size>
+          <width>125</width>
+          <height>16777215</height>
+         </size>
+        </property>
+       </widget>
       </item>
       <item row="0" column="1">
        <widget class="QPushButton" name="btnDelete">
         <property name="text">
          <string>Supprimer</string>
         </property>
+        <property name="icon">
+         <iconset resource="ressources.qrc">
+          <normaloff>:/images/delete-icon.png</normaloff>:/images/delete-icon.png</iconset>
+        </property>
        </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLineEdit" name="txtUser">
+        <property name="maximumSize">
+         <size>
+          <width>125</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="maxLength">
          <number>24</number>
         </property>
@@ -50,6 +67,10 @@
         </property>
         <property name="text">
          <string>Ajouter</string>
+        </property>
+        <property name="icon">
+         <iconset resource="ressources.qrc">
+          <normaloff>:/images/add-icon.png</normaloff>:/images/add-icon.png</iconset>
         </property>
        </widget>
       </item>
@@ -82,6 +103,16 @@
        <property name="text">
         <string>Démarrer</string>
        </property>
+       <property name="icon">
+        <iconset resource="ressources.qrc">
+         <normaloff>:/images/icon-start.png</normaloff>:/images/icon-start.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>12</width>
+         <height>12</height>
+        </size>
+       </property>
        <property name="default">
         <bool>true</bool>
        </property>
@@ -99,6 +130,8 @@
   <tabstop>btnStart</tabstop>
   <tabstop>btnDelete</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="ressources.qrc"/>
+ </resources>
  <connections/>
 </ui>

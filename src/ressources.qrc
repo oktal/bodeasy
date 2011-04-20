@@ -5,5 +5,8 @@
         <file>images/save-icon.gif</file>
         <file>images/close-icon.png</file>
         <file>images/help-icon.png</file>
+        <file>images/minus-icon.png</file>
+        <file>images/plus-icon.png</file>
+        <file>images/icon-start.png</file>
     </qresource>
 </RCC>

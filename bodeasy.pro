@@ -32,7 +32,8 @@ CONFIG( debug, debug|release ) {
 
 FORMS    *= src/usersdialog.ui \
             src/exercisewidget.ui \
-    src/exercisesdialog.ui
+    src/exercisesdialog.ui \
+    src/sessionsdialog.ui
 
 HEADERS  *= src/usersdialog.h \
          src/user.h \
@@ -41,7 +42,8 @@ HEADERS  *= src/usersdialog.h \
          src/exercise.h \
          src/exercisesmanager.h \
     src/exercisewidget.h \
-    src/exercisesdialog.h
+    src/exercisesdialog.h \
+    src/sessionsdialog.h
 
 SOURCES *= src/main.cpp \
         src/usersdialog.cpp \
@@ -51,7 +53,8 @@ SOURCES *= src/main.cpp \
         src/exercise.cpp \
         src/exercisesmanager.cpp \
     src/exercisewidget.cpp \
-    src/exercisesdialog.cpp
+    src/exercisesdialog.cpp \
+    src/sessionsdialog.cpp
 
 RESOURCES += \
     src/ressources.qrc

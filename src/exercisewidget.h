@@ -18,8 +18,6 @@ public:
 private:
     Ui::ExerciseWidget *ui;
 
-    void addSerie();
-
 };
 
 #endif // EXERCISEWIDGET_H
