@@ -1,0 +1,20 @@
+v.2011.03.24
+
+    * [BUGFIX] [Mathieu Stefani] <mathieu.stefani at supinfo dot com>
+               [Romain Beylerian] <beylerian.romain at gmail dot com>
+
+        added a missing column in table exercise_result : serie_number
+		and a not null statement for the load column of exercise 
+		table. load could be 1 or 0 meaning true or false.
+		
+v.2011.03.22
+
+    * [BUGFIX] [Mathieu Stefani] <mathieu.stefani at supinfo dot com>
+               [Romain Beylerian] <beylerian.romain at gmail dot com>
+
+        added three missing columns in table session_exercise : series,
+        repetitions, load and duration.
+
+v.1
+
+    * initial databasebase
