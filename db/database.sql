@@ -1,8 +1,8 @@
--- Creator:       MySQL Workbench 5.2.31/ExportSQLite plugin 2009.12.02
+-- Creator:       MySQL Workbench 5.2.30/ExportSQLite plugin 2009.12.02
 -- Author:        Disk1
 -- Caption:       New Model
 -- Project:       Name of the project
--- Changed:       2011-03-24 20:14
+-- Changed:       2011-04-20 19:57
 -- Created:       2010-12-11 20:09
 PRAGMA foreign_keys = OFF;
 
@@ -19,9 +19,9 @@ CREATE TABLE "user"(
 CREATE TABLE "exercise"(
   "id_exercice" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL CHECK("id_exercice">=0),
   "name" TEXT NOT NULL,
-  "type" TEXT NOT NULL,
-  "load" INTEGER NOT NULL,
-  "difficulty" TEXT NOT NULL,
+  "type" INTEGER NOT NULL,
+  "weight" INTEGER NOT NULL,
+  "difficulty" INTEGER NOT NULL,
   "description" TEXT,
   CONSTRAINT "id_exercice_UNIQUE"
     UNIQUE("id_exercice"),

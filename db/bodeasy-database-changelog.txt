@@ -1,3 +1,10 @@
+v.2011.04.20
+    * [CHANGES] [Mathieu Stefani] <mathieu.stefani at supinfo dot com>
+               [Romain Beylerian] <beylerian.romain at gmail dot com>
+			   
+         changed `exercise.load` column name to `weight`
+		 changed `exercise.weight`, `exercise.difficulty` columns types to INT
+
 v.2011.03.24
 
     * [BUGFIX] [Mathieu Stefani] <mathieu.stefani at supinfo dot com>
