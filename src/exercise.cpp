@@ -1,17 +1,16 @@
 #include "exercise.h"
 
-/*
-Exercise::Exercise() :
-    id_(-1),
-    name_(QString::null),
-    type_(QString::null),
-    difficulty_(QString::null),
-    load_(false),
-    description_(QString::null)
+Exercise::Exercise( const QString& _name, Exercise::Type _type, Exercise::Difficulty _difficulty, bool _useWeight, const QString& _description ) :
+    id( -1 ),
+    name( _name ),
+    type( _type ),
+    difficulty( _difficulty ),
+    useWeight( _useWeight ),
+    description( _description )
+{
+}
 
-{}
-
-Exercise::Exercise(qint64 id,
+/*Exercise::Exercise(qint64 id,
     const QString &name,
     const QString &type,
     const QString &difficulty,
