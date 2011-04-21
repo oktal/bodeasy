@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>561</width>
-    <height>448</height>
+    <width>559</width>
+    <height>446</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -61,10 +61,10 @@
      <string>Nom :</string>
     </property>
     <property name="buddy">
-     <cstring>txtName</cstring>
+     <cstring>leName</cstring>
     </property>
    </widget>
-   <widget class="QLineEdit" name="txtName">
+   <widget class="QLineEdit" name="leName">
     <property name="geometry">
      <rect>
       <x>90</x>
@@ -87,7 +87,7 @@
      <string>Type :</string>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radRepeat">
+   <widget class="QRadioButton" name="rbRepetition">
     <property name="geometry">
      <rect>
       <x>80</x>
@@ -102,8 +102,11 @@
     <property name="checked">
      <bool>true</bool>
     </property>
+    <attribute name="buttonGroup">
+     <string>bgType</string>
+    </attribute>
    </widget>
-   <widget class="QRadioButton" name="radDuration">
+   <widget class="QRadioButton" name="rbDuration">
     <property name="geometry">
      <rect>
       <x>200</x>
@@ -115,18 +118,21 @@
     <property name="text">
      <string>Durée</string>
     </property>
+    <attribute name="buttonGroup">
+     <string>bgType</string>
+    </attribute>
    </widget>
-   <widget class="QCheckBox" name="chkLoad">
+   <widget class="QCheckBox" name="cbUseWeight">
     <property name="geometry">
      <rect>
       <x>20</x>
       <y>100</y>
-      <width>70</width>
+      <width>261</width>
       <height>17</height>
      </rect>
     </property>
     <property name="text">
-     <string>Charge</string>
+     <string>Utilisation de poids</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_4">
@@ -142,7 +148,7 @@
      <string>Difficulté :</string>
     </property>
    </widget>
-   <widget class="QComboBox" name="cmbDifficulty">
+   <widget class="QComboBox" name="cbDifficulty">
     <property name="geometry">
      <rect>
       <x>90</x>
@@ -256,7 +262,7 @@
    <property name="title">
     <string>Description</string>
    </property>
-   <widget class="QPlainTextEdit" name="txtDescription">
+   <widget class="QPlainTextEdit" name="pteDescription">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -442,4 +448,7 @@
    </hints>
   </connection>
  </connections>
+ <buttongroups>
+  <buttongroup name="bgType"/>
+ </buttongroups>
 </ui>
