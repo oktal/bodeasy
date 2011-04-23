@@ -20,6 +20,7 @@ ExercisesDialog::ExercisesDialog(QWidget *parent) :
     ui->cbDifficulty->addItem( tr( "Easy" ), Exercise::Easy );
     ui->cbDifficulty->addItem( tr( "Medium" ), Exercise::Medium );
     ui->cbDifficulty->addItem( tr( "Hard" ), Exercise::Hard );
+
 }
 
 ExercisesDialog::~ExercisesDialog()
@@ -50,4 +51,5 @@ void ExercisesDialog::on_btnModify_clicked()
 
 void ExercisesDialog::on_btnDelete_clicked()
 {
+    exercisesModel->removeRow( ui->lstExercises->currentIndex().row() );
 }
