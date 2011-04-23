@@ -17,7 +17,7 @@ CREATE TABLE "user"(
     UNIQUE("name")
 );
 CREATE TABLE "exercise"(
-  "id_exercice" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL CHECK("id_exercice">=0),
+  "id_exercise" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL CHECK("id_exercice">=0),
   "name" TEXT NOT NULL,
   "type" INTEGER NOT NULL,
   "weight" INTEGER NOT NULL,

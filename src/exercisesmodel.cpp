@@ -1,11 +1,13 @@
 #include "exercisesmodel.h"
 #include "exercisesmanager.h"
 
+#include <QDebug>
+
 ExercisesModel::ExercisesModel( QObject* parent )
 	: QAbstractListModel( parent )
 {
 	mManager = new ExercisesManager( this );
-	mExercises = mManager->selectExercises();
+    mExercises = mManager->selectExercises();
 }
 
 QVariant ExercisesModel::data(const QModelIndex &index, int role) const

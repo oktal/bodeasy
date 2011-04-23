@@ -11,22 +11,21 @@ ExercisesManager::ExercisesManager(QObject *parent) :
 
 bool ExercisesManager::createExercise(Exercise &exercise)
 {
-qWarning( "ici" );
-    query.prepare("INSERT INTO Exercise(name,"
+    query.prepare("INSERT INTO exercise(name,"
                     "type,"
                     "difficulty,"
-                    "useWeight,"
+                    "weight,"
                     "description) "
                   "VALUES(:name,"
                     ":type,"
                     ":difficulty,"
-                    ":useWeight,"
+                    ":weight,"
                     ":description)");
 
     query.bindValue(":name", exercise.name);
     query.bindValue(":type", exercise.type);
     query.bindValue(":difficulty", exercise.difficulty);
-    query.bindValue(":useWeight", exercise.useWeight);
+    query.bindValue(":weight", exercise.useWeight);
     query.bindValue(":description", exercise.description);
 
     if (query.exec())
@@ -42,13 +41,13 @@ qWarning( "ici" );
 
 QList<Exercise> ExercisesManager::selectExercises()
 {
-    query.prepare("SELECT id_Exercise,"
+    query.prepare("SELECT id_exercise,"
                     "name,"
                     "type,"
                     "difficulty,"
-                    "useWeight,"
+                    "weight,"
                     "description "
-                  "FROM Exercise");
+                  "FROM exercise");
 
     QList<Exercise> exercises;
     if (query.exec())
@@ -71,18 +70,18 @@ QList<Exercise> ExercisesManager::selectExercises()
 
 bool ExercisesManager::updateExercise(const Exercise &exercise)
 {
-    query.prepare("UPDATE Exercise "
+    query.prepare("UPDATE exercise "
                   "SET name=:name,"
                     "type=:type,"
                     "difficulty=:difficulty,"
-                    "useWeight=:useWeight,"
+                    "weight=:weight,"
                     "description=:description"
-                  "WHERE id_Exercise=:id");
+                  "WHERE id_exercise=:id");
 
     query.bindValue(":name", exercise.name);
     query.bindValue(":type", exercise.type);
     query.bindValue(":difficulty", exercise.difficulty);
-    query.bindValue(":useWeight", exercise.useWeight);
+    query.bindValue(":weight", exercise.useWeight);
     query.bindValue(":description", exercise.description);
     query.bindValue(":id", exercise.id);
     return query.exec();
@@ -90,7 +89,7 @@ bool ExercisesManager::updateExercise(const Exercise &exercise)
 
 bool ExercisesManager::removeExerciseById(int id)
 {
-    query.prepare("DELETE FROM Exercise WHERE id_Exercise=:id");
+    query.prepare("DELETE FROM exercise WHERE id_exercise=:id");
     query.bindValue(":id", id);
     return query.exec();
 }
