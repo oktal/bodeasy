@@ -12,15 +12,17 @@ class ExercisesModel : public QAbstractListModel
 	Q_OBJECT
 	
 public:
-	explicit ExercisesModel( QObject* parent = 0 );
+    explicit ExercisesModel( QObject* parent = 0 );
     QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
     int rowCount( const QModelIndex& parent = QModelIndex() ) const;
     void removeRow( int row, const QModelIndex& parent = QModelIndex() );
-	bool addExercise( Exercise& exercise );
-	QModelIndex index( const Exercise& exercise ) const;
+    bool addExercise( Exercise& exercise );
+    bool updateExercise( const Exercise& exercise );
+    QModelIndex index( const Exercise& exercise ) const;
+    Exercise exercise( const QModelIndex& index) const;
 
 protected:
-	ExercisesManager* mManager;
+    ExercisesManager* mManager;
     QList<Exercise> mExercises;
 };
 

@@ -48,7 +48,10 @@ HEADERS	*= src/usersdialog.h \
 	src/exercisewidget.h \
 	src/exercisesdialog.h \
 	src/sessionsdialog.h \
-	src/exercisesmodel.h
+	src/exercisesmodel.h \
+    src/musclegroupsmodel.h \
+    src/musclegroupsmanager.h \
+    src/musclegroup.h
 
 SOURCES	*= src/main.cpp \
 	src/usersdialog.cpp \
@@ -60,7 +63,9 @@ SOURCES	*= src/main.cpp \
 	src/exercisewidget.cpp \
 	src/exercisesdialog.cpp \
 	src/sessionsdialog.cpp \
-	src/exercisesmodel.cpp
+	src/exercisesmodel.cpp \
+    src/musclegroupsmodel.cpp \
+    src/musclegroupsmanager.cpp
 
 RESOURCES	+=  \
 	src/ressources.qrc

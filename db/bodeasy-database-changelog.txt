@@ -1,3 +1,8 @@
+v.2011.04.25
+    * [FIX]
+	     removed UNIQUE constraint on `exercise_muscle_group.id_exercise` and `exercise_muscle_group.id_muscle_group`
+		 columns
+
 v.2011.04.23
     * [FIX]
          renamed `exercise.id_exercice` column `exercise.id_exercise`

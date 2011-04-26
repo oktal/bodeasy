@@ -2,7 +2,7 @@
 -- Author:        Disk1
 -- Caption:       New Model
 -- Project:       Name of the project
--- Changed:       2011-04-20 19:57
+-- Changed:       2011-04-25 15:09
 -- Created:       2010-12-11 20:09
 PRAGMA foreign_keys = OFF;
 
@@ -17,14 +17,14 @@ CREATE TABLE "user"(
     UNIQUE("name")
 );
 CREATE TABLE "exercise"(
-  "id_exercise" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL CHECK("id_exercice">=0),
+  "id_exercise" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL CHECK("id_exercise">=0),
   "name" TEXT NOT NULL,
   "type" INTEGER NOT NULL,
   "weight" INTEGER NOT NULL,
   "difficulty" INTEGER NOT NULL,
   "description" TEXT,
   CONSTRAINT "id_exercice_UNIQUE"
-    UNIQUE("id_exercice"),
+    UNIQUE("id_exercise"),
   CONSTRAINT "name_UNIQUE"
     UNIQUE("name")
 );
@@ -71,13 +71,9 @@ CREATE TABLE "exercise_muscle_group"(
   "id_exercise" INTEGER NOT NULL CHECK("id_exercise">=0),
   "id_muscle_group" INTEGER NOT NULL CHECK("id_muscle_group">=0),
   PRIMARY KEY("id_exercise","id_muscle_group"),
-  CONSTRAINT "id_exercice_UNIQUE"
-    UNIQUE("id_exercise"),
-  CONSTRAINT "id_muscle_group_UNIQUE"
-    UNIQUE("id_muscle_group"),
   CONSTRAINT "fk_id_exercise"
     FOREIGN KEY("id_exercise")
-    REFERENCES "exercise"("id_exercice"),
+    REFERENCES "exercise"("id_exercise"),
   CONSTRAINT "fk_id_muscle_group"
     FOREIGN KEY("id_muscle_group")
     REFERENCES "muscle_group"("id_muscle_group")
@@ -101,7 +97,7 @@ CREATE TABLE "session_exercise"(
     REFERENCES "session"("id_session"),
   CONSTRAINT "fk_id_exercise"
     FOREIGN KEY("id_exercise")
-    REFERENCES "exercise"("id_exercice")
+    REFERENCES "exercise"("id_exercise")
 );
 CREATE INDEX "session_exercise.id_session_INDEX" ON "session_exercise"("id_session");
 CREATE INDEX "session_exercise.id_exercise_INDEX" ON "session_exercise"("id_exercise");
@@ -121,7 +117,7 @@ CREATE TABLE "exercise_result"(
     REFERENCES "session"("id_session"),
   CONSTRAINT "fk_id_exercise"
     FOREIGN KEY("id_exercice")
-    REFERENCES "exercise"("id_exercice"),
+    REFERENCES "exercise"("id_exercise"),
   CONSTRAINT "fk_id_user"
     FOREIGN KEY("id_user")
     REFERENCES "user"("id_user")

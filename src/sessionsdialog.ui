@@ -267,6 +267,9 @@
     </property>
     <item>
      <widget class="QPushButton" name="btnAdd">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="minimumSize">
        <size>
         <width>0</width>
@@ -293,6 +296,9 @@
     </item>
     <item>
      <widget class="QPushButton" name="btnModify">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="minimumSize">
        <size>
         <width>0</width>
@@ -310,6 +316,9 @@
     </item>
     <item>
      <widget class="QPushButton" name="btnDelete">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="minimumSize">
        <size>
         <width>0</width>
