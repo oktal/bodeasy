@@ -184,7 +184,7 @@
      <string>Groupe 1 : </string>
     </property>
    </widget>
-   <widget class="QComboBox" name="cmbGroup1">
+   <widget class="QComboBox" name="cbGroup1">
     <property name="geometry">
      <rect>
       <x>100</x>
@@ -207,7 +207,7 @@
      <string>Groupe 2 :</string>
     </property>
    </widget>
-   <widget class="QComboBox" name="cmbGroup2">
+   <widget class="QComboBox" name="cbGroup2">
     <property name="enabled">
      <bool>false</bool>
     </property>
@@ -236,7 +236,7 @@
      <string>Groupe 3 :</string>
     </property>
    </widget>
-   <widget class="QComboBox" name="cmbGroup3">
+   <widget class="QComboBox" name="cbGroup3">
     <property name="enabled">
      <bool>false</bool>
     </property>
@@ -291,6 +291,9 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
      <widget class="QPushButton" name="btnAdd">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="minimumSize">
        <size>
         <width>0</width>
@@ -314,6 +317,9 @@
     </item>
     <item row="1" column="0">
      <widget class="QPushButton" name="btnModify">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="minimumSize">
        <size>
         <width>0</width>
@@ -337,6 +343,9 @@
     </item>
     <item row="2" column="0">
      <widget class="QPushButton" name="btnDelete">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="minimumSize">
        <size>
         <width>0</width>
@@ -402,7 +411,7 @@
   <connection>
    <sender>chkGroup2</sender>
    <signal>clicked(bool)</signal>
-   <receiver>cmbGroup2</receiver>
+   <receiver>cbGroup2</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -418,7 +427,7 @@
   <connection>
    <sender>chkGroup3</sender>
    <signal>clicked(bool)</signal>
-   <receiver>cmbGroup3</receiver>
+   <receiver>cbGroup3</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -444,6 +453,22 @@
     <hint type="destinationlabel">
      <x>289</x>
      <y>266</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnClose</sender>
+   <signal>clicked()</signal>
+   <receiver>ExercisesDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>484</x>
+     <y>425</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>329</x>
+     <y>411</y>
     </hint>
    </hints>
   </connection>

@@ -17,9 +17,10 @@ struct Exercise
         Hard = 2
     };
     
-    Exercise( const QString& name = QString::null,
-        Exercise::Type type = Exercise::Repetition, Exercise::Difficulty difficulty = Exercise::Medium,
-        bool useWeight = false, const QString& description = QString::null );
+    Exercise( const QString& name_ = QString::null,
+        Exercise::Type type_ = Exercise::Repetition, Exercise::Difficulty difficulty_ = Exercise::Medium,
+        const QList<qint64> &groups_ = QList<qint64>(),
+        bool useWeight_ = false, const QString& description_ = QString::null );
     
     qint64 id;
     QString name;
