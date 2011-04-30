@@ -1,8 +1,8 @@
 #include "usersdialog.h"
 #include "ui_usersdialog.h"
 
-#include "usersmodel.h"
-#include "user.h"
+#include "sql/models/usersmodel.h"
+#include "sql/user.h"
 
 #include <QtGui>
 #include <QtSql>
