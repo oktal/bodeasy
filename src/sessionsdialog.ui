@@ -373,5 +373,21 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>btnClose</sender>
+   <signal>clicked()</signal>
+   <receiver>SessionsDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>441</x>
+     <y>506</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>242</x>
+     <y>500</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
 </ui>

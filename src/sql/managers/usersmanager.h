@@ -5,7 +5,7 @@
 #include <QList>
 #include <QSqlQuery>
 
-#include "user.h"
+#include "../user.h"
 
 class UsersManager : public QObject
 {

@@ -5,7 +5,7 @@
 #include <QList>
 #include <QSqlQuery>
 
-#include "exercise.h"
+#include "../exercise.h"
 
 class ExercisesManager : public QObject
 {

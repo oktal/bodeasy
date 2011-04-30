@@ -4,7 +4,7 @@
 #include <QAbstractListModel>
 #include <QList>
 
-#include "user.h"
+#include "../user.h"
 
 class UsersManager;
 

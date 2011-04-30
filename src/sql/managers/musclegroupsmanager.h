@@ -5,7 +5,7 @@
 #include <QList>
 #include <QSqlQuery>
 
-#include "musclegroup.h"
+#include "../musclegroup.h"
 
 class MuscleGroupsManager : public QObject
 {

@@ -1,9 +1,11 @@
 #include "musclegroupsmodel.h"
-#include "musclegroupsmanager.h"
+#include "../managers/musclegroupsmanager.h"
 
 #include <QAbstractListModel>
+#include <QSqlQuery>
 
 #include <QDebug>
+
 
 MuscleGroupsModel::MuscleGroupsModel(QObject *parent) :
     QAbstractListModel( parent )

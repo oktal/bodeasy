@@ -2,7 +2,7 @@
 #define MUSCLEGROUPMODEL_H
 
 #include <QAbstractListModel>
-#include "musclegroup.h"
+#include "../musclegroup.h"
 
 class MuscleGroupsManager;
 
