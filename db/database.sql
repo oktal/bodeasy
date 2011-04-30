@@ -2,7 +2,7 @@
 -- Author:        Disk1
 -- Caption:       New Model
 -- Project:       Name of the project
--- Changed:       2011-04-25 15:09
+-- Changed:       2011-04-26 23:45
 -- Created:       2010-12-11 20:09
 PRAGMA foreign_keys = OFF;
 
@@ -62,6 +62,7 @@ CREATE TABLE "muscle_group"(
 CREATE TABLE "session"(
   "id_session" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL CHECK("id_session">=0),
   "name" TEXT NOT NULL,
+  "objective" TEXT,
   CONSTRAINT "id_session_UNIQUE"
     UNIQUE("id_session"),
   CONSTRAINT "name_UNIQUE"
@@ -85,13 +86,8 @@ CREATE TABLE "session_exercise"(
   "id_exercise" INTEGER NOT NULL CHECK("id_exercise">=0),
   "series" INTEGER NOT NULL,
   "repetitions" INTEGER,
-  "load" INTEGER,
-  "duration" INTEGER,
+  "rest" INTEGER,
   PRIMARY KEY("id_session","id_exercise"),
-  CONSTRAINT "id_session_UNIQUE"
-    UNIQUE("id_session"),
-  CONSTRAINT "id_exercise_UNIQUE"
-    UNIQUE("id_exercise"),
   CONSTRAINT "fk_id_session"
     FOREIGN KEY("id_session")
     REFERENCES "session"("id_session"),
@@ -104,9 +100,9 @@ CREATE INDEX "session_exercise.id_exercise_INDEX" ON "session_exercise"("id_exer
 CREATE TABLE "exercise_result"(
   "id_result" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL CHECK("id_result">=0),
   "result" INTEGER NOT NULL,
-  "serie_number" INTEGER NOT NULL,
   "load" INTEGER,
   "date" DATETIME NOT NULL,
+  "serie_number" INTEGER NOT NULL,
   "id_exercice" INTEGER NOT NULL CHECK("id_exercice">=0),
   "id_session" INTEGER NOT NULL CHECK("id_session">=0),
   "id_user" INTEGER NOT NULL CHECK("id_user">=0),
