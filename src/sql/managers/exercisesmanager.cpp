@@ -1,5 +1,5 @@
 #include "exercisesmanager.h"
-#include "exercise.h"
+#include "../exercise.h"
 
 #include <QtCore>
 #include <QtSql>

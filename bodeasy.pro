@@ -34,38 +34,23 @@ CONFIG( debug, debug|release ) {
 	UI_DIR	= $${BUILD_PATH}/release/ui
 }
 
+include(src/sql/sql.pri)
+
 FORMS	*= src/usersdialog.ui \
 	src/exercisewidget.ui \
 	src/exercisesdialog.ui \
-	src/sessionsdialog.ui
+        src/sessionsdialog.ui
 
 HEADERS	*= src/usersdialog.h \
-	src/user.h \
-	src/usersmanager.h \
-	src/usersmodel.h \
-	src/exercise.h \
-	src/exercisesmanager.h \
 	src/exercisewidget.h \
 	src/exercisesdialog.h \
 	src/sessionsdialog.h \
-	src/exercisesmodel.h \
-    src/musclegroupsmodel.h \
-    src/musclegroupsmanager.h \
-    src/musclegroup.h
 
 SOURCES	*= src/main.cpp \
 	src/usersdialog.cpp \
-	src/user.cpp \
-	src/usersmanager.cpp \
-	src/usersmodel.cpp \
-	src/exercise.cpp \
-	src/exercisesmanager.cpp \
 	src/exercisewidget.cpp \
 	src/exercisesdialog.cpp \
 	src/sessionsdialog.cpp \
-	src/exercisesmodel.cpp \
-    src/musclegroupsmodel.cpp \
-    src/musclegroupsmanager.cpp
 
 RESOURCES	+=  \
 	src/ressources.qrc

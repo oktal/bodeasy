@@ -3,6 +3,7 @@
 
 #include "usersdialog.h"
 #include "exercisesdialog.h"
+#include "sessionsdialog.h"
 
 int main(int argc, char *argv[])
 {
@@ -10,9 +11,14 @@ int main(int argc, char *argv[])
     
     UsersDialog dialog;
     //dialog.show();
+
+
+    ExercisesDialog exercises;
+    exercises.show();
+
     
-    ExercisesDialog exe;
-    exe.show();
+    SessionsDialog sessions;
+    sessions.show();
 
     return a.exec();
 }

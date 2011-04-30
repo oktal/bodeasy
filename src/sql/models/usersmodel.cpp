@@ -1,6 +1,5 @@
 #include "usersmodel.h"
-#include "usersmanager.h"
-#include "user.h"
+#include "../managers/usersmanager.h"
 
 #include <QAbstractListModel>
 #include <QDebug>

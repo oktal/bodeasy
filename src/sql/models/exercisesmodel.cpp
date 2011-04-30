@@ -1,5 +1,5 @@
 #include "exercisesmodel.h"
-#include "exercisesmanager.h"
+#include "../managers/exercisesmanager.h"
 
 #include <QDebug>
 
@@ -19,6 +19,10 @@ QVariant ExercisesModel::data(const QModelIndex &index, int role) const
     switch ( role ) {
         case Qt::DisplayRole:
             return mExercises[ index.row() ].name;
+            break;
+        case Qt::UserRole:
+            return mExercises[ index.row() ].id;
+            break;
     }
 	
     return QVariant();

@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include <QModelIndex>
-#include "exercise.h"
+#include "sql/exercise.h"
 
 namespace Ui
 {

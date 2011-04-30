@@ -1,7 +1,7 @@
 #include "exercisesdialog.h"
 #include "ui_exercisesdialog.h"
-#include "exercisesmodel.h"
-#include "musclegroupsmodel.h"
+#include "sql/models/exercisesmodel.h"
+#include "sql/models/musclegroupsmodel.h"
 
 #include <QWidget>
 #include <QDialog>

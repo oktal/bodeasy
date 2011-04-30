@@ -1,5 +1,5 @@
 #include "usersmanager.h"
-#include "user.h"
+#include "../user.h"
 
 #include <QtCore>
 #include <QtSql>

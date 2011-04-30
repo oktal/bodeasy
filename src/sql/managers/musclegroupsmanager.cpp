@@ -1,5 +1,5 @@
 #include "musclegroupsmanager.h"
-#include "musclegroup.h"
+#include "../musclegroup.h"
 
 #include <QSqlQuery>
 #include <QSqlError>

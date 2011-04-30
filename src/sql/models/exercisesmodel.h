@@ -3,7 +3,7 @@
 
 #include <QAbstractListModel>
 
-#include "exercise.h"
+#include "../exercise.h"
 
 class ExercisesManager;
 
