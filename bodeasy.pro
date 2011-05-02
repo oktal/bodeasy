@@ -39,18 +39,23 @@ include(src/sql/sql.pri)
 FORMS	*= src/usersdialog.ui \
 	src/exercisewidget.ui \
 	src/exercisesdialog.ui \
-        src/sessionsdialog.ui
+        src/sessionsdialog.ui \
+        src/mensurationsdialog.ui
 
 HEADERS	*= src/usersdialog.h \
 	src/exercisewidget.h \
 	src/exercisesdialog.h \
 	src/sessionsdialog.h \
+    src/mensurationsdialog.h \
+    src/ruleritem.h
 
 SOURCES	*= src/main.cpp \
 	src/usersdialog.cpp \
 	src/exercisewidget.cpp \
 	src/exercisesdialog.cpp \
 	src/sessionsdialog.cpp \
+    src/mensurationsdialog.cpp \
+    src/ruleritem.cpp
 
 RESOURCES	+=  \
 	src/ressources.qrc

@@ -46,6 +46,7 @@ void SessionsDialog::on_btnModify_clicked()
               ui->txtObjective->toPlainText(),
               sessionExercisesModel->sessionExercises());
     s.id = sessionsModel->session(sessionsModel->index(ui->lstSessions->currentIndex().row(), 0)).id;
+    qDebug() << s.id;
     if (sessionsModel->updateSession(s))
     {
 
