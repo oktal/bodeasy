@@ -1,3 +1,7 @@
+v.2011.05.02
+    * [FIX]
+	     added `session_exercise.id_session_exercise` column
+
 v.2011.04.26
     * [FIX]
 	     added `session.objective` column

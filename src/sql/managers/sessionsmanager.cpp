@@ -117,6 +117,7 @@ bool SessionsManager::updateSession(const Session &session) const
                 query.bindValue(":repetitions", se.repetitions);
                 query.bindValue(":rest", se.rest);
                 query.exec();
+                qDebug() << query.lastError();
             }
             return true;
         }

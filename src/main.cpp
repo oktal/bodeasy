@@ -4,6 +4,7 @@
 #include "usersdialog.h"
 #include "exercisesdialog.h"
 #include "sessionsdialog.h"
+#include "mensurationsdialog.h"
 
 int main(int argc, char *argv[])
 {
@@ -13,12 +14,17 @@ int main(int argc, char *argv[])
     //dialog.show();
 
 
+    /*
     ExercisesDialog exercises;
     exercises.show();
 
     
     SessionsDialog sessions;
     sessions.show();
+    */
+
+    MensurationsDialog mensurations;
+    mensurations.show();
 
     return a.exec();
 }
