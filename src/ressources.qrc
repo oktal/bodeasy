@@ -9,5 +9,6 @@
         <file>images/plus-icon.png</file>
         <file>images/icon-start.png</file>
         <file>images/fitness-man.png</file>
+        <file>images/cancel-icon.png</file>
     </qresource>
 </RCC>

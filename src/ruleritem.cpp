@@ -1,15 +1,15 @@
 #include "ruleritem.h"
 
 #include <QPainter>
-#include <QGraphicsItem>
+#include <QGraphicsObject>
 #include <QGraphicsSceneMouseEvent>
 
 #include <QLineEdit>
 
 RulerItem::RulerItem(Qt::Orientation orientation, QGraphicsItem *parent) :
-    QGraphicsItem(parent),
+    QGraphicsObject(parent),
     mWidth(0), mOrientation(orientation),
-    mLineField(0)
+    mLineField(0), mDescription(QString::null)
 {
     setFlag(QGraphicsItem::ItemIsFocusable, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
@@ -24,6 +24,7 @@ void RulerItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
         mLineField->setStyleSheet("border: 2px solid rgb(255, 66, 66);");
         setCursor(Qt::PointingHandCursor);
     }
+    emit showDescription(mDescription);
 }
 
 void RulerItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
@@ -34,6 +35,7 @@ void RulerItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
         mLineField->setStyleSheet("border: 1px solid black;");
         setCursor(Qt::ArrowCursor);
     }
+    emit showDescription("");
 }
 
 void RulerItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -58,6 +60,11 @@ void RulerItem::setWidth(int width)
 void RulerItem::setBuddy(QLineEdit *field)
 {
     mLineField = field;
+}
+
+void RulerItem::setDescription(const QString &description)
+{
+    mDescription = description;
 }
 
 QRectF RulerItem::boundingRect() const
