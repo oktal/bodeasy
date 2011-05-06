@@ -2,11 +2,13 @@
 #define RULERITEM_H
 
 #include <QGraphicsItem>
+#include <QString>
 
 class QLineEdit;
 
-class RulerItem : public QGraphicsItem
+class RulerItem : public QGraphicsObject
 {
+    Q_OBJECT
 public:
     enum { Type = UserType + 1 };
     explicit RulerItem(Qt::Orientation orientation = Qt::Horizontal, QGraphicsItem *parent = 0);
@@ -15,7 +17,11 @@ public:
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void setBuddy(QLineEdit *field);
+    void setDescription(const QString &description);
     int type() const;
+
+signals:
+    void showDescription(const QString &description);
 
 protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
@@ -28,6 +34,7 @@ private:
     int mWidth;
     Qt::Orientation mOrientation;
     QLineEdit *mLineField;
+    QString mDescription;
 };
 
 #endif // RULERITEM_H

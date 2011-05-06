@@ -23,21 +23,30 @@ public:
 
 private slots:
     void onChkRulersClicked(bool checked);
+    void onShowDescription(const QString &description);
 
 private:
+    enum State { View, Add };
+
+    void createRulers();
+    void createWidgets();
+
     Ui::MensurationsDialog *ui;
     QGraphicsScene *mScene;
+    State mState;
 
     QLineEdit *txtThigh;
     QLineEdit *txtBiceps;
     QLineEdit *txtWaist;
     QLineEdit *txtPectoral;
+    QLineEdit *txtShoulder;
     QLineEdit *txtNeck;
     QLineEdit *txtCalf;
     QLineEdit *txtForeArm;
     QLineEdit *txtAnkle;
     QLineEdit *txtWrist;
     QCheckBox *chkRulers;
+    QPlainTextEdit *txtDescription;
 };
 
 #endif // MENSURATIONSDIALOG_H
