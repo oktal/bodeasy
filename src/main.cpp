@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     sessions.show();
     */
 
-    MensurationsDialog mensurations;
+    MensurationsDialog mensurations(0);
     mensurations.show();
 
     return a.exec();
