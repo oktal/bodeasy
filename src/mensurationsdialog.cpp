@@ -13,11 +13,21 @@
 #include <QSignalMapper>
 #include <QPlainTextEdit>
 #include <QDate>
+#include <QDataWidgetMapper>
+#include <QSqlTableModel>
+#include <QSqlError>
+#include <QHash>
+#include <QLabel>
+#include <QGraphicsTextItem>
+#include <QFontMetrics>
 
 #include <QDebug>
 
-MensurationsDialog::MensurationsDialog(QWidget *parent) :
+static QHash<QWidget *, QGraphicsTextItem *> labelsHash;
+
+MensurationsDialog::MensurationsDialog(quint64 userId, QWidget *parent) :
     QDialog(parent),
+    mUserId(userId),
     ui(new Ui::MensurationsDialog),
     mScene(new QGraphicsScene),
     mState(View)
@@ -27,6 +37,8 @@ MensurationsDialog::MensurationsDialog(QWidget *parent) :
     /* WARNING : widgets have to be created before rulers ! */
     createWidgets();
     createRulers();
+    createLabels();
+    setupMapper();
 
     mScene->setSceneRect(QRectF(QPointF(0, 0), QSizeF(400, 500)));
     ui->graphicsView->setSceneRect(mScene->sceneRect());
@@ -46,15 +58,32 @@ MensurationsDialog::MensurationsDialog(QWidget *parent) :
         else if (item->type() == QGraphicsProxyWidget::Type)
         {
             QGraphicsProxyWidget *proxyItem = qgraphicsitem_cast<QGraphicsProxyWidget *>(item);
-            proxyItem->setZValue(1);
+            if (proxyItem->widget() != btnAdd && proxyItem->widget() != btnCancel)
+            {
+                proxyItem->setZValue(2);
+            }
+            else
+            {
+                proxyItem->setZValue(1);
+            }
             if (QLineEdit *edit = qobject_cast<QLineEdit *>(proxyItem->widget()))
             {
                 edit->setEnabled(false);
                 edit->setStyleSheet("border: 1px solid black;");
                 edit->setValidator(validator);
+                edit->setAlignment(Qt::AlignCenter);
+                connect(edit, SIGNAL(textChanged(QString)), this,
+                        SLOT(onLineEditChanged()));
             }
         }
     }
+
+    mapper->toLast();
+    cmbDates->setModel(model);
+    cmbDates->setModelColumn(model->fieldIndex("date"));
+    cmbDates->setCurrentIndex(mapper->currentIndex());
+    connect(cmbDates, SIGNAL(currentIndexChanged(int)),
+            mapper, SLOT(setCurrentIndex(int)));
 }
 
 /*!
@@ -194,31 +223,62 @@ void MensurationsDialog::createWidgets()
     txtAnkle->setFixedWidth(40);
     txtAnkle->move(100, 415);
 
-    chkRulers = new QCheckBox(trUtf8("Afficher les règles"));
-    chkRulers->setChecked(true);
-    chkRulers->move(480, 480);
-    connect(chkRulers, SIGNAL(clicked(bool)), this, SLOT(onChkRulersClicked(bool)));
-
-    QComboBox *cmbDates = new QComboBox;
-    cmbDates->setMinimumHeight(30);
-    cmbDates->move(520, 20);
-    cmbDates->addItem(QDate::currentDate().toString());
-
-    QPushButton *btnAdd = new QPushButton(QIcon(":/images/plus-icon.png"), tr("Ajouter"));
-    btnAdd->setFixedSize(100, 30);
-    btnAdd->move(520, 70);
-
-    QPushButton *btnCancel = new QPushButton(QIcon(":/images/cancel-icon.png"), tr("Annuler"));
-    btnCancel->setFixedSize(100, 30);
-    btnCancel->move(520, 105);
-    btnCancel->hide();
-
-    QGraphicsTextItem *visualisation = new QGraphicsTextItem(tr("Visualisation"));
-    visualisation->setPos(450, 20);
-
     txtDescription = new QPlainTextEdit;
     txtDescription->move(300, 320);
     txtDescription->setFixedSize(200, 100);
+    txtDescription->setReadOnly(true);
+    txtDescription->setStyleSheet("border: 1px solid black;");
+
+    QGraphicsSimpleTextItem *weightText = new
+            QGraphicsSimpleTextItem(tr("Poids:"));
+    weightText->setPos(350, 200);
+    weightText->setZValue(1);
+    txtWeight = new QLineEdit;
+    txtWeight->setFixedWidth(40);
+    txtWeight->move(390, 195);
+    QGraphicsSimpleTextItem *weightUnit = new
+            QGraphicsSimpleTextItem(tr("Kg."));
+    weightUnit->setPos(435, 200);
+
+    QGraphicsSimpleTextItem *sizeText = new
+            QGraphicsSimpleTextItem(tr("Taille:"));
+    sizeText->setPos(350, 240);
+    txtSize = new QLineEdit;
+    txtSize->setFixedWidth(40);
+    txtSize->move(390, 235);
+    QGraphicsSimpleTextItem *sizeUnit = new
+            QGraphicsSimpleTextItem(tr("cm."));
+    sizeUnit->setPos(435, 240);
+
+    chkRulers = new QCheckBox(trUtf8("Afficher les règles"));
+    chkRulers->setChecked(true);
+    chkRulers->move(480, 460);
+    connect(chkRulers, SIGNAL(clicked(bool)), this, SLOT(onChkRulersClicked(bool)));
+
+    chkDescriptions = new QCheckBox(trUtf8("Afficher les indications"));
+    chkDescriptions->setChecked(true);
+    chkDescriptions->move(480, 480);
+    connect(chkDescriptions, SIGNAL(clicked(bool)),
+            txtDescription, SLOT(setVisible(bool)));
+
+    cmbDates = new QComboBox;
+    cmbDates->move(520, 20);
+    cmbDates->setMinimumSize(100, 30);
+
+    btnAdd = new QPushButton(QIcon(":/images/plus-icon.png"), tr("Ajouter"));
+    btnAdd->setFixedSize(100, 30);
+    btnAdd->move(520, 70);
+    //btnAdd->move(0, 40);
+    connect(btnAdd, SIGNAL(clicked()), this, SLOT(onBtnAddClicked()));
+
+    btnCancel = new QPushButton(QIcon(":/images/cancel-icon.png"), tr("Annuler"));
+    btnCancel->setFixedSize(100, 30);
+    btnCancel->move(520, 105);
+    btnCancel->hide();
+    connect(btnCancel, SIGNAL(clicked()), this, SLOT(onBtnCancelClicked()));
+
+    QGraphicsTextItem *visualisation = new QGraphicsTextItem(tr("Visualisation"));
+    visualisation->setPos(450, 20);
 
     mScene->addItem(visualisation);
     mScene->addWidget(txtThigh);
@@ -231,11 +291,66 @@ void MensurationsDialog::createWidgets()
     mScene->addWidget(txtForeArm);
     mScene->addWidget(txtWrist);
     mScene->addWidget(txtAnkle);
+    mScene->addItem(weightText);
+    mScene->addItem(weightUnit);
+    mScene->addWidget(txtWeight);
+    mScene->addItem(sizeText);
+    mScene->addItem(sizeUnit);
+    mScene->addWidget(txtSize);
     mScene->addWidget(chkRulers);
+    mScene->addWidget(chkDescriptions);
     mScene->addWidget(cmbDates);
     mScene->addWidget(btnAdd);
     mScene->addWidget(btnCancel);
     mScene->addWidget(txtDescription);
+}
+
+void MensurationsDialog::createLabels()
+{
+    QFontMetrics fm(font());
+    foreach (QGraphicsItem *item, mScene->items())
+    {
+        if (item->type() == QGraphicsProxyWidget::Type)
+        {
+            QGraphicsProxyWidget *proxyItem = qgraphicsitem_cast<QGraphicsProxyWidget *>(item);
+            if (QLineEdit *edit = qobject_cast<QLineEdit *>(proxyItem->widget()))
+            {
+                QGraphicsTextItem *txtDifference = new QGraphicsTextItem();
+                txtDifference->setPos(edit->pos().x() + (edit->width() / 2) - fm.width("+9") / 2,
+                                      edit->pos().y() - fm.height() - 5);
+                mScene->addItem(txtDifference);
+                labelsHash[edit] = txtDifference;
+            }
+        }
+    }
+}
+
+/*!
+  * \brief setup and configure the datawidgetmapper
+*/
+void MensurationsDialog::setupMapper()
+{
+    model = new QSqlTableModel(this);
+    model->setTable("mensuration");
+    model->setSort(model->fieldIndex("date"), Qt::AscendingOrder);
+    model->select();
+
+    mapper = new QDataWidgetMapper(this);
+    mapper->setModel(model);
+    /* Map all fields */
+    mapper->addMapping(txtNeck, model->fieldIndex("neck"));
+    mapper->addMapping(txtShoulder, model->fieldIndex("shoulder"));
+    mapper->addMapping(txtPectoral, model->fieldIndex("chest"));
+    mapper->addMapping(txtWaist, model->fieldIndex("waist_size"));
+    mapper->addMapping(txtForeArm, model->fieldIndex("forearm"));
+    mapper->addMapping(txtThigh, model->fieldIndex("thigh"));
+    mapper->addMapping(txtCalf, model->fieldIndex("calf"));
+    mapper->addMapping(txtBiceps, model->fieldIndex("biceps"));
+    mapper->addMapping(txtWrist, model->fieldIndex("wrist"));
+    mapper->addMapping(txtAnkle, model->fieldIndex("ankle"));
+    mapper->addMapping(txtWeight, model->fieldIndex("weight"));
+    mapper->addMapping(txtSize, model->fieldIndex("size"));
+    mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
 }
 
 /*!
@@ -261,4 +376,135 @@ void MensurationsDialog::onShowDescription(const QString &description)
 {
     txtDescription->clear();
     txtDescription->appendHtml(description);
+}
+
+/*!
+  * \brief Add or Validate a row into the model
+*/
+void MensurationsDialog::onBtnAddClicked()
+{
+    /* Check in which state we are */
+    if (mState == View)
+    {
+        btnCancel->show();
+        btnAdd->setText(tr("Valider"));
+        btnAdd->setIcon(QIcon(":/images/check-icon.png"));
+        enableEdits(true, true);
+        mState = Add;
+        model->insertRow(model->rowCount());
+        mapper->toLast();
+        model->setData(model->index(mapper->currentIndex(), model->fieldIndex("date")),
+                       QDate::currentDate());
+        model->setData(model->index(mapper->currentIndex(), model->fieldIndex("id_user")),
+                       mUserId);
+        cmbDates->setCurrentIndex(model->rowCount() - 1);
+        cmbDates->setEnabled(false);
+        btnAdd->setEnabled(true);
+    }
+    else if (mState == Add)
+    {
+        btnAdd->setText(tr("Ajouter"));
+        btnAdd->setIcon(QIcon(":/images/plus-icon.png"));
+        btnCancel->hide();
+        enableEdits(false);
+        mState = View;
+        if (!mapper->submit())
+        {
+            qDebug() << model->lastError();
+        }
+        mapper->toLast();
+        cmbDates->setCurrentIndex(model->rowCount() - 1);
+        cmbDates->setEnabled(true);
+    }
+}
+
+void MensurationsDialog::onBtnCancelClicked()
+{
+    model->removeRow(model->rowCount() - 1);
+    mapper->toLast();
+    mState = View;
+    enableEdits(false);
+    btnCancel->hide();
+    cmbDates->setEnabled(true);
+    cmbDates->setCurrentIndex(model->rowCount() - 1);
+    btnAdd->setText(tr("Ajouter"));
+    btnAdd->setIcon(QIcon(":/images/plus-icon.png"));
+}
+
+/*!
+  * \brief Change labels associated with edits when
+   any lineedit has changed
+*/
+void MensurationsDialog::onLineEditChanged()
+{
+
+    QLineEdit *edit = qobject_cast<QLineEdit *>(sender());
+    if (!edit)
+    {
+        return;
+    }
+
+    QGraphicsTextItem *text = labelsHash[edit];
+    if (model->rowCount() == 1 || mapper->currentIndex() == 0)
+    {
+        text->setPlainText("");
+        return;
+    }
+
+    if (!edit->text().isEmpty())
+    {
+        /* Model's section of the edit */
+        int section = mapper->mappedSection(edit);
+        QVariant lastValue = model->data(model->index(mapper->currentIndex() - 1,
+                                                      section));
+        int delta = edit->text().toInt() - lastValue.toInt();
+        QColor color;
+        QString value = QString::number(delta);
+        if (delta < 0)
+        {
+            color = Qt::red;
+        }
+        else if (delta == 0)
+        {
+            color = Qt::blue;
+        }
+        else
+        {
+            color = Qt::darkGreen;
+            value.prepend("+");
+        }
+        text->setHtml(
+              QString("<strong><font color=%1>%2</font></strong>").arg(color.name()).arg(value));
+    }
+    else
+    {
+        text->setPlainText("");
+    }
+}
+
+/*!
+  * \brief enable or not line edits
+  * \param enable if true enable lineedits, else disable edits
+  * \param clear if set to true, clear lineedits
+      The default is false
+*/
+
+void MensurationsDialog::enableEdits(bool enable, bool clear)
+{
+    /* Loop over scene items and treat graphics proxy widgets */
+    foreach (QGraphicsItem *item, mScene->items())
+    {
+        if (item->type() == QGraphicsProxyWidget::Type)
+        {
+            QGraphicsProxyWidget *proxyItem = qgraphicsitem_cast<QGraphicsProxyWidget *>(item);
+            if (QLineEdit *edit = qobject_cast<QLineEdit *>(proxyItem->widget()))
+            {
+                edit->setEnabled(enable);
+                if (clear)
+                {
+                    edit->clear();
+                }
+            }
+        }
+    }
 }
