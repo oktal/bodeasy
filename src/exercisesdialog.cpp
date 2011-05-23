@@ -5,6 +5,7 @@
 
 #include <QWidget>
 #include <QDialog>
+#include <QMessageBox>
 
 #include <QDebug>
 
@@ -68,6 +69,12 @@ void ExercisesDialog::on_btnAdd_clicked()
     groups(),
     ui->cbUseWeight->isChecked(),
     ui->pteDescription->toPlainText() );
+
+    if ( exercisesModel->index(e).isValid() ) {
+        QMessageBox::critical(this, trUtf8( "Erreur" ),
+                              trUtf8( "L'exercice que vous voulez ajouter existe déjà" ) );
+        return;
+    }
 
     if ( exercisesModel->addExercise( e ) ) {
         const QModelIndex index = exercisesModel->index( e );

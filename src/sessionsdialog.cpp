@@ -5,6 +5,7 @@
 #include "sql/models/sessionexercisesdelegate.h"
 
 #include <QDebug>
+#include <QMessageBox>
 
 SessionsDialog::SessionsDialog(QWidget *parent) :
     QDialog(parent),
@@ -34,6 +35,12 @@ void SessionsDialog::on_btnAdd_clicked()
     Session s(ui->txtSessionName->text(),
               ui->txtObjective->toPlainText(),
               sessionExercisesModel->sessionExercises());
+    if (sessionsModel->index(s).isValid())
+    {
+        QMessageBox::critical(this, trUtf8("Erreur"),
+                              trUtf8("La session que vous voulez ajouter existe déjà"));
+    }
+
     if (sessionsModel->addSession(s))
     {
         ui->lstSessions->selectRow(sessionsModel->rowCount());
@@ -46,7 +53,7 @@ void SessionsDialog::on_btnModify_clicked()
               ui->txtObjective->toPlainText(),
               sessionExercisesModel->sessionExercises());
     s.id = sessionsModel->session(sessionsModel->index(ui->lstSessions->currentIndex().row(), 0)).id;
-    qDebug() << s.id;
+
     if (sessionsModel->updateSession(s))
     {
 

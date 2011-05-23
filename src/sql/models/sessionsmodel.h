@@ -25,6 +25,9 @@ public:
     bool addSession(Session &session);
     bool updateSession(const Session &session);
 
+    using QAbstractTableModel::index;
+    QModelIndex index(const Session &session) const;
+
 private:
     SessionsManager *mManager;
     QList<Session> mSessions;
