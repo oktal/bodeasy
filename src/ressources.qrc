@@ -11,5 +11,19 @@
         <file>images/fitness-man.png</file>
         <file>images/cancel-icon.png</file>
         <file>images/check-icon.png</file>
+        <file>images/user-icon.png</file>
+        <file>images/calendar-icon.png</file>
+        <file>images/measure-icon.png</file>
+        <file>images/logout-icon.png</file>
+        <file>images/graph-icon.png</file>
+        <file>images/leftarrow-icon.png</file>
+        <file>images/rightarrow-icon.png</file>
+        <file>images/first-icon.png</file>
+        <file>images/last-icon.png</file>
+        <file>images/go-icon.png</file>
+        <file>images/checkround-icon.png</file>
+        <file>images/exercise-icon.png</file>
+        <file>images/table-icon.png</file>
+        <file>images/graph-icon2.png</file>
     </qresource>
 </RCC>

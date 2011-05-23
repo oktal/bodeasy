@@ -11,6 +11,19 @@ SessionsModel::SessionsModel(QObject *parent) :
     mSessions = mManager->selectSessions();
 }
 
+QModelIndex SessionsModel::index(const Session &session) const
+{
+    for ( int i = 0; i < mSessions.count(); i++ ) {
+        const Session& s = mSessions[ i ];
+
+        if ( s.name.compare( session.name, Qt::CaseInsensitive ) == 0 ) {
+            return QAbstractTableModel::index( i, 0 );
+        }
+     }
+
+    return QModelIndex();
+}
+
 Session SessionsModel::session(const QModelIndex &index) const
 {
     if (index.row() < 0 || index.row() > mSessions.count())

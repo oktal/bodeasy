@@ -40,14 +40,18 @@ FORMS	*= src/usersdialog.ui \
 	src/exercisewidget.ui \
 	src/exercisesdialog.ui \
         src/sessionsdialog.ui \
-        src/mensurationsdialog.ui
+        src/mensurationsdialog.ui \
+        src/mainwindow.ui \
+        src/sessionframe.ui
 
 HEADERS	*= src/usersdialog.h \
 	src/exercisewidget.h \
 	src/exercisesdialog.h \
 	src/sessionsdialog.h \
     src/mensurationsdialog.h \
-    src/ruleritem.h
+    src/ruleritem.h \
+    src/mainwindow.h \
+    src/sessionframe.h
 
 SOURCES	*= src/main.cpp \
 	src/usersdialog.cpp \
@@ -55,7 +59,9 @@ SOURCES	*= src/main.cpp \
 	src/exercisesdialog.cpp \
 	src/sessionsdialog.cpp \
     src/mensurationsdialog.cpp \
-    src/ruleritem.cpp
+    src/ruleritem.cpp \
+    src/mainwindow.cpp \
+    src/sessionframe.cpp
 
 RESOURCES	+=  \
 	src/ressources.qrc

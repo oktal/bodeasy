@@ -303,6 +303,7 @@ void MensurationsDialog::createWidgets()
     mScene->addWidget(btnAdd);
     mScene->addWidget(btnCancel);
     mScene->addWidget(txtDescription);
+
 }
 
 void MensurationsDialog::createLabels()

@@ -5,6 +5,7 @@
 #include "exercisesdialog.h"
 #include "sessionsdialog.h"
 #include "mensurationsdialog.h"
+#include "mainwindow.h"
 
 int main(int argc, char *argv[])
 {
@@ -13,18 +14,8 @@ int main(int argc, char *argv[])
     UsersDialog dialog;
     //dialog.show();
 
-
-    /*
-    ExercisesDialog exercises;
-    exercises.show();
-
-    
-    SessionsDialog sessions;
-    sessions.show();
-    */
-
-    MensurationsDialog mensurations(0);
-    mensurations.show();
+    MainWindow mainWindow;
+    mainWindow.showMaximized();
 
     return a.exec();
 }
