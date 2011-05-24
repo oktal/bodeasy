@@ -12,7 +12,7 @@ SOURCES *= src/sql/exercise.cpp \
 		   src/sql/managers/sessionsmanager.cpp \
 		   src/sql/managers/usersmanager.cpp
 		   
-HEADERS *= exercise.h \
+HEADERS *= src/sql/exercise.h \
            src/sql/musclegroup.h \
            src/sql/session.h \
 		   src/sql/user.h \
