@@ -1,21 +1,31 @@
 #include <QtGui/QApplication>
-#include <QTextCodec>
 
+#include "sql/SqlHelper.h"
 #include "usersdialog.h"
-#include "exercisesdialog.h"
-#include "sessionsdialog.h"
-#include "mensurationsdialog.h"
 #include "mainwindow.h"
 
-int main(int argc, char *argv[])
+#define EXIT_SQL_OPEN_ERROR 1
+#define EXIT_LOGIN_ERROR 2
+
+int main( int argc, char* argv[] )
 {
-    QApplication a(argc, argv);
+    QApplication app( argc, argv );
+    app.setApplicationName( "BodEasy" );
+    
+    if ( !SqlHelper::openDatabase() ) {
+        return EXIT_SQL_OPEN_ERROR;
+    }
     
     UsersDialog dialog;
-    //dialog.show();
+    if ( dialog.exec() == QDialog::Rejected ) {
+        return EXIT_LOGIN_ERROR;
+    }
 
-    MainWindow mainWindow;
-    mainWindow.showMaximized();
+    MainWindow mw;
+    mw.setWindowTitle( app.applicationName() );
+    mw.showMaximized();
 
-    return a.exec();
+    const int result = app.exec();
+    SqlHelper::closeDatabase();
+    return result;
 }

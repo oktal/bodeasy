@@ -4,25 +4,16 @@
 #include "sql/models/usersmodel.h"
 #include "sql/user.h"
 
-#include <QtGui>
-#include <QtSql>
+#include <QMessageBox>
 
 UsersDialog::UsersDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::UsersDialog)
+    ui(new Ui::UsersDialog),
+    m_model(new UsersModel(this))
 {
     ui->setupUi(this);
-
-    if (createConnection())
-    {
-        initModel();
-    }
-
-
+    ui->cmbUsers->setModel(m_model);
     ui->btnDelete->setEnabled(m_model->rowCount() > 0);
-
-    connect(ui->txtUser, SIGNAL(returnPressed()), this,
-            SLOT(on_btnAdd_clicked()));
 }
 
 UsersDialog::~UsersDialog()
@@ -30,47 +21,29 @@ UsersDialog::~UsersDialog()
     delete ui;
 }
 
-bool UsersDialog::createConnection()
-{
-    m_db = QSqlDatabase::addDatabase("QSQLITE");
-    m_db.setDatabaseName(qApp->applicationDirPath()+QDir::separator()+"database.s3db");
-    return m_db.open();
-}
-
-void UsersDialog::initModel()
-{
-    m_model = new UsersModel(this);
-    ui->cmbUsers->setModel(m_model);
-}
-
 void UsersDialog::on_btnAdd_clicked()
 {
-    if (!ui->btnAdd->isEnabled())
-        return;
+    const QString newUser = ui->txtUser->text().trimmed();
+    const bool hasUser = !m_model->match(m_model->index(0,0),Qt::DisplayRole,newUser,1,Qt::MatchExactly | Qt::MatchRecursive ).isEmpty();
 
-    QString newUser = ui->txtUser->text();
-
-    for (int i = 0; i < m_model->rowCount(); ++i)
+    if (hasUser)
     {
-        if (newUser == m_model->data(m_model->index(i, 0)))
-        {
-            QMessageBox::information(this,
-                                     tr("Ajout d'utilisateur"),
-                                     tr("L'utilisateur %1 existe dÃ©jÃ , impossible de l'ajouter Ã  nouveau.")
-                                     .arg(newUser));
-            return;
-        }
+        QMessageBox::information(this,
+                                 tr("Ajout d'utilisateur"),
+                                 tr("L'utilisateur %1 existe dÃ©jÃ , impossible de l'ajouter Ã  nouveau.")
+                                 .arg(newUser));
+        return;
     }
 
     User user;
     user.id = -1;
-    user.name = ui->txtUser->text();
+    user.name = newUser;
     if (m_model->addUser(user))
     {
         ui->btnDelete->setEnabled(m_model->rowCount() > 0);
         ui->txtUser->clear();
         ui->btnAdd->setEnabled(false);
-        ui->cmbUsers->setCurrentIndex(ui->cmbUsers->count() - 1);
+        ui->cmbUsers->setCurrentIndex(m_model->userIndex(user).row());
     }
 }
 
@@ -84,7 +57,8 @@ void UsersDialog::on_btnDelete_clicked()
 
     if (r == QMessageBox::Yes)
     {
-        m_model->removeRow(ui->cmbUsers->currentIndex());
+        const QModelIndex index = m_model->index(ui->cmbUsers->currentIndex());
+        m_model->removeUser(m_model->user(index));
         ui->btnDelete->setEnabled(m_model->rowCount() > 0);
     }
 }
@@ -95,6 +69,8 @@ void UsersDialog::on_txtUser_textEdited()
 }
 
 
-void UsersDialog::on_btnStart_clicked()
+void UsersDialog::accept()
 {
+    if (ui->cmbUsers->currentIndex() != -1)
+        QDialog::accept();
 }

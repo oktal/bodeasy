@@ -28,21 +28,6 @@ int UsersModel::rowCount(const QModelIndex &parent) const
     return parent.isValid() ? 0 : users.count();
 }
 
-void UsersModel::removeRow(int row, const QModelIndex &parent)
-{
-    if (parent.isValid())
-    {
-        return;
-    }
-
-    beginRemoveRows(parent, row, row);
-    if (manager->removeUserById(users[row].id))
-    {
-        users.removeAt(row);
-    }
-    endRemoveRows();
-}
-
 bool UsersModel::addUser(User &user)
 {
     if (manager->createUser(user))
@@ -55,4 +40,30 @@ bool UsersModel::addUser(User &user)
 
 
     return false;
+}
+
+void UsersModel::removeUser(const User &user)
+{
+    const int row = users.indexOf(user);
+    
+    if (row != -1)
+    {
+        if (manager->removeUserById(user.id))
+        {
+            beginRemoveRows(QModelIndex(), row, row);
+            users.removeAt(row);
+            endRemoveRows();
+        }
+    }
+}
+
+User UsersModel::user(const QModelIndex &index) const
+{
+    return users.value( index.row() );
+}
+
+QModelIndex UsersModel::userIndex(const User &user, int column) const
+{
+    const int row = users.indexOf(user);
+    return row != -1 ? QAbstractListModel::index(row, column, QModelIndex()) : QModelIndex();
 }
