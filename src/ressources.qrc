@@ -26,4 +26,8 @@
         <file>images/table-icon.png</file>
         <file>images/graph-icon2.png</file>
     </qresource>
+    <qresource prefix="/sql">
+        <file alias="script001.sql">../db/database.sql</file>
+        <file alias="script002.sql">../db/triggers.sql</file>
+    </qresource>
 </RCC>

@@ -1,11 +1,11 @@
 #include "usersmanager.h"
+#include "../SqlHelper.h"
 #include "../user.h"
 
-#include <QtCore>
-#include <QtSql>
+#include <QVariant>
 
 UsersManager::UsersManager(QObject *parent) :
-    QObject(parent)
+    QObject(parent), query(SqlHelper::query())
 {
 }
 

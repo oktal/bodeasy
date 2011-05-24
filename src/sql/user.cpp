@@ -1,5 +1,10 @@
 #include "user.h"
 
+bool User::operator==(const User &other) const
+{
+    return id == other.id;
+}
+
 /*
 User::User() : id_(-1), name_(QString::null)
 {

@@ -7,6 +7,8 @@ struct User
 {
     qint64 id;
     QString name;
+    
+    virtual bool operator==(const User &other) const;
 };
 
 /*
