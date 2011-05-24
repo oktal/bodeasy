@@ -56,11 +56,11 @@ void SqlHelper::closeDatabase()
 QStringList SqlHelper::initializeScripts()
 {
 	const QString path = ":/sql";
-	const QStringList entries = QDir( path ).entryList( QStringList( "*.sql" ), QDir::Files | QDir::NoDotDot );
+	const QStringList entries = QDir( path ).entryList( QStringList( "*.sql" ), QDir::Files | QDir::NoDotDot, QDir::Name );
 	QStringList files;
 	
 	foreach ( const QString& entry, entries ) {
-		files << QDir::toNativeSeparators( QString( "%1/%2" ).arg( path ).arg( entry ) );
+		files << QString( "%1/%2" ).arg( path ).arg( entry );
 	}
 	
 	return files;
