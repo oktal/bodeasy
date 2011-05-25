@@ -3,7 +3,7 @@
 
 #include <QDesktopServices>
 #include <QDir>
-#include <QTemporaryFile>
+#include <QFile>
 #include <QSqlError>
 #include <QDebug>
 
@@ -96,62 +96,6 @@ QSqlQuery SqlHelper::query()
 	return QSqlQuery( SqlHelper::database() );
 }
 
-void printSt(toSQLParse::statement &stat, int level)
-{
-    for (int i = 0; i < level; i++)
-        printf("    ");
-
-    /*switch (stat.StatementClass)
-    {
-    case toSQLParse::statement::unknown:
-        printf("[U]");
-        break;
-    case toSQLParse::statement::ddldml:
-        printf("[D]");
-        break;
-    case toSQLParse::statement::plsqlblock:
-        printf("[P]");
-    default:
-        printf("[B]");
-    }*/
-
-    switch (stat.Type)
-    {
-    case toSQLParse::statement::Block:
-        printf("Block:");
-        break;
-    case toSQLParse::statement::Statement:
-        printf("Statement:");
-        break;
-    case toSQLParse::statement::List:
-        printf("List:");
-        break;
-    case toSQLParse::statement::Keyword:
-        printf("Keyword:");
-        break;
-    case toSQLParse::statement::Token:
-        printf("Token:");
-        break;
-    /*case toSQLParse::statement::EndOfStatement:
-        printf("EndOfStatement:");
-        break;*/
-    case toSQLParse::statement::Raw:
-        printf("Raw:");
-        break;
-    }
-    printf("%s (%d)\n", (const char *)stat.String.toUtf8(), stat.Line);
-    if (!stat.Comment.isNull())
-    {
-        for (int i = 0; i < level; i++)
-            printf("    ");
-        printf("Comment:%s\n", (const char *)stat.Comment.toUtf8());
-    }
-    for (std::list<toSQLParse::statement>::iterator i = stat.subTokens().begin();
-            i != stat.subTokens().end();
-            i++)
-        printSt(*i, level + 1);
-}
-
 bool SqlHelper::executeSqlScript( const QString& filePath )
 {
 	qWarning() << Q_FUNC_INFO << "Executing" << qPrintable( filePath );
@@ -163,17 +107,17 @@ bool SqlHelper::executeSqlScript( const QString& filePath )
 		return false;
 	}
 	
-	toSQLParse::settings cur;
-	cur.ExpandSpaces = false;
-	cur.CommaBefore = false;
-	cur.BlockOpenLine = false;
-	cur.OperatorSpace = false;
-	cur.KeywordUpper = false;
-	cur.RightSeparator = false;
-	cur.EndBlockNewline = false;
-	cur.IndentLevel = true;
-	cur.CommentColumn = false;
-	toSQLParse::setSetting(cur);
+	toSQLParse::settings settings;
+	settings.ExpandSpaces = false;
+	settings.CommaBefore = false;
+	settings.BlockOpenLine = false;
+	settings.OperatorSpace = false;
+	settings.KeywordUpper = false;
+	settings.RightSeparator = false;
+	settings.EndBlockNewline = false;
+	settings.IndentLevel = true;
+	settings.CommentColumn = false;
+	toSQLParse::setSetting( settings );
 	
 	const QString content = QString::fromUtf8( file.readAll() );
 	toSQLParse::stringTokenizer tokens( content );
