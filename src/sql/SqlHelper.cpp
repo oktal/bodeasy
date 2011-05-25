@@ -184,7 +184,6 @@ bool SqlHelper::executeSqlScript( const QString& filePath )
 		const toSQLParse::statement statement = toSQLParse::parseStatement( tokens );
 		const QString sql = content.mid( lastOffset, tokens.offset() -lastOffset ).trimmed();
 		
-		
 		if ( !sql.isEmpty() && !q.exec( sql ) ) {
 			SqlHelper::debugQuery( q, Q_FUNC_INFO );
 			return false;
