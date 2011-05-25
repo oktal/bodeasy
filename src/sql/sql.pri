@@ -1,4 +1,6 @@
 HEADERS	*= src/sql/SqlHelper.h \
+	src/sql/parser/sqlkeywords.h \
+	src/sql/parser/tosqlparse.h \
 	src/sql/exercise.h \
 	src/sql/musclegroup.h \
 	src/sql/session.h \
@@ -15,6 +17,8 @@ HEADERS	*= src/sql/SqlHelper.h \
 	src/sql/managers/usersmanager.h
 
 SOURCES	*= src/sql/SqlHelper.cpp \
+	src/sql/parser/sqlkeywords.cpp \
+	src/sql/parser/tosqlparse.cpp \
 	src/sql/exercise.cpp \
 	src/sql/session.cpp \
 	src/sql/user.cpp \
