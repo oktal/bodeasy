@@ -1,5 +1,6 @@
 XUPProjectSettings {
 	OTHERS_PLATFORM_TARGET_RELEASE	= bodeasy
+	QT_VERSION	= Qt System (4.7.2)
 }
 
 #-------------------------------------------------
@@ -14,9 +15,9 @@ DESTDIR	= .
 BUILD_PATH	= build
 
 !win32:CONFIG	-= warn_on warn_off release debug debug_and_release
-CONFIG	*= qt warn_on release
+CONFIG	+= qt release warn_on
 
-QT	*= core gui sql
+QT	= core gui sql
 
 
 CONFIG( debug, debug|release ) {
@@ -34,34 +35,33 @@ CONFIG( debug, debug|release ) {
 	UI_DIR	= $${BUILD_PATH}/release/ui
 }
 
-include(src/sql/sql.pri)
+include( src/sql/sql.pri )
 
-FORMS	*= src/usersdialog.ui \
+FORMS	+= src/usersdialog.ui \
 	src/exercisewidget.ui \
 	src/exercisesdialog.ui \
-        src/sessionsdialog.ui \
-        src/mensurationsdialog.ui \
-        src/mainwindow.ui \
-        src/sessionframe.ui
+	src/sessionsdialog.ui \
+	src/mensurationsdialog.ui \
+	src/mainwindow.ui \
+	src/sessionframe.ui
 
-HEADERS	*= src/usersdialog.h \
+HEADERS	+= src/usersdialog.h \
 	src/exercisewidget.h \
 	src/exercisesdialog.h \
 	src/sessionsdialog.h \
-    src/mensurationsdialog.h \
-    src/ruleritem.h \
-    src/mainwindow.h \
-    src/sessionframe.h
+	src/mensurationsdialog.h \
+	src/ruleritem.h \
+	src/mainwindow.h \
+	src/sessionframe.h
 
-SOURCES	*= src/main.cpp \
+SOURCES	+= src/main.cpp \
 	src/usersdialog.cpp \
 	src/exercisewidget.cpp \
 	src/exercisesdialog.cpp \
 	src/sessionsdialog.cpp \
-    src/mensurationsdialog.cpp \
-    src/ruleritem.cpp \
-    src/mainwindow.cpp \
-    src/sessionframe.cpp
+	src/mensurationsdialog.cpp \
+	src/ruleritem.cpp \
+	src/mainwindow.cpp \
+	src/sessionframe.cpp
 
-RESOURCES	+=  \
-	src/ressources.qrc
+RESOURCES	+= src/ressources.qrc
