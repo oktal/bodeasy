@@ -7,6 +7,23 @@
 #include <QSqlError>
 #include <QDebug>
 
+void printStatement( toSQLParse::statement& s, int prof = 0 )
+{
+    const QString indent = QString( prof, '\t' );
+    
+    if ( prof == 0 ) {
+        qWarning() << "-----------------------------";
+    }
+    
+    qWarning() << qPrintable( (QStringList() << indent << QString::number(s.Type) << s.String).join( " / " ) );
+    
+    foreach ( toSQLParse::statement t, s.subTokens() ) {
+        prof++;
+        printStatement( t, prof );
+        prof--;
+    }
+}
+
 bool SqlHelper::openDatabase()
 {
 	qWarning() << Q_FUNC_INFO << "Using database in" << qPrintable( SqlHelper::databaseLocalFilePath() );
@@ -71,6 +88,9 @@ bool SqlHelper::transaction()
 	if ( !ok ) {
 		qWarning() << Q_FUNC_INFO << qPrintable( lastError() );
 	}
+    else {
+        qWarning() << Q_FUNC_INFO << "Begin transaction";
+    }
 	
 	return ok;
 }
@@ -82,6 +102,9 @@ bool SqlHelper::commit()
 	if ( !ok ) {
 		qWarning() << Q_FUNC_INFO << qPrintable( lastError() );
 	}
+    else {
+        qWarning() << Q_FUNC_INFO << "Commit transaction";
+    }
 	
 	return ok;
 }
@@ -93,6 +116,9 @@ bool SqlHelper::rollback()
 	if ( !ok ) {
 		qWarning() << Q_FUNC_INFO << qPrintable( lastError() );
 	}
+    else {
+        qWarning() << Q_FUNC_INFO << "Rollback transaction";
+    }
 	
 	return ok;
 }
@@ -104,7 +130,7 @@ QStringList SqlHelper::initializeScripts()
 	QStringList files;
 	
 	foreach ( const QString& entry, entries ) {
-		files << QString( "%1/%2" ).arg( path ).arg( entry );
+		files << QDir::cleanPath( QString( "%1/%2" ).arg( path ).arg( entry ) );
 	}
 	
 	return files;
@@ -118,7 +144,7 @@ QString SqlHelper::connectionName()
 QString SqlHelper::databaseLocalFilePath()
 {
 	const QString path = QDesktopServices::storageLocation( QDesktopServices::DataLocation );
-	const QString filePath = QString( "%1/database.s3db" ).arg( path );
+	const QString filePath = QDir::cleanPath( QString( "%1/database.s3db" ).arg( path ) );
 	
 	if ( !QFile::exists( filePath ) ) {
 		if ( !QDir().mkpath( path ) ) {
@@ -171,11 +197,35 @@ bool SqlHelper::executeSqlScript( const QString& filePath )
 	toSQLParse::stringTokenizer tokens( content );
 	int lastOffset = 0;
 	int count = 0;
+    int skip = 0;
 	
 	while ( tokens.offset() != content.length() ) {
-                const toSQLParse::statement statement = toSQLParse::parseStatement( tokens );
-                Q_UNUSED( statement );
-		const QString sql = content.mid( lastOffset, tokens.offset() -lastOffset ).trimmed();
+		toSQLParse::statement statement = toSQLParse::parseStatement( tokens );
+        const QString sql = content.mid( lastOffset, tokens.offset() -lastOffset ).trimmed();
+        
+        //printStatement( statement );
+        
+        if ( statement.subTokens().size() == 2 ) {
+            toSQLParse::statement firstToken = *statement.subTokens().begin();
+            
+            if ( firstToken.Type == toSQLParse::statement::Keyword ) {
+                if ( firstToken.String == "BEGIN" || firstToken.String == "COMMIT" ) {
+                    toSQLParse::statement secondToken = *(++statement.subTokens().begin());
+                    
+                    if ( secondToken.Type == toSQLParse::statement::Token ) {
+                        if ( secondToken.String == ";" ) {
+                            qWarning() << "*** Skipping" << firstToken.String +";";
+                            lastOffset = tokens.offset();
+                            skip++;
+                            
+                            if ( tokens.offset() != content.length() ) {
+                                continue;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 		
 		if ( !sql.isEmpty() && !q.exec( sql ) ) {
 			SqlHelper::debugQuery( q, Q_FUNC_INFO );
@@ -186,7 +236,7 @@ bool SqlHelper::executeSqlScript( const QString& filePath )
 		count++;
 	}
 	
-	qWarning() << "Count" << count -1;
+	qWarning() << Q_FUNC_INFO << "Executed" << count -1 << " statements and skipped" << skip;
 	return true;
 }
 

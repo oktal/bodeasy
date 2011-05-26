@@ -588,7 +588,9 @@ toSQLParse::statement toSQLParse::parseStatement(tokenizer &tokens, bool declare
 				  first == ("SPOOL") ||
 				  first == ("STORE") ||
 				  first == ("REMARK") ||
-				  first == ("REM"))
+				  first == ("REM") ||
+				  first == "PRAGMA" ||
+				  first == "COMMIT")
 		 {
 //              qDebug() << "ASSIGN";
 			 ret.subTokens().insert(ret.subTokens().end(), statement(statement::Keyword, token, tokens.line()));
@@ -604,7 +606,7 @@ toSQLParse::statement toSQLParse::parseStatement(tokenizer &tokens, bool declare
 		 else if (upp == (",") ||
 // 		if (upp == (",") ||
 //				  (syntax.reservedWord(upp) &&
-				  (isKeyword(upp) &&
+				  ((isKeyword(upp) &&
 				  upp != ("NOT") &&
 				  upp != ("IS") &&
 				  upp != ("LIKE") &&
@@ -615,7 +617,7 @@ toSQLParse::statement toSQLParse::parseStatement(tokenizer &tokens, bool declare
 				  upp != ("BETWEEN") &&
 				  upp != ("ASC") &&
 				  upp != ("DESC") &&
-				  upp != ("NULL")) && !nokey)
+				  upp != ("NULL")) && !nokey))
 		{
 
 		}
