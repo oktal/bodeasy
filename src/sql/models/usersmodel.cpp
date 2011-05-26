@@ -13,13 +13,21 @@ UsersModel::UsersModel(QObject *parent) :
 
 QVariant UsersModel::data(const QModelIndex &index, int role) const
 {
-   if (role == Qt::DisplayRole)
+   if (!index.isValid() || index.row() >= users.count())
    {
-       if (index.row() < users.count())
-       {
-            return users[index.row()].name;
-       }
+       return QVariant();
    }
+
+   switch (role)
+   {
+   case Qt::DisplayRole:
+       return users[index.row()].name;
+       break;
+   case Qt::UserRole:
+       return users[index.row()].id;
+       break;
+   }
+
    return QVariant();
 }
 

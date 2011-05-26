@@ -74,3 +74,8 @@ void UsersDialog::accept()
     if (ui->cmbUsers->currentIndex() != -1)
         QDialog::accept();
 }
+
+qint64 UsersDialog::userId() const
+{
+    return ui->cmbUsers->itemData(ui->cmbUsers->currentIndex()).toLongLong();
+}

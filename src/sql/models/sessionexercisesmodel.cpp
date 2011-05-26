@@ -1,4 +1,5 @@
 #include "sessionexercisesmodel.h"
+#include "../SqlHelper.h"
 
 #include <QDebug>
 #include <QList>
@@ -12,7 +13,7 @@
 
 static QString exerciseNameForId(qint64 id)
 {
-    QSqlQuery query;
+    QSqlQuery query = SqlHelper::query();
     query.prepare("SELECT name FROM exercise WHERE id_exercise=:id");
     query.bindValue(":id", id);
     if (query.exec() && query.next())

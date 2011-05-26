@@ -1,5 +1,6 @@
 #include "sessionsmanager.h"
 #include "../session.h"
+#include "../SqlHelper.h"
 
 #include <QSqlQuery>
 #include <QVariant>
@@ -19,13 +20,13 @@ SessionsManager::SessionsManager(QObject *parent) :
 
 QList<Session> SessionsManager::selectSessions() const
 {
-    QSqlQuery query;
+    QSqlQuery query = SqlHelper::query();
     query.prepare("SELECT id_session, name, objective FROM session");
 
     QList<Session> sessions;
     if (query.exec())
     {
-        QSqlQuery exercisesQuery;
+        QSqlQuery exercisesQuery = SqlHelper::query();
         /* Select exercises */
         exercisesQuery.prepare("SELECT id_exercise, series, repetitions, rest "
                                "FROM session_exercise WHERE id_session=:id_session");
@@ -61,7 +62,7 @@ QList<Session> SessionsManager::selectSessions() const
 
 bool SessionsManager::createSession(Session &session) const
 {
-    QSqlQuery query;
+    QSqlQuery query = SqlHelper::query();
     query.prepare("INSERT INTO session(name, objective) VALUES(:name, :objective)");
     query.bindValue(":name", session.name);
     query.bindValue(":objective", session.objective);
@@ -94,7 +95,7 @@ bool SessionsManager::createSession(Session &session) const
 
 bool SessionsManager::updateSession(const Session &session) const
 {
-    QSqlQuery query;
+    QSqlQuery query = SqlHelper::query();
     query.prepare("UPDATE session SET name=:name, objective=:objective "
                   "WHERE id_session=:id_session");
     query.bindValue(":name", session.name);
@@ -134,7 +135,7 @@ bool SessionsManager::updateSession(const Session &session) const
 
 bool SessionsManager::removeSessionById(qint64 id) const
 {
-    QSqlQuery query;
+    QSqlQuery query = SqlHelper::query();
     query.prepare("DELETE FROM session WHERE id_session=:id_session");
     query.bindValue(":id_session", id);
     return query.exec();

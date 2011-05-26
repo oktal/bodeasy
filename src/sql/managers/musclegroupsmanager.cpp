@@ -1,5 +1,6 @@
 #include "musclegroupsmanager.h"
 #include "../musclegroup.h"
+#include "../SqlHelper.h"
 
 #include <QSqlQuery>
 #include <QSqlError>
@@ -7,7 +8,7 @@
 #include <QDebug>
 
 MuscleGroupsManager::MuscleGroupsManager(QObject *parent) :
-    QObject(parent)
+    QObject(parent), query(SqlHelper::query())
 {
 }
 
