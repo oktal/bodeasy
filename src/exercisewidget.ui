@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>387</width>
-    <height>224</height>
+    <width>385</width>
+    <height>225</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -35,12 +41,12 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <widget class="QLabel" name="label_7">
+     <widget class="QLabel" name="lblExerciseName">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>171</width>
+        <width>371</width>
         <height>16</height>
        </rect>
       </property>
@@ -81,8 +87,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>132</width>
-             <height>144</height>
+             <width>131</width>
+             <height>145</height>
             </rect>
            </property>
           </widget>

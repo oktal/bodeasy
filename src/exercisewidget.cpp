@@ -6,9 +6,10 @@
 #include <QGridLayout>
 #include <QLineEdit>
 
-ExerciseWidget::ExerciseWidget(QWidget *parent) :
+ExerciseWidget::ExerciseWidget(qint64 id, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::ExerciseWidget)
+    ui(new Ui::ExerciseWidget),
+    mSessionExerciseId(id)
 {
     ui->setupUi(this);
 }
@@ -16,4 +17,10 @@ ExerciseWidget::ExerciseWidget(QWidget *parent) :
 ExerciseWidget::~ExerciseWidget()
 {
     delete ui;
+}
+
+void ExerciseWidget::setExerciseName(const QString &exerciseName)
+{
+    mExerciseName = exerciseName;
+    ui->lblExerciseName->setText(exerciseName);
 }

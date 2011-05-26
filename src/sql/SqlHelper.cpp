@@ -125,7 +125,8 @@ bool SqlHelper::executeSqlScript( const QString& filePath )
 	int count = 0;
 	
 	while ( tokens.offset() != content.length() ) {
-		const toSQLParse::statement statement = toSQLParse::parseStatement( tokens );
+                const toSQLParse::statement statement = toSQLParse::parseStatement( tokens );
+                Q_UNUSED( statement );
 		const QString sql = content.mid( lastOffset, tokens.offset() -lastOffset ).trimmed();
 		
 		if ( !sql.isEmpty() && !q.exec( sql ) ) {
