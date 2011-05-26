@@ -32,10 +32,20 @@ bool SqlHelper::openDatabase()
 
 bool SqlHelper::initializeDatabase()
 {
+	const bool inTransaction = transaction();
+	
 	foreach ( const QString& filePath, SqlHelper::initializeScripts() ) {
 		if ( !SqlHelper::executeSqlScript( filePath ) ) {
+			if ( inTransaction ) {
+				rollback();
+			}
+			
 			return false;
 		}
+	}
+	
+	if ( inTransaction ) {
+		commit();
 	}
 	
 	return true;
@@ -52,6 +62,39 @@ void SqlHelper::closeDatabase()
 	}
 	
 	QSqlDatabase::removeDatabase( SqlHelper::connectionName() );
+}
+
+bool SqlHelper::transaction()
+{
+	const bool ok = database().transaction();
+	
+	if ( !ok ) {
+		qWarning() << Q_FUNC_INFO << qPrintable( lastError() );
+	}
+	
+	return ok;
+}
+
+bool SqlHelper::commit()
+{
+	const bool ok = database().commit();
+	
+	if ( !ok ) {
+		qWarning() << Q_FUNC_INFO << qPrintable( lastError() );
+	}
+	
+	return ok;
+}
+
+bool SqlHelper::rollback()
+{
+	const bool ok = database().rollback();
+	
+	if ( !ok ) {
+		qWarning() << Q_FUNC_INFO << qPrintable( lastError() );
+	}
+	
+	return ok;
 }
 
 QStringList SqlHelper::initializeScripts()
@@ -94,6 +137,11 @@ QSqlDatabase SqlHelper::database()
 QSqlQuery SqlHelper::query()
 {
 	return QSqlQuery( SqlHelper::database() );
+}
+
+QString SqlHelper::lastError()
+{
+	return database().lastError().text();
 }
 
 bool SqlHelper::executeSqlScript( const QString& filePath )

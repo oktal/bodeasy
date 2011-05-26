@@ -11,11 +11,16 @@ namespace SqlHelper
 	bool initializeDatabase();
 	void closeDatabase();
 	
+	bool transaction();
+	bool commit();
+	bool rollback();
+	
 	QStringList initializeScripts();
 	QString connectionName();
 	QString databaseLocalFilePath();
 	QSqlDatabase database();
 	QSqlQuery query();
+	QString lastError();
 	bool executeSqlScript( const QString& filePath );
 	
 	void debugQuery( const QSqlQuery& query, const char* function );
