@@ -8,10 +8,14 @@ SessionFrame::SessionFrame(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    /*
     ui->gridLayout->addWidget(new ExerciseWidget, 0, 0);
     ui->gridLayout->addWidget(new ExerciseWidget, 0, 1);
     ui->gridLayout->addWidget(new ExerciseWidget, 1, 0);
     ui->gridLayout->addWidget(new ExerciseWidget, 1, 1);
+    */
+
+    ui->verticalLayout->insertStretch(0);
 }
 
 SessionFrame::~SessionFrame()

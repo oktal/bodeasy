@@ -1,5 +1,6 @@
 #include "exercisesmanager.h"
 #include "../exercise.h"
+#include "../SqlHelper.h"
 
 #include <QtCore>
 #include <QtSql>
@@ -11,7 +12,7 @@ ExercisesManager::ExercisesManager(QObject *parent) :
 
 bool ExercisesManager::createExercise(Exercise &exercise) const
 {
-    QSqlQuery query;
+    QSqlQuery query = SqlHelper::query();
     query.prepare("INSERT INTO exercise(name,"
                     "type,"
                     "difficulty,"
@@ -50,7 +51,7 @@ bool ExercisesManager::createExercise(Exercise &exercise) const
 
 QList<Exercise> ExercisesManager::selectExercises() const
 {
-    QSqlQuery query;
+    QSqlQuery query = SqlHelper::query();
     query.prepare("SELECT e.id_exercise, mg.id_muscle_group, e.name, e.type, e.weight, "
                   "e.difficulty, e.description FROM exercise e "
                   "INNER JOIN exercise_muscle_group mg ON e.id_exercise = mg.id_exercise");
@@ -132,7 +133,7 @@ QList<Exercise> ExercisesManager::selectExercises() const
 
 bool ExercisesManager::updateExercise(const Exercise &exercise) const
 {    
-    QSqlQuery query;
+    QSqlQuery query = SqlHelper::query();
     query.prepare("UPDATE exercise "
                   "SET name=:name,"
                     "type=:type,"
@@ -149,7 +150,7 @@ bool ExercisesManager::updateExercise(const Exercise &exercise) const
     query.bindValue(":id", exercise.id);
     if (query.exec())
     {
-        QSqlQuery groupsQuery;
+        QSqlQuery groupsQuery = SqlHelper::query();
 
         groupsQuery.prepare("DELETE FROM exercise_muscle_group "
                             "WHERE id_exercise=:id_exercise");
@@ -175,7 +176,7 @@ bool ExercisesManager::updateExercise(const Exercise &exercise) const
 
 bool ExercisesManager::removeExerciseById(int id) const
 {
-    QSqlQuery query;
+    QSqlQuery query = SqlHelper::query();
     query.prepare("DELETE FROM exercise WHERE id_exercise=:id");
     query.bindValue(":id", id);
     return query.exec();

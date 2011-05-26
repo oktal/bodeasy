@@ -1,6 +1,7 @@
 #include "mensurationsdialog.h"
 #include "ui_mensurationsdialog.h"
 #include "ruleritem.h"
+#include "sql/SqlHelper.h"
 
 #include <QDialog>
 #include <QGraphicsScene>
@@ -331,7 +332,7 @@ void MensurationsDialog::createLabels()
 */
 void MensurationsDialog::setupMapper()
 {
-    model = new QSqlTableModel(this);
+    model = new QSqlTableModel(this, SqlHelper::database());
     model->setTable("mensuration");
     model->setSort(model->fieldIndex("date"), Qt::AscendingOrder);
     model->select();

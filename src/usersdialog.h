@@ -16,6 +16,7 @@ class UsersDialog : public QDialog
 public:
     explicit UsersDialog(QWidget *parent = 0);
     virtual ~UsersDialog();
+    qint64 userId() const;
 
 private:
     Ui::UsersDialog *ui;

@@ -114,7 +114,7 @@ QVariant SessionsModel::headerData(int section, Qt::Orientation orientation, int
 
 QVariant SessionsModel::data(const QModelIndex &index, int role) const
 {
-    if (index.row() < 0 || index.row()> mSessions.count())
+    if (index.row() < 0 || index.row() > mSessions.count())
     {
         return QVariant();
     }
@@ -130,6 +130,9 @@ QVariant SessionsModel::data(const QModelIndex &index, int role) const
         {
             return mSessions[index.row()].exercises.count();
         }
+        break;
+    case Qt::UserRole:
+        return mSessions[index.row()].id;
         break;
     }
 

@@ -22,7 +22,7 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QListView" name="listView"/>
+        <widget class="QListView" name="lstContent"/>
        </item>
       </layout>
      </widget>
@@ -37,28 +37,34 @@
       </property>
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
-        <widget class="QRadioButton" name="radioButton">
+        <widget class="QRadioButton" name="radPlanifiedSession">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Séance planifiée :</string>
          </property>
         </widget>
        </item>
        <item row="0" column="1" colspan="2">
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="lblPlanifiedSession">
          <property name="text">
           <string>planifiedSeance</string>
          </property>
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QRadioButton" name="radioButton_2">
+        <widget class="QRadioButton" name="radOtherSession">
          <property name="text">
           <string>Autre séance :</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
        <item row="1" column="1" colspan="2">
-        <widget class="QComboBox" name="comboBox"/>
+        <widget class="QComboBox" name="cmbSessions"/>
        </item>
        <item row="2" column="0" colspan="2">
         <spacer name="horizontalSpacer">
@@ -77,7 +83,7 @@
         </spacer>
        </item>
        <item row="2" column="2">
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="btnStart">
          <property name="text">
           <string>Démarrer la séance</string>
          </property>
@@ -243,7 +249,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="exercisesAction"/>
-   <addaction name="sessionAction"/>
+   <addaction name="sessionsAction"/>
    <addaction name="mensurationAction"/>
    <addaction name="separator"/>
    <addaction name="calendarAction"/>
@@ -265,6 +271,9 @@
    </property>
   </action>
   <action name="calendarAction">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="ressources.qrc">
      <normaloff>:/images/calendar-icon.png</normaloff>:/images/calendar-icon.png</iconset>
@@ -301,6 +310,9 @@
    </property>
   </action>
   <action name="graphAction">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="ressources.qrc">
      <normaloff>:/images/graph-icon2.png</normaloff>:/images/graph-icon2.png</iconset>
@@ -312,13 +324,13 @@
     <string>Graphiques et histogrammes</string>
    </property>
   </action>
-  <action name="sessionAction">
+  <action name="sessionsAction">
    <property name="icon">
     <iconset resource="ressources.qrc">
      <normaloff>:/images/table-icon.png</normaloff>:/images/table-icon.png</iconset>
    </property>
    <property name="text">
-    <string>session</string>
+    <string>sessions</string>
    </property>
    <property name="toolTip">
     <string>Consulter les séances</string>
