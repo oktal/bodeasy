@@ -12,11 +12,14 @@ class ExerciseWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ExerciseWidget(QWidget *parent = 0);
+    explicit ExerciseWidget(qint64 id, QWidget *parent = 0);
     ~ExerciseWidget();
+    void setExerciseName(const QString &exerciseName);
 
 private:
     Ui::ExerciseWidget *ui;
+    qint64 mSessionExerciseId;
+    QString mExerciseName;
 
 };
 
