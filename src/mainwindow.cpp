@@ -61,7 +61,7 @@ void MainWindow::setUserId(qint64 id)
 {
     mUserId = id;
     UsersModel users;
-    setWindowTitle(QString("%1 (%2)").arg(qApp->applicationName()).arg( users.user(id).name));
+    setWindowTitle(QString("%1 (%2)").arg(qApp->applicationName()).arg(users.user(id).name));
 }
 
 void MainWindow::on_exercisesAction_triggered()
