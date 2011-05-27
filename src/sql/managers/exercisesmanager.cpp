@@ -44,7 +44,7 @@ bool ExercisesManager::createExercise(Exercise &exercise) const
         return true;
     }
     else {
-        qWarning( qPrintable( query.lastError().text() ) );
+        qWarning( "%s", qPrintable( query.lastError().text() ) );
     }
     return false;
 }
