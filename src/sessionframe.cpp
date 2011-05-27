@@ -2,9 +2,13 @@
 #include "ui_sessionframe.h"
 #include "exercisewidget.h"
 #include "sql/SqlHelper.h"
+#include "sql/exercise.h"
 
 #include <QDebug>
 #include <QWidget>
+
+static int const RowMaximumWidgets = 2;
+static int const ColumnMaximumWidgets = 2;
 
 SessionFrame::SessionFrame(QWidget *parent) :
     QFrame(parent),
@@ -29,9 +33,11 @@ void SessionFrame::setSessionId(qint64 id)
     mSessionId = id;
     mCurrentPage = 0;
 
+    /* Remove all existing pages */
     for (int i = 0; i < ui->stackedWidget->count(); ++i)
     {
-        ui->stackedWidget->removeWidget(ui->stackedWidget->widget(i));
+        QWidget *w = ui->stackedWidget->widget(i);
+        ui->stackedWidget->removeWidget(w);
     }
 
     qDeleteAll(exercises);
@@ -43,10 +49,12 @@ void SessionFrame::setSessionId(qint64 id)
 }
 
 void SessionFrame::start()
-{
+{    
     setEnabled(true);
+
     ui->btnFirst->setEnabled(false);
     ui->btnPrevious->setEnabled(false);
+    /* Enable Last and Next buttons if there are more than one page */
     if (ui->stackedWidget->count() == 1)
     {
         ui->btnLast->setEnabled(false);
@@ -105,10 +113,15 @@ void SessionFrame::on_btnLast_clicked()
     ui->btnFirst->setEnabled(true);
 }
 
+/*!
+  * \brief Select all exercises corresponding to the session id
+           and create the ExerciseWidget widgets
+*/
 void SessionFrame::selectExercises()
 {
     QSqlQuery query = SqlHelper::query();
-    query.prepare("SELECT se.id_exercise, e.name FROM "
+    query.prepare("SELECT se.id_exercise, e.name, e.type, e.difficulty, e.weight, "
+                  "se.rest, se.repetitions, se.series FROM "
                   "session_exercise se INNER JOIN exercise e "
                   "ON se.id_exercise = e.id_exercise "
                   "WHERE id_session=:sessionId");
@@ -119,11 +132,20 @@ void SessionFrame::selectExercises()
         {
             ExerciseWidget *ew = new ExerciseWidget(query.value(0).toLongLong());
             ew->setExerciseName(query.value(1).toString());
+            ew->setExerciseType(Exercise::Type(query.value(2).toInt()));
+            ew->setExerciseDifficulty(Exercise::Difficulty(query.value(3).toInt()));
+            ew->setExerciseUseWeight(query.value(4).toBool());
+            ew->setExerciseRest(query.value(5).toInt());
+            ew->setExerciseRepetitions(query.value(6).toInt());
+            ew->setExerciseSeries(query.value(7).toInt());
             exercises.append(ew);
         }
     }
 }
 
+/*!
+  * \brief Paginate the exercises
+*/
 void SessionFrame::paginate()
 {
     int row = 0, column = 0;
@@ -133,10 +155,10 @@ void SessionFrame::paginate()
     foreach (ExerciseWidget *ew, exercises)
     {
         layout->addWidget(ew, row, column++);
-        if (column == 2)
+        if (column == ColumnMaximumWidgets)
         {
             ++row;
-            if (row == 2)
+            if (row == RowMaximumWidgets)
             {
                 row = 0;
                 QWidget * widget = new QWidget;
@@ -150,12 +172,13 @@ void SessionFrame::paginate()
         }
     }
 
-    if (row != 2 && column != 2)
+    /* Put spacers if the page is not full */
+    if (row != RowMaximumWidgets && column != ColumnMaximumWidgets)
     {
 
-        for (int r = row; r < 2; ++r)
+        for (int r = row; r < RowMaximumWidgets; ++r)
         {
-            for (int c = column; c < 2; ++c)
+            for (int c = column; c < ColumnMaximumWidgets; ++c)
             {
                 layout->addItem(new QSpacerItem(20, 100, QSizePolicy::Expanding, QSizePolicy::Expanding),
                                 r, c);
