@@ -50,6 +50,37 @@ pChronometer::~pChronometer()
 {
 }
 
+QSize pChronometer::sizeHint() const
+{
+	const QMargins margins = layout()->contentsMargins();
+	const QFontMetrics fm( mFont );
+	const QString text = this->text();
+	const QRect br = fm.boundingRect( text );
+	QSize size = QFrame::sizeHint();
+	int& w = size.rwidth();
+	int& h = size.rheight();
+	
+	w = margins.left() +fm.width( text ) +10 +layout()->spacing() +layout()->itemAt( 1 )->sizeHint().width() +margins.right();
+	h = qMax( h, margins.top() +fm.height() +margins.top() );
+	
+	return size;
+}
+
+QString pChronometer::text() const
+{
+	const QTime time = QTime( 0, 0, 0 ).addMSecs( mElapsed );
+	const QString format = time.second() %2 == 0 ? mFormat : QString( mFormat ).replace( ':', ' ' );
+	return time.toString( format );
+}
+
+QRect pChronometer::textRect() const
+{
+	const QMargins margins = layout()->contentsMargins();
+	const QRect r = rect().adjusted( margins.left(), margins.top(), -( layout()->spacing() +layout()->itemAt( 1 )->geometry().width() +( margins.right() *2 ) ), -margins.bottom() );
+	
+	return r;
+}
+
 void pChronometer::restart()
 {
 	stop();
@@ -97,15 +128,15 @@ void pChronometer::paintEvent( QPaintEvent* event )
 {
 	QFrame::paintEvent( event );
 	
-	const QString text = QTime( 0, 0, 0 ).addMSecs( mElapsed ).toString( mFormat );
-	const int flags = Qt::AlignCenter;
 	QPainter painter( this );
 	
-	//qWarning() << "***" << mTime << text;
+	/*painter.setPen( Qt::green );
+	painter.setBrush( Qt::NoBrush );
+	painter.drawRect( textRect().adjusted( 0, 0, -1, -1 ) );*/
 	
 	painter.setFont( mFont );
 	painter.setPen( Qt::red );
 	painter.setBrush( Qt::NoBrush );
-	painter.drawText( contentsRect(), flags, text );
+	painter.drawText( textRect(), Qt::AlignCenter, text() );
 }
 
