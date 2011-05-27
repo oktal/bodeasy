@@ -16,13 +16,17 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit MainWindow(qint64 userId, QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    
+    qint64 userId() const;
+    void setUserId(qint64 id);
 
 private slots:
     void on_exercisesAction_triggered();
     void on_sessionsAction_triggered();
     void on_mensurationAction_triggered();
+    void on_userAction_triggered();
     void on_cmbSessions_currentIndexChanged(int index);
     void on_btnStart_clicked();
 
@@ -33,6 +37,8 @@ private:
     SessionContentModel *contentModel;
     SessionFrame *sessionFrame;
 
+protected slots:
+    virtual void closeEvent(QCloseEvent* event);
 };
 
 #endif // MAINWINDOW_H

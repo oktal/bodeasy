@@ -70,6 +70,19 @@ User UsersModel::user(const QModelIndex &index) const
     return users.value( index.row() );
 }
 
+User UsersModel::user(qint64 id) const
+{
+    foreach (const User &user, users)
+    {
+        if (user.id == id)
+        {
+            return user;
+        }
+    }
+    
+    return User();
+}
+
 QModelIndex UsersModel::userIndex(const User &user, int column) const
 {
     const int row = users.indexOf(user);

@@ -16,6 +16,7 @@ public:
     bool addUser(User &user);
     void removeUser(const User &user);
     User user(const QModelIndex &index) const;
+    User user(qint64 id) const;
     QModelIndex userIndex(const User &user, int column = 0) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     int rowCount(const QModelIndex &parent = QModelIndex()) const;

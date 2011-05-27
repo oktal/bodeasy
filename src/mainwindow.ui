@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>952</width>
+    <width>1148</width>
     <height>696</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>MainWindow</string>
+  <property name="unifiedTitleAndToolBarOnMac">
+   <bool>true</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="mainLayout" rowstretch="75,15,5" columnstretch="20,40,40">
@@ -227,8 +227,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>952</width>
-     <height>21</height>
+     <width>1148</width>
+     <height>22</height>
     </rect>
    </property>
   </widget>
@@ -352,5 +352,22 @@
  <resources>
   <include location="ressources.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>exitAction</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>573</x>
+     <y>347</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

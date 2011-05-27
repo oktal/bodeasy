@@ -21,8 +21,9 @@ int main( int argc, char* argv[] )
         return EXIT_LOGIN_ERROR;
     }
 
-    MainWindow mw( dialog.userId() );
+    MainWindow mw;
     mw.setWindowTitle( app.applicationName() );
+    mw.setUserId( dialog.userId() );
     mw.showMaximized();
 
     const int result = app.exec();
