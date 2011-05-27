@@ -1,0 +1,44 @@
+v.2011.05.02
+    * [FIX]
+	     added `session_exercise.id_session_exercise` column
+
+v.2011.04.26
+    * [FIX]
+	     added `session.objective` column
+
+v.2011.04.25
+    * [FIX]
+	     removed UNIQUE constraint on `exercise_muscle_group.id_exercise` and `exercise_muscle_group.id_muscle_group`
+		 columns
+
+v.2011.04.23
+    * [FIX]
+         renamed `exercise.id_exercice` column `exercise.id_exercise`
+
+v.2011.04.20
+    * [CHANGES] [Mathieu Stefani] <mathieu.stefani at supinfo dot com>
+               [Romain Beylerian] <beylerian.romain at gmail dot com>
+			   
+         changed `exercise.load` column name to `weight`
+		 changed `exercise.weight`, `exercise.difficulty` columns types to INT
+
+v.2011.03.24
+
+    * [BUGFIX] [Mathieu Stefani] <mathieu.stefani at supinfo dot com>
+               [Romain Beylerian] <beylerian.romain at gmail dot com>
+
+        added a missing column in table exercise_result : serie_number
+		and a not null statement for the load column of exercise 
+		table. load could be 1 or 0 meaning true or false.
+		
+v.2011.03.22
+
+    * [BUGFIX] [Mathieu Stefani] <mathieu.stefani at supinfo dot com>
+               [Romain Beylerian] <beylerian.romain at gmail dot com>
+
+        added three missing columns in table session_exercise : series,
+        repetitions, load and duration.
+
+v.1
+
+    * initial databasebase
