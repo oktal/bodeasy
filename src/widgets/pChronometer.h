@@ -13,6 +13,11 @@ class pChronometer : public QFrame
 public:
 	pChronometer( QWidget* parent = 0 );
 	virtual ~pChronometer();
+	
+	virtual QSize sizeHint() const;
+	
+	QString text() const;
+	QRect textRect() const;
 
 public slots:
 	void restart();
