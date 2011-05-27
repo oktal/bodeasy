@@ -77,7 +77,7 @@
            <enum>QFrame::NoFrame</enum>
           </property>
           <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
+           <enum>QFrame::Plain</enum>
           </property>
           <property name="widgetResizable">
            <bool>true</bool>
@@ -126,7 +126,7 @@ border-style: none;</string>
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLabel" name="label_6">
+        <widget class="QLabel" name="lblType">
          <property name="font">
           <font>
            <weight>50</weight>
@@ -178,7 +178,7 @@ border-style: none;</string>
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QLabel" name="label_8">
+        <widget class="QLabel" name="lblDifficulty">
          <property name="font">
           <font>
            <weight>50</weight>
@@ -230,7 +230,7 @@ border-style: none;</string>
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QLabel" name="label_9">
+        <widget class="QLabel" name="lblRepetitions">
          <property name="font">
           <font>
            <weight>50</weight>
@@ -282,7 +282,7 @@ border-style: none;</string>
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QLabel" name="label_10">
+        <widget class="QLabel" name="lblRest">
          <property name="font">
           <font>
            <weight>50</weight>
@@ -315,7 +315,7 @@ border-style: none;</string>
         </widget>
        </item>
        <item row="5" column="0" colspan="2">
-        <widget class="QPlainTextEdit" name="plainTextEdit">
+        <widget class="QPlainTextEdit" name="txtDescription">
          <property name="maximumSize">
           <size>
            <width>16777215</width>
