@@ -2,10 +2,12 @@
 #include "ui_mainwindow.h"
 #include "sessionframe.h"
 
+#include "usersdialog.h"
 #include "exercisesdialog.h"
 #include "sessionsdialog.h"
 #include "mensurationsdialog.h"
 #include "sql/SqlHelper.h"
+#include "sql/models/usersmodel.h"
 #include "sql/models/sessionsmodel.h"
 #include "sql/models/sessioncontentmodel.h"
 
@@ -13,11 +15,13 @@
 
 #include <QDebug>
 #include <QSqlError>
+#include <QCloseEvent>
+#include <QMessageBox>
 
-MainWindow::MainWindow(qint64 userId, QWidget *parent) :
+MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    mUserId(userId),
+    mUserId(-1),
     sessionsModel(new SessionsModel(this)),
     contentModel(new SessionContentModel(this)),
     sessionFrame(new SessionFrame)
@@ -33,6 +37,31 @@ MainWindow::MainWindow(qint64 userId, QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::closeEvent(QCloseEvent* event)
+{
+    const QString text = trUtf8( "Êtes vous sûr de vouloir quitter '%1'?" ).arg(qApp->applicationName());
+    
+    if (QMessageBox::question(this, QString::null, text, QMessageBox::Yes, QMessageBox::No) == QMessageBox::No)
+    {
+        event->ignore();
+        return;
+    }
+    
+    QMainWindow::closeEvent(event);
+}
+
+qint64 MainWindow::userId() const
+{
+    return mUserId;
+}
+
+void MainWindow::setUserId(qint64 id)
+{
+    mUserId = id;
+    UsersModel users;
+    setWindowTitle(QString("%1 (%2)").arg(qApp->applicationName()).arg( users.user(id).name));
 }
 
 void MainWindow::on_exercisesAction_triggered()
@@ -51,6 +80,15 @@ void MainWindow::on_mensurationAction_triggered()
 {
     MensurationsDialog dialog(mUserId);
     dialog.exec();
+}
+
+void MainWindow::on_userAction_triggered()
+{
+    UsersDialog dialog(this);
+    if (dialog.exec() == QDialog::Accepted)
+    {
+        setUserId(dialog.userId());
+    }
 }
 
 void MainWindow::on_cmbSessions_currentIndexChanged(int index)

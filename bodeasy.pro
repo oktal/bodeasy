@@ -1,6 +1,7 @@
 XUPProjectSettings {
 	OTHERS_PLATFORM_TARGET_RELEASE	= bodeasy
 	QT_VERSION	= Qt System (4.7.2)
+	MAC_PLATFORM_TARGET_RELEASE	= bodeasy.app
 }
 
 #-------------------------------------------------
