@@ -53,7 +53,8 @@ HEADERS	+= src/usersdialog.h \
 	src/mensurationsdialog.h \
 	src/ruleritem.h \
 	src/mainwindow.h \
-	src/sessionframe.h
+	src/sessionframe.h \
+	src/widgets/pChronometer.h
 
 SOURCES	+= src/main.cpp \
 	src/usersdialog.cpp \
@@ -63,6 +64,7 @@ SOURCES	+= src/main.cpp \
 	src/mensurationsdialog.cpp \
 	src/ruleritem.cpp \
 	src/mainwindow.cpp \
-	src/sessionframe.cpp
+	src/sessionframe.cpp \
+	src/widgets/pChronometer.cpp
 
 RESOURCES	+= src/ressources.qrc
