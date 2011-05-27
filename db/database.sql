@@ -6,7 +6,6 @@
 -- Created:       2010-12-11 20:09
 PRAGMA foreign_keys = OFF;
 
--- Schema: mydb
 BEGIN;
 CREATE TABLE "user"(
   "id_user" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL CHECK("id_user">=0),

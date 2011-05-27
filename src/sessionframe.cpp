@@ -34,13 +34,13 @@ void SessionFrame::setSessionId(qint64 id)
     mCurrentPage = 0;
 
     /* Remove all existing pages */
-    for (int i = 0; i < ui->stackedWidget->count(); ++i)
+
+    QWidget *w;
+    while ((w = ui->stackedWidget->currentWidget()) != 0)
     {
-        QWidget *w = ui->stackedWidget->widget(i);
-        ui->stackedWidget->removeWidget(w);
+        delete w;
     }
 
-    qDeleteAll(exercises);
     exercises.clear();
 
     selectExercises();
@@ -148,8 +148,12 @@ void SessionFrame::selectExercises()
 */
 void SessionFrame::paginate()
 {
+    if (exercises.count() == 0)
+    {
+        return;
+    }
+
     int row = 0, column = 0;
-    int page = 0;
     QGridLayout *layout = new QGridLayout;
     layout->setContentsMargins(QMargins(0, 0, 0, 0));
     foreach (ExerciseWidget *ew, exercises)
@@ -164,7 +168,6 @@ void SessionFrame::paginate()
                 QWidget * widget = new QWidget;
                 widget->setLayout(layout);
                 ui->stackedWidget->addWidget(widget);
-                ++page;
                 layout = new QGridLayout;
                 layout->setContentsMargins(QMargins(0, 0, 0, 0));
             }

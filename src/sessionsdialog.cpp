@@ -7,10 +7,10 @@
 #include <QDebug>
 #include <QMessageBox>
 
-SessionsDialog::SessionsDialog(QWidget *parent) :
+SessionsDialog::SessionsDialog(SessionsModel *model, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SessionsDialog),
-    sessionsModel(new SessionsModel), sessionExercisesModel(new SessionExercisesModel)
+    sessionsModel(model), sessionExercisesModel(new SessionExercisesModel)
 {
     ui->setupUi(this);
     ui->lstSessions->setModel(sessionsModel);
