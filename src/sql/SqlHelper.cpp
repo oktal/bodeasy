@@ -172,52 +172,52 @@ QString SqlHelper::lastError()
 
 bool SqlHelper::executeSqlScript( const QString& filePath )
 {
-	qWarning() << Q_FUNC_INFO << "Executing" << qPrintable( filePath );
-	QSqlQuery q = SqlHelper::query();
-	QFile file( filePath );
-	
-	if ( !file.open( QIODevice::ReadOnly ) ) {
-		qWarning() << Q_FUNC_INFO << "Can't open file" << qPrintable( filePath );
-		return false;
-	}
-	
-	toSQLParse::settings settings;
-	settings.ExpandSpaces = false;
-	settings.CommaBefore = false;
-	settings.BlockOpenLine = false;
-	settings.OperatorSpace = false;
-	settings.KeywordUpper = false;
-	settings.RightSeparator = false;
-	settings.EndBlockNewline = false;
-	settings.IndentLevel = true;
-	settings.CommentColumn = false;
-	toSQLParse::setSetting( settings );
-	
-	const QString content = QString::fromUtf8( file.readAll() );
-	toSQLParse::stringTokenizer tokens( content );
-	int lastOffset = 0;
-	int count = 0;
+        qWarning() << Q_FUNC_INFO << "Executing" << qPrintable( filePath );
+        QSqlQuery q = SqlHelper::query();
+        QFile file( filePath );
+
+        if ( !file.open( QIODevice::ReadOnly ) ) {
+                qWarning() << Q_FUNC_INFO << "Can't open file" << qPrintable( filePath );
+                return false;
+        }
+
+        toSQLParse::settings settings;
+        settings.ExpandSpaces = false;
+        settings.CommaBefore = false;
+        settings.BlockOpenLine = false;
+        settings.OperatorSpace = false;
+        settings.KeywordUpper = false;
+        settings.RightSeparator = false;
+        settings.EndBlockNewline = false;
+        settings.IndentLevel = true;
+        settings.CommentColumn = false;
+        toSQLParse::setSetting( settings );
+
+        const QString content = QString::fromUtf8( file.readAll() );
+        toSQLParse::stringTokenizer tokens( content );
+        int lastOffset = 0;
+        int count = 0;
     int skip = 0;
-	
-	while ( tokens.offset() != content.length() ) {
-		toSQLParse::statement statement = toSQLParse::parseStatement( tokens );
+
+        while ( tokens.offset() != content.length() ) {
+                toSQLParse::statement statement = toSQLParse::parseStatement( tokens );
         const QString sql = content.mid( lastOffset, tokens.offset() -lastOffset ).trimmed();
-        
+
         //printStatement( statement );
-        
+
         if ( statement.subTokens().size() == 2 ) {
             toSQLParse::statement firstToken = *statement.subTokens().begin();
-            
+
             if ( firstToken.Type == toSQLParse::statement::Keyword ) {
                 if ( firstToken.String == "BEGIN" || firstToken.String == "COMMIT" ) {
                     toSQLParse::statement secondToken = *(++statement.subTokens().begin());
-                    
+
                     if ( secondToken.Type == toSQLParse::statement::Token ) {
                         if ( secondToken.String == ";" ) {
                             qWarning() << "*** Skipping" << firstToken.String +";";
                             lastOffset = tokens.offset();
                             skip++;
-                            
+
                             if ( tokens.offset() != content.length() ) {
                                 continue;
                             }
@@ -226,19 +226,20 @@ bool SqlHelper::executeSqlScript( const QString& filePath )
                 }
             }
         }
-		
-		if ( !sql.isEmpty() && !q.exec( sql ) ) {
-			SqlHelper::debugQuery( q, Q_FUNC_INFO );
-			return false;
-		}
-		
-		lastOffset = tokens.offset();
-		count++;
-	}
-	
-	qWarning() << Q_FUNC_INFO << "Executed" << count -1 << " statements and skipped" << skip;
-	return true;
+
+                if ( !sql.isEmpty() && !q.exec( sql ) ) {
+                        SqlHelper::debugQuery( q, Q_FUNC_INFO );
+                        return false;
+                }
+
+                lastOffset = tokens.offset();
+                count++;
+        }
+
+        qWarning() << Q_FUNC_INFO << "Executed" << count -1 << " statements and skipped" << skip;
+        return true;
 }
+
 
 void SqlHelper::debugQuery( const QSqlQuery& query, const char* function )
 {
