@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->cmbSessions->setModel(sessionsModel);
     ui->lstContent->setModel(contentModel);
+    ui->cmbSessions->setCurrentIndex(-1);
 }
 
 MainWindow::~MainWindow()
@@ -72,8 +73,9 @@ void MainWindow::on_exercisesAction_triggered()
 
 void MainWindow::on_sessionsAction_triggered()
 {
-    SessionsDialog dialog;
+    SessionsDialog dialog(sessionsModel);
     dialog.exec();
+    ui->cmbSessions->update();
 }
 
 void MainWindow::on_mensurationAction_triggered()
@@ -91,7 +93,7 @@ void MainWindow::on_userAction_triggered()
     }
 }
 
-void MainWindow::on_cmbSessions_currentIndexChanged(int index)
+void MainWindow::on_cmbSessions_activated(int index)
 {
     const qint64 id = ui->cmbSessions->itemData(index).toLongLong();
     contentModel->setSessionId(id);
