@@ -8,15 +8,15 @@
 #include <QDebug>
 
 pChronometer::pChronometer( QWidget* parent )
-	: QFrame( parent )
+        : QFrame( parent ),
+          tTimer( new QTimer( this ) ),
+          mElapsed( 0 ),
+          mFormat( "mm:ss:zzz" ),
+          mPaused( false ),
+          mFont( "Monospace", 13, QFont::Bold ),
+          mColor( Qt::black )
 {
-	tTimer = new QTimer( this );
-	tTimer->setInterval( 50 );
-	mElapsed = 0;
-	mFormat = "mm:ss:zzz";
-	mPaused = false;
-	mFont = QFont( "Monospace", 13, QFont::Bold );
-	mColor = QColor( Qt::black );
+        tTimer->setInterval( 50 );
 	
 	QMenu* menu = new QMenu( this );
 	aStart = menu->addAction( tr( "Start" ) );
@@ -78,7 +78,7 @@ void pChronometer::setFormat( const QString& format )
 	updateGeometry();
 }
 
-QColor pChronometer::textColors() const
+QColor pChronometer::textColor() const
 {
 	return mColor;
 }
