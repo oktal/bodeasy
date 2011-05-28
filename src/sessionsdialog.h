@@ -21,6 +21,7 @@ public:
 
 signals:
     void sessionUpdated(qint64 id);
+    void sessionDeleted(qint64 id);
 
 private slots:
     void on_btnAdd_clicked();

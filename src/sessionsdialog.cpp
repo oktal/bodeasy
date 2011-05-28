@@ -61,9 +61,11 @@ void SessionsDialog::on_btnModify_clicked()
 
 void SessionsDialog::on_btnDelete_clicked()
 {
+    const qint64 id = sessionsModel->session(ui->lstSessions->currentIndex()).id;
     if (sessionsModel->removeRow(ui->lstSessions->currentIndex().row()))
     {
         ui->btnReset->click();
+        emit sessionDeleted(id);
     }
 }
 

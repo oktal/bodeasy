@@ -75,8 +75,8 @@ void MainWindow::on_sessionsAction_triggered()
 {
     SessionsDialog dialog(sessionsModel);
     connect(&dialog, SIGNAL(sessionUpdated(qint64)), this, SLOT(onSessionUpdated(qint64)));
+    connect(&dialog, SIGNAL(sessionDeleted(qint64)), this, SLOT(onSessionDeleted(qint64)));
     dialog.exec();
-    contentModel->update();
 }
 
 void MainWindow::on_mensurationAction_triggered()
@@ -114,5 +114,15 @@ void MainWindow::onSessionUpdated(qint64 id)
     {
         contentModel->update();
         sessionFrame->refresh();
+    }
+}
+
+void MainWindow::onSessionDeleted(qint64 id)
+{
+    if (id == contentModel->sessionId())
+    {
+        ui->cmbSessions->setCurrentIndex(-1);
+        contentModel->setSessionId(-1);
+        sessionFrame->setSessionId(-1);
     }
 }
