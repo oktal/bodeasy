@@ -16,6 +16,7 @@ ExercisesDialog::ExercisesDialog(QWidget *parent) :
     groupsModel( new MuscleGroupsModel( this ) )
 {
     ui->setupUi(this);
+    ui->verticalLayout_3->setAlignment(Qt::AlignCenter);
     
     ui->lstExercises->setModel( exercisesModel );
     

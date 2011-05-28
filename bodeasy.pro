@@ -20,6 +20,8 @@ CONFIG	+= qt release warn_on
 
 QT	= core gui sql
 
+INCLUDEPATH += . src
+
 
 CONFIG( debug, debug|release ) {
 	message( "Debug build." )
@@ -33,7 +35,7 @@ CONFIG( debug, debug|release ) {
 	MOC_DIR	= $${BUILD_PATH}/release/moc
 	RCC_DIR	= $${BUILD_PATH}/release/rcc
 	OBJECTS_DIR	= $${BUILD_PATH}/release/obj
-	UI_DIR	= $${BUILD_PATH}/release/ui
+    UI_DIR	= $${BUILD_PATH}/release/ui
 }
 
 include( src/sql/sql.pri )
