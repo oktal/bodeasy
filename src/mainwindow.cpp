@@ -75,6 +75,7 @@ void MainWindow::on_sessionsAction_triggered()
 {
     SessionsDialog dialog(sessionsModel);
     dialog.exec();
+    contentModel->update();
     ui->cmbSessions->update();
 }
 

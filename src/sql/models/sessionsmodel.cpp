@@ -26,7 +26,7 @@ QModelIndex SessionsModel::index(const Session &session) const
 
 Session SessionsModel::session(const QModelIndex &index) const
 {
-    if (index.row() < 0 || index.row() > mSessions.count())
+    if (index.row() < 0 || index.row() >= mSessions.count())
     {
         return Session();
     }

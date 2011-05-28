@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>519</width>
-    <height>535</height>
+    <width>517</width>
+    <height>533</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -307,6 +307,23 @@
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="btnReset">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Effacer</string>
+       </property>
+       <property name="icon">
+        <iconset resource="ressources.qrc">
+         <normaloff>:/images/close-icon.png</normaloff>:/images/close-icon.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="verticalSpacer_2">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -375,13 +392,13 @@
  <connections>
   <connection>
    <sender>chkObjective</sender>
-   <signal>clicked(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>txtObjective</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>86</x>
-     <y>324</y>
+     <x>94</x>
+     <y>316</y>
     </hint>
     <hint type="destinationlabel">
      <x>97</x>
@@ -391,7 +408,7 @@
   </connection>
   <connection>
    <sender>chkLoop</sender>
-   <signal>clicked(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>txtLoop</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
@@ -400,8 +417,8 @@
      <y>471</y>
     </hint>
     <hint type="destinationlabel">
-     <x>160</x>
-     <y>464</y>
+     <x>179</x>
+     <y>484</y>
     </hint>
    </hints>
   </connection>
