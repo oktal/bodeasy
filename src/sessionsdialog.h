@@ -23,6 +23,7 @@ private slots:
     void on_btnAdd_clicked();
     void on_btnModify_clicked();
     void on_btnDelete_clicked();
+    void on_btnReset_clicked();
     void on_btnAddExercise_clicked();
     void on_btnDeleteExercise_clicked();
 

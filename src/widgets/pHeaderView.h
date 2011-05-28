@@ -10,9 +10,7 @@ class pHeaderView : public QHeaderView
 public:
 	struct Properties
 	{
-		Properties() : proportional( false )
-		{
-		}
+		Properties() : proportional( false ) {}
 		
 		bool proportional;
 		QHash<int, int> factors;

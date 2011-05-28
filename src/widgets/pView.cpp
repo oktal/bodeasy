@@ -20,6 +20,8 @@ bool pView::hasProportionalSectionSizes( Qt::Orientation orientation ) const
 		case Qt::Vertical:
 			return vertical ? vertical->hasProportionalSectionSizes() : false;
 	}
+	
+	return false;
 }
 
 void pView::setProportionalSectionSizes( Qt::Orientation orientation, bool enabled )
@@ -50,6 +52,8 @@ int pView::sectionStretchFactor( Qt::Orientation orientation, int logicalIndex )
 		case Qt::Vertical:
 			return vertical ? vertical->sectionStretchFactor( logicalIndex ) : false;
 	}
+	
+	return 0;
 }
 
 void pView::setSectionStretchFactor( Qt::Orientation orientation, int logicalIndex, int factor )

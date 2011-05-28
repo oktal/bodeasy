@@ -13,8 +13,8 @@ SessionsDialog::SessionsDialog(SessionsModel *model, QWidget *parent) :
     sessionsModel(model), sessionExercisesModel(new SessionExercisesModel)
 {
     ui->setupUi(this);
-    ui->lstSessions->setModel(sessionsModel);
     
+    ui->lstSessions->setModel(sessionsModel);
     ui->lstSessions->setProportionalSectionSizes(Qt::Horizontal, true);
     ui->lstSessions->setSectionStretchFactor(Qt::Horizontal, 0, 80);
     ui->lstSessions->setSectionStretchFactor(Qt::Horizontal, 1, 20);
@@ -28,7 +28,6 @@ SessionsDialog::~SessionsDialog()
 {
     delete ui;
 }
-
 
 void SessionsDialog::on_btnAdd_clicked()
 {
@@ -52,7 +51,7 @@ void SessionsDialog::on_btnModify_clicked()
     Session s(ui->txtSessionName->text(),
               ui->txtObjective->toPlainText(),
               sessionExercisesModel->sessionExercises());
-    s.id = sessionsModel->session(sessionsModel->index(ui->lstSessions->currentIndex().row(), 0)).id;
+    s.id = sessionsModel->session(ui->lstSessions->currentIndex()).id;
 
     if (sessionsModel->updateSession(s))
     {
@@ -64,12 +63,18 @@ void SessionsDialog::on_btnDelete_clicked()
 {
     if (sessionsModel->removeRow(ui->lstSessions->currentIndex().row()))
     {
-        ui->txtSessionName->clear();
-        ui->chkObjective->setChecked(false);
-        ui->txtObjective->setEnabled(false);
-        ui->txtObjective->clear();
-        sessionExercisesModel->setSessionExercises(QList<Session::SessionExercise>());
+        ui->btnReset->click();
     }
+}
+
+void SessionsDialog::on_btnReset_clicked()
+{
+    ui->txtSessionName->clear();
+    ui->chkObjective->setChecked(false);
+    ui->txtObjective->clear();
+    ui->chkLoop->setChecked(false);
+    ui->txtLoop->clear();
+    sessionExercisesModel->setSessionExercises(QList<Session::SessionExercise>());
 }
 
 void SessionsDialog::on_btnAddExercise_clicked()
@@ -84,7 +89,7 @@ void SessionsDialog::on_btnDeleteExercise_clicked()
 
 void SessionsDialog::on_lstSessions_clicked()
 {
-    const Session &s = sessionsModel->session(sessionsModel->index(ui->lstSessions->currentIndex().row(), 0));
+    const Session s = sessionsModel->session(ui->lstSessions->currentIndex());
     ui->txtSessionName->setText(s.name);
     ui->chkObjective->setChecked(!s.objective.isNull());
     ui->txtObjective->setEnabled(!s.objective.isNull());

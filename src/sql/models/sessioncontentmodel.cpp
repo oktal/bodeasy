@@ -70,6 +70,11 @@ QVariant SessionContentModel::data(const QModelIndex &index, int role) const
 void SessionContentModel::setSessionId(qint64 id)
 {
     mSessionId = id;
+    update();
+}
+
+void SessionContentModel::update()
+{
     beginResetModel();
     mExercises.clear();
     selectExercises();
