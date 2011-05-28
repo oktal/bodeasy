@@ -63,6 +63,9 @@ QList<Session> SessionsManager::selectSessions() const
 bool SessionsManager::createSession(Session &session) const
 {
     QSqlQuery query = SqlHelper::query();
+
+    const bool transaction = SqlHelper::transaction();
+
     query.prepare("INSERT INTO session(name, objective) VALUES(:name, :objective)");
     query.bindValue(":name", session.name);
     query.bindValue(":objective", session.objective);
@@ -79,9 +82,24 @@ bool SessionsManager::createSession(Session &session) const
             query.bindValue(":series", se.series);
             query.bindValue(":repetitions", se.repetitions);
             query.bindValue(":rest", se.rest);
-            query.exec();
+            if (!query.exec())
+            {
+                if (transaction)
+                {
+                    SqlHelper::rollback();
+                }
+                return false;
+            }
+        }
+        if (transaction)
+        {
+            SqlHelper::commit();
         }
         return true;
+    }
+    else if (transaction)
+    {
+        SqlHelper::rollback();
     }
 
     return false;
@@ -96,6 +114,10 @@ bool SessionsManager::createSession(Session &session) const
 bool SessionsManager::updateSession(const Session &session) const
 {
     QSqlQuery query = SqlHelper::query();
+
+    const bool transaction = SqlHelper::transaction();
+
+
     query.prepare("UPDATE session SET name=:name, objective=:objective "
                   "WHERE id_session=:id_session");
     query.bindValue(":name", session.name);
@@ -117,11 +139,29 @@ bool SessionsManager::updateSession(const Session &session) const
                 query.bindValue(":series", se.series);
                 query.bindValue(":repetitions", se.repetitions);
                 query.bindValue(":rest", se.rest);
-                query.exec();
-                qDebug() << query.lastError();
+                if (!query.exec())
+                {
+                    if (transaction)
+                    {
+                        SqlHelper::rollback();
+                    }
+                    return false;
+                }
+            }
+            if (transaction)
+            {
+                SqlHelper::commit();
             }
             return true;
         }
+        else if (transaction)
+        {
+            SqlHelper::rollback();
+        }
+    }
+    else if (transaction)
+    {
+        SqlHelper::rollback();
     }
 
     return false;
