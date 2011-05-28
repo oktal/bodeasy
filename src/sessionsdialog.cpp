@@ -55,7 +55,7 @@ void SessionsDialog::on_btnModify_clicked()
 
     if (sessionsModel->updateSession(s))
     {
-
+        emit sessionUpdated(s.id);
     }
 }
 

@@ -19,6 +19,7 @@ public:
 
     QSize sizeHint() const;
     void setSessionId(qint64 id);
+    void refresh();
     void start();
 
 private slots:
