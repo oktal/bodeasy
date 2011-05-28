@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>521</width>
-    <height>537</height>
+    <width>519</width>
+    <height>535</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,11 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_4">
       <item>
-       <widget class="QTableView" name="lstSessions"/>
+       <widget class="pTableView" name="lstSessions">
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -225,7 +229,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QTableView" name="lstExercises"/>
+        <widget class="pTableView" name="lstExercises"/>
        </item>
       </layout>
      </widget>
@@ -358,6 +362,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>pTableView</class>
+   <extends>QTableView</extends>
+   <header>widgets/pView.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="ressources.qrc"/>
  </resources>

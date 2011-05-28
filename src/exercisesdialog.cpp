@@ -23,9 +23,9 @@ ExercisesDialog::ExercisesDialog(QWidget *parent) :
     ui->bgType->setId( ui->rbRepetition, Exercise::Repetition );
     ui->bgType->setId( ui->rbDuration, Exercise::Duration );
     
-    ui->cbDifficulty->addItem( tr( "Easy" ), Exercise::Easy );
-    ui->cbDifficulty->addItem( tr( "Medium" ), Exercise::Medium );
-    ui->cbDifficulty->addItem( tr( "Hard" ), Exercise::Hard );
+    ui->cbDifficulty->addItem( tr( "Facile" ), Exercise::Easy );
+    ui->cbDifficulty->addItem( tr( "Moyen" ), Exercise::Medium );
+    ui->cbDifficulty->addItem( tr( "Dur" ), Exercise::Hard );
 
     ui->cbGroup1->setModel( groupsModel );
     ui->cbGroup2->setModel( groupsModel );
@@ -82,7 +82,7 @@ void ExercisesDialog::on_btnAdd_clicked()
         ui->lstExercises->setCurrentIndex( index );
     }
     else {
-        qWarning( "Error" );
+        qWarning() << Q_FUNC_INFO << "Error";
     }
 }
 
