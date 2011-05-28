@@ -16,6 +16,7 @@ pChronometer::pChronometer( QWidget* parent )
 	mFormat = "mm:ss:zzz";
 	mPaused = false;
 	mFont = QFont( "Monospace", 13, QFont::Bold );
+	mColor = QColor( Qt::black );
 	
 	QMenu* menu = new QMenu( this );
 	aStart = menu->addAction( tr( "Start" ) );
@@ -75,6 +76,17 @@ void pChronometer::setFormat( const QString& format )
 {
 	mFormat = format;
 	updateGeometry();
+}
+
+QColor pChronometer::textColors() const
+{
+	return mColor;
+}
+
+void pChronometer::setTextColor( const QColor& color )
+{
+	mColor = color;
+	update();
 }
 
 QString pChronometer::text() const
@@ -146,7 +158,7 @@ void pChronometer::paintEvent( QPaintEvent* event )
 	painter.drawRect( textRect().adjusted( 0, 0, -1, -1 ) );*/
 	
 	painter.setFont( mFont );
-	painter.setPen( Qt::red );
+	painter.setPen( mColor );
 	painter.setBrush( Qt::NoBrush );
 	painter.drawText( textRect(), Qt::AlignCenter, text() );
 }
