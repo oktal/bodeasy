@@ -16,6 +16,9 @@ public:
 	
 	virtual QSize sizeHint() const;
 	
+	QString format() const;
+	void setFormat( const QString& format );
+	
 	QString text() const;
 	QRect textRect() const;
 

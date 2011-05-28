@@ -66,6 +66,17 @@ QSize pChronometer::sizeHint() const
 	return size;
 }
 
+QString pChronometer::format() const
+{
+	return mFormat;
+}
+
+void pChronometer::setFormat( const QString& format )
+{
+	mFormat = format;
+	updateGeometry();
+}
+
 QString pChronometer::text() const
 {
 	const QTime time = QTime( 0, 0, 0 ).addMSecs( mElapsed );

@@ -14,11 +14,10 @@ SessionsDialog::SessionsDialog(SessionsModel *model, QWidget *parent) :
 {
     ui->setupUi(this);
     ui->lstSessions->setModel(sessionsModel);
-
-    int const Width = ui->lstSessions->horizontalHeader()->width();
-    ui->lstSessions->horizontalHeader()->resizeSection(0, (Width * 80) / 100);
-    ui->lstSessions->horizontalHeader()->resizeSection(1, (Width * 20) / 100);
-    ui->lstSessions->setSelectionBehavior(QAbstractItemView::SelectRows);
+    
+    ui->lstSessions->setProportionalSectionSizes(Qt::Horizontal, true);
+    ui->lstSessions->setSectionStretchFactor(Qt::Horizontal, 0, 80);
+    ui->lstSessions->setSectionStretchFactor(Qt::Horizontal, 1, 20);
 
     ui->lstExercises->setModel(sessionExercisesModel);
     ui->lstExercises->setItemDelegate(new SessionExercisesDelegate(this));

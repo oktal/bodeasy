@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>524</width>
-    <height>490</height>
+    <width>522</width>
+    <height>488</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QListView" name="lstExercises"/>
+       <widget class="pListView" name="lstExercises"/>
       </item>
      </layout>
     </widget>
@@ -360,6 +360,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>pListView</class>
+   <extends>QListView</extends>
+   <header>widgets/pView.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="ressources.qrc"/>
  </resources>
