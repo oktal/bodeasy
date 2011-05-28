@@ -73,6 +73,11 @@ void SessionContentModel::setSessionId(qint64 id)
     update();
 }
 
+qint64 SessionContentModel::sessionId() const
+{
+    return mSessionId;
+}
+
 void SessionContentModel::update()
 {
     beginResetModel();

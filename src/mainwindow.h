@@ -31,6 +31,7 @@ private slots:
     void on_btnStart_clicked();
 
     void onSessionUpdated(qint64 id);
+    void onSessionDeleted(qint64 id);
 
 private:
     Ui::MainWindow *ui;
