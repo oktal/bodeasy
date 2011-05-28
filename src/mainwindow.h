@@ -30,6 +30,8 @@ private slots:
     void on_cmbSessions_activated(int index);
     void on_btnStart_clicked();
 
+    void onSessionUpdated(qint64 id);
+
 private:
     Ui::MainWindow *ui;
     qint64 mUserId;

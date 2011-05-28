@@ -74,9 +74,9 @@ void MainWindow::on_exercisesAction_triggered()
 void MainWindow::on_sessionsAction_triggered()
 {
     SessionsDialog dialog(sessionsModel);
+    connect(&dialog, SIGNAL(sessionUpdated(qint64)), this, SLOT(onSessionUpdated(qint64)));
     dialog.exec();
     contentModel->update();
-    ui->cmbSessions->update();
 }
 
 void MainWindow::on_mensurationAction_triggered()
@@ -106,3 +106,13 @@ void MainWindow::on_btnStart_clicked()
     sessionFrame->start();
 }
 
+void MainWindow::onSessionUpdated(qint64 id)
+{
+    const int index = ui->cmbSessions->currentIndex();
+    const qint64 currentId = ui->cmbSessions->itemData(index).toLongLong();
+    if (id == currentId)
+    {
+        contentModel->update();
+        sessionFrame->refresh();
+    }
+}

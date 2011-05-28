@@ -31,6 +31,11 @@ QSize SessionFrame::sizeHint() const
 void SessionFrame::setSessionId(qint64 id)
 {
     mSessionId = id;
+    refresh();
+}
+
+void SessionFrame::refresh()
+{
     mCurrentPage = 0;
 
     /* Remove all existing pages */
