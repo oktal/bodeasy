@@ -19,6 +19,9 @@ public:
 	QString format() const;
 	void setFormat( const QString& format );
 	
+	QColor textColors() const;
+	void setTextColor( const QColor& color );
+	
 	QString text() const;
 	QRect textRect() const;
 
@@ -35,6 +38,7 @@ protected:
 	QString mFormat;
 	bool mPaused;
 	QFont mFont;
+	QColor mColor;
 	
 	QAction* aStart;
 	QAction* aStop;
