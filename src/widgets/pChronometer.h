@@ -16,11 +16,14 @@ public:
 	
 	virtual QSize sizeHint() const;
 	
-	QString format() const;
-	void setFormat( const QString& format );
+	QString textFormat() const;
+	void setTextFormat( const QString& format );
 	
-        QColor textColor() const;
+	QColor textColor() const;
 	void setTextColor( const QColor& color );
+	
+	QFont textFont() const;
+	void setTextFont( const QFont& font );
 	
 	QString text() const;
 	QRect textRect() const;
