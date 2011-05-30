@@ -84,6 +84,9 @@
        </item>
        <item row="2" column="2">
         <widget class="QPushButton" name="btnStart">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Démarrer la séance</string>
          </property>
@@ -110,7 +113,7 @@
         </widget>
        </item>
        <item row="0" column="3">
-        <widget class="QLabel" name="label_17">
+        <widget class="QLabel" name="lblSeancesCount">
          <property name="text">
           <string>seancesCount</string>
          </property>
@@ -124,7 +127,7 @@
         </widget>
        </item>
        <item row="1" column="3">
-        <widget class="QLabel" name="label_18">
+        <widget class="QLabel" name="lblLastSeanceDate">
          <property name="text">
           <string>lastSeanceDate</string>
          </property>
@@ -138,7 +141,7 @@
         </widget>
        </item>
        <item row="2" column="3">
-        <widget class="QLabel" name="label_19">
+        <widget class="QLabel" name="lblNextSeanceDate">
          <property name="text">
           <string>nextSeanceDate</string>
          </property>
@@ -156,6 +159,9 @@
        </item>
        <item row="4" column="0">
         <widget class="QPushButton" name="pushButton_2">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Revoir</string>
          </property>

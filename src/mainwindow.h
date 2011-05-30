@@ -34,6 +34,8 @@ private slots:
     void onSessionDeleted(qint64 id);
 
 private:
+    void selectInformations();
+
     Ui::MainWindow *ui;
     qint64 mUserId;
     SessionsModel *sessionsModel;

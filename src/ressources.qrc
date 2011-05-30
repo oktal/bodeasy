@@ -25,6 +25,7 @@
         <file>images/exercise-icon.png</file>
         <file>images/table-icon.png</file>
         <file>images/graph-icon2.png</file>
+        <file>images/clock-icon.png</file>
     </qresource>
     <qresource prefix="/sql">
         <file alias="script001.sql">../db/database.sql</file>

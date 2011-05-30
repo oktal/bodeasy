@@ -33,6 +33,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->cmbSessions->setModel(sessionsModel);
     ui->lstContent->setModel(contentModel);
     ui->cmbSessions->setCurrentIndex(-1);
+
+    const int sessionsCount = sessionsModel->rowCount();
+    ui->lblSeancesCount->setText(trUtf8("<strong>%1</strong>", "Nombre de séances").arg(
+                                     sessionsCount == 0 ? "Aucune"
+                                                        : QString::number(sessionsCount)));
+    ui->lblPlanifiedSession->setText(trUtf8("Aucune séance planifiée"));
+    ui->lblPlanifiedSession->setEnabled(false);
+
+    ui->cChrono->setFormat("hh:mm:ss:zzz");
 }
 
 MainWindow::~MainWindow()
@@ -99,6 +108,7 @@ void MainWindow::on_cmbSessions_activated(int index)
     const qint64 id = ui->cmbSessions->itemData(index).toLongLong();
     contentModel->setSessionId(id);
     sessionFrame->setSessionId(id);
+    ui->btnStart->setEnabled(true);
 }
 
 void MainWindow::on_btnStart_clicked()
@@ -125,4 +135,9 @@ void MainWindow::onSessionDeleted(qint64 id)
         contentModel->setSessionId(-1);
         sessionFrame->setSessionId(-1);
     }
+}
+
+void MainWindow::selectInformations()
+{
+
 }

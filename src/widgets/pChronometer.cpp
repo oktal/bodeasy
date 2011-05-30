@@ -16,7 +16,7 @@ pChronometer::pChronometer( QWidget* parent )
           mFont( "Monospace", 13, QFont::Bold ),
           mColor( Qt::black )
 {
-        tTimer->setInterval( 50 );
+        tTimer->setInterval( 10 );
 	
 	QMenu* menu = new QMenu( this );
 	aStart = menu->addAction( tr( "Start" ) );
@@ -30,7 +30,7 @@ pChronometer::pChronometer( QWidget* parent )
 	aPause->setCheckable( true );
 	
 	QToolButton* tb = new QToolButton( this );
-	tb->setIcon( QIcon::fromTheme( "chronometer" ) );
+    tb->setIcon( QIcon::fromTheme( "chronometer", QIcon( ":/images/clock-icon.png" ) ) );
 	tb->setPopupMode( QToolButton::InstantPopup );
 	tb->setMenu( menu );
 	
