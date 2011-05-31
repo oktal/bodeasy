@@ -14,7 +14,7 @@ static int const RowMaximumWidgets = 2;
 static int const ColumnMaximumWidgets = 2;
 
 SessionFrame::SessionFrame(QWidget *parent) :
-    QFrame(parent),
+    QFrame(parent), SessionProxy(), 
     ui(new Ui::SessionFrame),
     mCurrentPage(0)
 {
@@ -75,58 +75,7 @@ void SessionFrame::start()
     }
 }
 
-void SessionFrame::on_btnNext_clicked()
-{
-    ++mCurrentPage;
-    ui->stackedWidget->setCurrentIndex(mCurrentPage);
-    if (mCurrentPage == ui->stackedWidget->count() - 1)
-    {
-        ui->btnLast->setEnabled(false);
-        ui->btnNext->setEnabled(false);
-    }
-
-    ui->btnFirst->setEnabled(true);
-    ui->btnPrevious->setEnabled(true);
-}
-
-void SessionFrame::on_btnPrevious_clicked()
-{
-    --mCurrentPage;
-    ui->stackedWidget->setCurrentIndex(mCurrentPage);
-    if (mCurrentPage == 0)
-    {
-        ui->btnFirst->setEnabled(false);
-        ui->btnPrevious->setEnabled(false);
-    }
-
-    ui->btnLast->setEnabled(true);
-    ui->btnNext->setEnabled(true);
-}
-
-void SessionFrame::on_btnFirst_clicked()
-{
-    mCurrentPage = 0;
-    ui->stackedWidget->setCurrentIndex(mCurrentPage);
-    ui->btnFirst->setEnabled(false);
-    ui->btnPrevious->setEnabled(false);
-
-    ui->btnLast->setEnabled(true);
-    ui->btnNext->setEnabled(true);
-}
-
-void SessionFrame::on_btnLast_clicked()
-{
-    mCurrentPage = ui->stackedWidget->count() - 1;
-    ui->stackedWidget->setCurrentIndex(mCurrentPage);
-
-    ui->btnNext->setEnabled(false);
-    ui->btnLast->setEnabled(false);
-
-    ui->btnPrevious->setEnabled(true);
-    ui->btnFirst->setEnabled(true);
-}
-
-void SessionFrame::on_btnFinish_clicked()
+void SessionFrame::stop()
 {
     QList<ExerciseWidget *>::const_iterator it;
 
@@ -210,9 +159,64 @@ void SessionFrame::on_btnFinish_clicked()
     {
         QMessageBox::critical(this, trUtf8("Erreur"),
                               trUtf8("Erreur lors de l'enregistrement de la séance: %1")
-                              .arg(SqlHelper::query().lastError().text()));
+                              .arg(SqlHelper::lastError()));
+    }
+}
+
+void SessionFrame::on_btnNext_clicked()
+{
+    ++mCurrentPage;
+    ui->stackedWidget->setCurrentIndex(mCurrentPage);
+    if (mCurrentPage == ui->stackedWidget->count() - 1)
+    {
+        ui->btnLast->setEnabled(false);
+        ui->btnNext->setEnabled(false);
     }
 
+    ui->btnFirst->setEnabled(true);
+    ui->btnPrevious->setEnabled(true);
+}
+
+void SessionFrame::on_btnPrevious_clicked()
+{
+    --mCurrentPage;
+    ui->stackedWidget->setCurrentIndex(mCurrentPage);
+    if (mCurrentPage == 0)
+    {
+        ui->btnFirst->setEnabled(false);
+        ui->btnPrevious->setEnabled(false);
+    }
+
+    ui->btnLast->setEnabled(true);
+    ui->btnNext->setEnabled(true);
+}
+
+void SessionFrame::on_btnFirst_clicked()
+{
+    mCurrentPage = 0;
+    ui->stackedWidget->setCurrentIndex(mCurrentPage);
+    ui->btnFirst->setEnabled(false);
+    ui->btnPrevious->setEnabled(false);
+
+    ui->btnLast->setEnabled(true);
+    ui->btnNext->setEnabled(true);
+}
+
+void SessionFrame::on_btnLast_clicked()
+{
+    mCurrentPage = ui->stackedWidget->count() - 1;
+    ui->stackedWidget->setCurrentIndex(mCurrentPage);
+
+    ui->btnNext->setEnabled(false);
+    ui->btnLast->setEnabled(false);
+
+    ui->btnPrevious->setEnabled(true);
+    ui->btnFirst->setEnabled(true);
+}
+
+void SessionFrame::on_btnFinish_clicked()
+{
+    stop();
 }
 
 /*!

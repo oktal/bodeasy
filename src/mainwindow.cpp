@@ -1,7 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "sessionframe.h"
 #include "widgets/pChronometer.h"
+
+#include "SessionProxy.h"
+#include "sessionframe.h"
+#include "views/icon/SessionIconView.h"
 
 #include "usersdialog.h"
 #include "exercisesdialog.h"
@@ -29,13 +32,14 @@ MainWindow::MainWindow(QWidget *parent) :
     sessionsModel(new SessionsModel(this)),
     contentModel(new SessionContentModel(this)),
     sessionsMadeModel(new SessionsMadeModel(this)),
-    sessionFrame(new SessionFrame),
+    sessionWidget(new SessionIconView(this)),
+    sessionProxy(dynamic_cast<SessionProxy*>(sessionWidget)),
     cChrono(new pChronometer(this)),
     dateTimeLabel(new QLabel(this))
 {
     ui->setupUi(this);
-    sessionFrame->setEnabled(false);
-    setCentralWidget(sessionFrame);
+    sessionWidget->setEnabled(false);
+    setCentralWidget(sessionWidget);
 
     ui->cmbSessions->setModel(sessionsModel);
     ui->lstContent->setModel(contentModel);
@@ -65,7 +69,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(timer, SIGNAL(timeout()), this, SLOT(onTimerTimeout()));
     onTimerTimeout();
 
-    connect(sessionFrame, SIGNAL(sessionFinished()), this, SLOT(onSessionFinished()));
+    connect(sessionWidget, SIGNAL(sessionFinished()), this, SLOT(onSessionFinished()));
 
     selectInformations();
 }
@@ -96,7 +100,7 @@ qint64 MainWindow::userId() const
 void MainWindow::setUserId(qint64 id)
 {
     mUserId = id;
-    sessionFrame->setUserId(id);
+    sessionProxy->setUserId(id);
     sessionsMadeModel->setUserId(id);
     ui->btnSee->setEnabled(sessionsMadeModel->rowCount() > 0);
     UsersModel users;
@@ -136,13 +140,13 @@ void MainWindow::on_cmbSessions_activated(int index)
 {
     const qint64 id = ui->cmbSessions->itemData(index).toLongLong();
     contentModel->setSessionId(id);
-    sessionFrame->setSessionId(id);
+    sessionProxy->setSessionId(id);
     ui->btnStart->setEnabled(true);
 }
 
 void MainWindow::on_btnStart_clicked()
 {
-    sessionFrame->start();
+    sessionProxy->start();
 }
 
 void MainWindow::onSessionUpdated(qint64 id)
@@ -152,7 +156,7 @@ void MainWindow::onSessionUpdated(qint64 id)
     if (id == currentId)
     {
         contentModel->update();
-        sessionFrame->refresh();
+        sessionProxy->refresh();
     }
 }
 
@@ -162,7 +166,7 @@ void MainWindow::onSessionDeleted(qint64 id)
     {
         ui->cmbSessions->setCurrentIndex(-1);
         contentModel->setSessionId(-1);
-        sessionFrame->setSessionId(-1);
+        sessionProxy->setSessionId(-1);
     }
 }
 

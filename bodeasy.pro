@@ -58,7 +58,11 @@ HEADERS	+= src/usersdialog.h \
 	src/sessionframe.h \
 	src/widgets/pChronometer.h \
 	src/widgets/pHeaderView.h \
-	src/widgets/pView.h
+	src/widgets/pView.h \
+	src/SessionProxy.h \
+	src/views/icon/SessionIconModel.h \
+	src/views/icon/SessionIconDelegate.h \
+	src/views/icon/SessionIconView.h
 
 SOURCES	+= src/main.cpp \
 	src/usersdialog.cpp \
@@ -71,6 +75,10 @@ SOURCES	+= src/main.cpp \
 	src/sessionframe.cpp \
 	src/widgets/pChronometer.cpp \
 	src/widgets/pHeaderView.cpp \
-	src/widgets/pView.cpp
+	src/widgets/pView.cpp \
+	src/SessionProxy.cpp \
+	src/views/icon/SessionIconModel.cpp \
+	src/views/icon/SessionIconDelegate.cpp \
+	src/views/icon/SessionIconView.cpp
 
 RESOURCES	+= src/ressources.qrc
