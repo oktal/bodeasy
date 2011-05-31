@@ -15,7 +15,8 @@ HEADERS	*= src/sql/SqlHelper.h \
 	src/sql/managers/musclegroupsmanager.h \
 	src/sql/managers/sessionsmanager.h \
 	src/sql/managers/usersmanager.h \
-    src/sql/models/sessioncontentmodel.h
+    src/sql/models/sessioncontentmodel.h \
+    src/sql/models/sessionsmademodel.h
 
 SOURCES	*= src/sql/SqlHelper.cpp \
 	src/sql/parser/sqlkeywords.cpp \
@@ -33,4 +34,5 @@ SOURCES	*= src/sql/SqlHelper.cpp \
 	src/sql/managers/musclegroupsmanager.cpp \
 	src/sql/managers/sessionsmanager.cpp \
 	src/sql/managers/usersmanager.cpp \
-    src/sql/models/sessioncontentmodel.cpp
+    src/sql/models/sessioncontentmodel.cpp \
+    src/sql/models/sessionsmademodel.cpp
