@@ -61,6 +61,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(timer, SIGNAL(timeout()), this, SLOT(onTimerTimeout()));
     onTimerTimeout();
 
+    connect(sessionFrame, SIGNAL(sessionFinished()), this, SLOT(onSessionFinished()));
+
     selectInformations();
 }
 
@@ -158,6 +160,13 @@ void MainWindow::onSessionDeleted(qint64 id)
         contentModel->setSessionId(-1);
         sessionFrame->setSessionId(-1);
     }
+}
+
+void MainWindow::onSessionFinished()
+{
+    const QSqlQuery query = sessionsMadeModel->query();
+    sessionsMadeModel->setQuery(query.executedQuery(), SqlHelper::database());
+    ui->lblLastSeanceDate->setText(QDate::currentDate().toString(Qt::SystemLocaleLongDate));
 }
 
 void MainWindow::onTimerTimeout()
