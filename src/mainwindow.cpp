@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "sessionframe.h"
+#include "widgets/pChronometer.h"
 
 #include "usersdialog.h"
 #include "exercisesdialog.h"
@@ -29,11 +30,12 @@ MainWindow::MainWindow(QWidget *parent) :
     contentModel(new SessionContentModel(this)),
     sessionsMadeModel(new SessionsMadeModel(this)),
     sessionFrame(new SessionFrame),
+    cChrono(new pChronometer(this)),
     dateTimeLabel(new QLabel(this))
 {
     ui->setupUi(this);
     sessionFrame->setEnabled(false);
-    ui->mainLayout->addWidget(sessionFrame, 0, 1, 1, 2);
+    setCentralWidget(sessionFrame);
 
     ui->cmbSessions->setModel(sessionsModel);
     ui->lstContent->setModel(contentModel);
@@ -47,7 +49,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->cmbSessionsMade->setModel(sessionsMadeModel);
 
-    ui->cChrono->setTextFormat("hh:mm:ss:zzz");
+    cChrono->setTextFormat("hh:mm:ss:zzz");
+    cChrono->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
     QFont myFont("Monospace", 10, QFont::Bold);
     dateTimeLabel->setFont(myFont);
@@ -56,6 +59,7 @@ MainWindow::MainWindow(QWidget *parent) :
     spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     ui->toolBar->addWidget(spacer);
     ui->toolBar->addWidget(dateTimeLabel);
+    ui->toolBar->addWidget(cChrono);
     timer = new QTimer(this);
     timer->start(1000);
     connect(timer, SIGNAL(timeout()), this, SLOT(onTimerTimeout()));

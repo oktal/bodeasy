@@ -38,7 +38,7 @@ pChronometer::pChronometer( QWidget* parent )
 	ml->addStretch();
 	ml->addWidget( tb );
 	
-	setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
+	setFrameStyle( QFrame::NoFrame | QFrame::Plain );
 	
 	connect( tTimer, SIGNAL( timeout() ), this, SLOT( timer_timeout() ) );
 	connect( aStart, SIGNAL( triggered() ), this, SLOT( restart() ) );
