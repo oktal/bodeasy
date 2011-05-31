@@ -8,15 +8,15 @@
 #include <QDebug>
 
 pChronometer::pChronometer( QWidget* parent )
-        : QFrame( parent ),
-          tTimer( new QTimer( this ) ),
-          mElapsed( 0 ),
-          mFormat( "mm:ss:zzz" ),
-          mPaused( false ),
-          mFont( "Monospace", 13, QFont::Bold ),
-          mColor( Qt::black )
+	: QFrame( parent ),
+		tTimer( new QTimer( this ) ),
+		mElapsed( 0 ),
+		mFormat( "mm:ss:zzz" ),
+		mPaused( false ),
+		mFont( "Monospace", 13, QFont::Bold ),
+		mColor( Qt::black )
 {
-        tTimer->setInterval( 10 );
+	tTimer->setInterval( 50 );
 	
 	QMenu* menu = new QMenu( this );
 	aStart = menu->addAction( tr( "Start" ) );
@@ -67,12 +67,12 @@ QSize pChronometer::sizeHint() const
 	return size;
 }
 
-QString pChronometer::format() const
+QString pChronometer::textFormat() const
 {
 	return mFormat;
 }
 
-void pChronometer::setFormat( const QString& format )
+void pChronometer::setTextFormat( const QString& format )
 {
 	mFormat = format;
 	updateGeometry();
@@ -87,6 +87,17 @@ void pChronometer::setTextColor( const QColor& color )
 {
 	mColor = color;
 	update();
+}
+
+QFont pChronometer::textFont() const
+{
+	return mFont;
+}
+
+void pChronometer::setTextFont( const QFont& font )
+{
+	mFont = font;
+	updateGeometry();
 }
 
 QString pChronometer::text() const
