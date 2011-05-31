@@ -13,6 +13,7 @@ namespace Ui
 }
 
 class QLineEdit;
+class QGridLayout;
 
 class ExerciseWidget : public QWidget
 {
@@ -34,13 +35,19 @@ public:
 protected:
     void changeEvent(QEvent *);
 
+private slots:
+    void on_btnAddSerie_clicked();
+    void on_btnDeleteSerie_clicked();
+
 private:
     Ui::ExerciseWidget *ui;
+    QGridLayout *scrollAreaLayout;
     qint64 mExerciseId;
     QString mExerciseName;
     bool mUseWeight;
 
     QList<QPair<QLineEdit *, QLineEdit *> > mPairs;
+    int mExtraSeries;
 
 };
 
