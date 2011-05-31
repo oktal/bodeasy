@@ -35,9 +35,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->cmbSessions->setCurrentIndex(-1);
 
     const int sessionsCount = sessionsModel->rowCount();
-    ui->lblSeancesCount->setText(trUtf8("<strong>%1</strong>", "Nombre de séances").arg(
-                                     sessionsCount == 0 ? "Aucune"
-                                                        : QString::number(sessionsCount)));
+    ui->lblSeancesCount->setText(sessionsCount == 0 ? trUtf8("Aucune")
+                                                    : QString::number(sessionsCount));
     ui->lblPlanifiedSession->setText(trUtf8("Aucune séance planifiée"));
     ui->lblPlanifiedSession->setEnabled(false);
 
@@ -70,6 +69,7 @@ qint64 MainWindow::userId() const
 void MainWindow::setUserId(qint64 id)
 {
     mUserId = id;
+    sessionFrame->setUserId(id);
     UsersModel users;
     setWindowTitle(QString("%1 (%2)").arg(qApp->applicationName()).arg(users.user(id).name));
 }

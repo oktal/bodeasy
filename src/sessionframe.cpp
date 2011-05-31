@@ -6,6 +6,8 @@
 
 #include <QDebug>
 #include <QWidget>
+#include <QMessageBox>
+#include <QDate>
 
 static int const RowMaximumWidgets = 2;
 static int const ColumnMaximumWidgets = 2;
@@ -32,6 +34,11 @@ void SessionFrame::setSessionId(qint64 id)
 {
     mSessionId = id;
     refresh();
+}
+
+void SessionFrame::setUserId(qint64 id)
+{
+    mUserId = id;
 }
 
 void SessionFrame::refresh()
@@ -116,6 +123,64 @@ void SessionFrame::on_btnLast_clicked()
 
     ui->btnPrevious->setEnabled(true);
     ui->btnFirst->setEnabled(true);
+}
+
+void SessionFrame::on_btnFinish_clicked()
+{
+    QList<ExerciseWidget *>::const_iterator it;
+
+    bool isComplete = true;
+
+    /* Check if each exercise is complete */
+    for (it = exercises.constBegin(); it != exercises.constEnd(); ++it)
+    {
+        ExerciseWidget *ew = *it;
+        if (!ew->isComplete())
+        {
+            isComplete = false;
+            break;
+        }
+    }
+
+
+    if (!isComplete)
+    {
+        const int r = QMessageBox::warning(this,
+                                            trUtf8("Attention"),
+                                            trUtf8("Certains champs n'ont pas été remplis. Ils seront "
+                                                   "mis à 0. Voulez-vous vraiment terminer la séance ?"),
+                                            QMessageBox::Yes, QMessageBox::No);
+        if (r == QMessageBox::No)
+        {
+            return;
+        }
+    }
+
+    /* Persist */
+    const bool transaction = SqlHelper::transaction();
+    for (it = exercises.constBegin(); it != exercises.constEnd(); ++it)
+    {
+        ExerciseWidget *ew = *it;
+        if(!ew->save(mUserId, mSessionId))
+        {
+            if (transaction)
+            {
+                SqlHelper::rollback();
+            }
+            return;
+        }
+    }
+
+    if (transaction)
+    {
+        SqlHelper::commit();
+    }
+
+    ui->btnFinish->setEnabled(false);
+    QMessageBox::information(this, trUtf8("Information"),
+                             trUtf8("La séance du %1 a bien été enregistrée.")
+                             .arg(QDate::currentDate().toString("dddd M MMM yyyy")));
+
 }
 
 /*!
