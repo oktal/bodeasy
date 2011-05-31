@@ -6,6 +6,7 @@
 #include <QScrollArea>
 #include <QGridLayout>
 #include <QLineEdit>
+#include <QPushButton>
 
 #include <QDebug>
 #include <QSqlError>
@@ -15,8 +16,10 @@
 ExerciseWidget::ExerciseWidget(qint64 id, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ExerciseWidget),
+    scrollAreaLayout(0),
     mExerciseId(id),
-    mUseWeight(true)
+    mUseWeight(true),
+    mExtraSeries(0)
 {
     ui->setupUi(this);
 }
@@ -24,6 +27,41 @@ ExerciseWidget::ExerciseWidget(qint64 id, QWidget *parent) :
 ExerciseWidget::~ExerciseWidget()
 {
     delete ui;
+}
+
+void ExerciseWidget::on_btnAddSerie_clicked()
+{
+    ++mExtraSeries;
+    QLineEdit *txtResult = new QLineEdit;
+    txtResult->setFixedWidth(30);
+    QLineEdit *txtLoad = new QLineEdit;
+    txtLoad->setFixedWidth(30);
+    txtLoad->setEnabled(mUseWeight);
+
+    mPairs.append(qMakePair(txtResult, txtLoad));
+    const int rowCount = mPairs.count();
+    scrollAreaLayout->addWidget(new QLabel(trUtf8("Série %1").arg(rowCount)), rowCount, 0);
+    scrollAreaLayout->addWidget(txtResult, rowCount, 1);
+    scrollAreaLayout->addWidget(txtLoad, rowCount, 2);
+
+    ui->btnDeleteSerie->setEnabled(true);
+
+}
+
+void ExerciseWidget::on_btnDeleteSerie_clicked()
+{
+    const int rowCount = mPairs.count();
+    for (int c = 0; c < scrollAreaLayout->columnCount(); ++c)
+    {
+        delete scrollAreaLayout->itemAtPosition(rowCount, c)->widget();
+    }
+
+    mPairs.removeLast();
+    --mExtraSeries;
+    if (mExtraSeries == 0)
+    {
+        ui->btnDeleteSerie->setEnabled(false);
+    }
 }
 
 void ExerciseWidget::setExerciseName(const QString &exerciseName)
@@ -78,36 +116,36 @@ void ExerciseWidget::setExerciseRepetitions(int repetitions)
 
 void ExerciseWidget::setExerciseSeries(int series)
 {
-    delete ui->scrollAreaWidgetContents->layout();
+    delete scrollAreaLayout;
     mPairs.clear();
 
     /* Rebuild the layout */
 
-    QGridLayout *layout = new QGridLayout;
-    layout->setContentsMargins(QMargins(0, 0, 0, 0));
-    layout->setSizeConstraint(QLayout::SetFixedSize);
-    layout->setHorizontalSpacing(20);
-    layout->addWidget(new QLabel(trUtf8("Rés.")), 0, 1);
-    layout->addWidget(new QLabel(trUtf8("Charge")), 0, 2);
+    scrollAreaLayout = new QGridLayout;
+    scrollAreaLayout->setContentsMargins(QMargins(0, 0, 0, 0));
+    scrollAreaLayout->setSizeConstraint(QLayout::SetFixedSize);
+    scrollAreaLayout->setHorizontalSpacing(20);
+    scrollAreaLayout->addWidget(new QLabel(trUtf8("Rés.")), 0, 1);
+    scrollAreaLayout->addWidget(new QLabel(trUtf8("Charge")), 0, 2);
     int row = 1;
     for (int i = 0; i < series; ++i)
     {
-        layout->addWidget(new QLabel(trUtf8("Série %1").arg(i + 1)), row, 0);
+        scrollAreaLayout->addWidget(new QLabel(trUtf8("Série %1").arg(i + 1)), row, 0);
 
 
         QLineEdit *txtSerieResult = new QLineEdit;
         txtSerieResult->setFixedWidth(30);
-        layout->addWidget(txtSerieResult, row, 1);
+        scrollAreaLayout->addWidget(txtSerieResult, row, 1);
 
         QLineEdit *txtLoad = new QLineEdit;
         txtLoad->setFixedWidth(30);
-        layout->addWidget(txtLoad, row, 2);
+        scrollAreaLayout->addWidget(txtLoad, row, 2);
         ++row;
 
         mPairs.append(qMakePair(txtSerieResult, txtLoad));
     }
 
-    ui->scrollAreaWidgetContents->setLayout(layout);
+    ui->scrollAreaWidgetContents->setLayout(scrollAreaLayout);
 }
 
 void ExerciseWidget::changeEvent(QEvent *event)
@@ -120,6 +158,8 @@ void ExerciseWidget::changeEvent(QEvent *event)
         {
             it.next().second->setEnabled(mUseWeight);
         }
+
+        ui->btnDeleteSerie->setEnabled(false);
     }
 }
 
