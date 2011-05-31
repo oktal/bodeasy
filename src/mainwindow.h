@@ -12,6 +12,7 @@ class QLabel;
 class QTimer;
 class SessionsModel;
 class SessionContentModel;
+class SessionsMadeModel;
 class SessionFrame;
 
 class MainWindow : public QMainWindow
@@ -44,6 +45,7 @@ private:
     qint64 mUserId;
     SessionsModel *sessionsModel;
     SessionContentModel *contentModel;
+    SessionsMadeModel *sessionsMadeModel;
     SessionFrame *sessionFrame;
     QLabel *dateTimeLabel;
     QTimer *timer;

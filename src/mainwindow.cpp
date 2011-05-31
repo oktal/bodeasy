@@ -10,6 +10,7 @@
 #include "sql/models/usersmodel.h"
 #include "sql/models/sessionsmodel.h"
 #include "sql/models/sessioncontentmodel.h"
+#include "sql/models/sessionsmademodel.h"
 
 #include <QSqlTableModel>
 
@@ -26,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mUserId(-1),
     sessionsModel(new SessionsModel(this)),
     contentModel(new SessionContentModel(this)),
+    sessionsMadeModel(new SessionsMadeModel(this)),
     sessionFrame(new SessionFrame),
     dateTimeLabel(new QLabel(this))
 {
@@ -42,6 +44,8 @@ MainWindow::MainWindow(QWidget *parent) :
                                                     : QString::number(sessionsCount));
     ui->lblPlanifiedSession->setText(trUtf8("Aucune séance planifiée"));
     ui->lblPlanifiedSession->setEnabled(false);
+
+    ui->cmbSessionsMade->setModel(sessionsMadeModel);
 
     ui->cChrono->setTextFormat("hh:mm:ss:zzz");
 
@@ -87,6 +91,8 @@ void MainWindow::setUserId(qint64 id)
 {
     mUserId = id;
     sessionFrame->setUserId(id);
+    sessionsMadeModel->setUserId(id);
+    ui->btnSee->setEnabled(sessionsMadeModel->rowCount() > 0);
     UsersModel users;
     setWindowTitle(QString("%1 (%2)").arg(qApp->applicationName()).arg(users.user(id).name));
 }
@@ -157,7 +163,7 @@ void MainWindow::onSessionDeleted(qint64 id)
 void MainWindow::onTimerTimeout()
 {
     const QString dt = QDateTime::currentDateTime().toString(
-                "dddd M MMM yyyy HH:mm:ss");
+                Qt::SystemLocaleLongDate);
     dateTimeLabel->setText(dt);
 }
 
@@ -169,7 +175,7 @@ void MainWindow::selectInformations()
         if (q.next())
         {
             QDate lastSeanceDate = q.value(0).toDate();
-            ui->lblLastSeanceDate->setText(lastSeanceDate.toString("dddd M MMM yyyy"));
+            ui->lblLastSeanceDate->setText(lastSeanceDate.toString(Qt::SystemLocaleLongDate));
         }
         else
         {
