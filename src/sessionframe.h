@@ -19,6 +19,7 @@ public:
 
     QSize sizeHint() const;
     void setSessionId(qint64 id);
+    void setUserId(qint64 id);
     void refresh();
     void start();
 
@@ -27,6 +28,7 @@ private slots:
     void on_btnPrevious_clicked();
     void on_btnFirst_clicked();
     void on_btnLast_clicked();
+    void on_btnFinish_clicked();
 
 private:
     void selectExercises();
@@ -34,6 +36,7 @@ private:
 
     Ui::SessionFrame *ui;
     qint64 mSessionId;
+    qint64 mUserId;
     QList<ExerciseWidget *> exercises;
     int mCurrentPage;
 };

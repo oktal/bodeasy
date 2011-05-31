@@ -28,12 +28,15 @@ public:
     void setExerciseRepetitions(int repetitions);
     void setExerciseSeries(int series);
 
+    bool save(qint64 userId, qint64 sessionId);
+    bool isComplete() const;
+
 protected:
     void changeEvent(QEvent *);
 
 private:
     Ui::ExerciseWidget *ui;
-    qint64 mSessionExerciseId;
+    qint64 mExerciseId;
     QString mExerciseName;
     bool mUseWeight;
 

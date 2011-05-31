@@ -1,16 +1,21 @@
 #include "exercisewidget.h"
 #include "ui_exercisewidget.h"
+#include "sql/SqlHelper.h"
 
 #include <QWidget>
 #include <QScrollArea>
 #include <QGridLayout>
 #include <QLineEdit>
 
+#include <QDebug>
+#include <QSqlError>
+
+#include <QDate>
 
 ExerciseWidget::ExerciseWidget(qint64 id, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ExerciseWidget),
-    mSessionExerciseId(id),
+    mExerciseId(id),
     mUseWeight(true)
 {
     ui->setupUi(this);
@@ -116,4 +121,87 @@ void ExerciseWidget::changeEvent(QEvent *event)
             it.next().second->setEnabled(mUseWeight);
         }
     }
+}
+
+bool ExerciseWidget::isComplete() const
+{
+     QListIterator<QPair<QLineEdit *, QLineEdit *> > it(mPairs);
+     while (it.hasNext())
+     {
+         QPair<QLineEdit *, QLineEdit *> pair = it.next();
+         if (pair.first->text().isEmpty() || pair.second->text().isEmpty())
+         {
+             return false;
+         }
+     }
+
+     return true;
+}
+
+/**
+  * \brief persist the exercise in database denoted by a \a userId and \a sessionId
+*/
+
+bool ExerciseWidget::save(qint64 userId, qint64 sessionId)
+{
+    QSqlQuery q = SqlHelper::query();
+    /* TO FIX : id_exercice => id_exercise */
+    q.prepare("INSERT INTO exercise_result(result, load, date, serie_number, id_exercice, id_session, id_user) "
+              "VALUES(:result, :load, :date, :serie_number, :id_exercise, :id_session, :id_user)");
+    q.bindValue(":date", QDate::currentDate());
+    q.bindValue(":id_session", sessionId);
+    q.bindValue(":id_user", userId);
+    q.bindValue(":id_exercise", mExerciseId);
+
+    QList<QPair<QLineEdit *, QLineEdit *> >::const_iterator it;
+    int serie = 0;
+    for (it = mPairs.begin(); it != mPairs.end(); ++it)
+    {
+
+        QPair<QLineEdit *, QLineEdit *> pair = *it;
+
+        QLineEdit *result = pair.first;
+        QLineEdit *load = pair.second;
+
+        Q_ASSERT(result);
+        Q_ASSERT(load);
+
+        q.bindValue(":serie_number", serie++);
+
+        if (result->text().isEmpty())
+        {
+            result->setText("0");
+        }
+
+        q.bindValue(":result", result->text().toInt());
+
+        if (!load->isEnabled())
+        {
+            q.bindValue(":load", "NULL");
+        }
+        else
+        {
+            if (load->text().isEmpty())
+            {
+                load->setText("0");
+            }
+
+            q.bindValue(":load", load->text().toInt());
+        }
+
+        if (!q.exec())
+        {
+            qDebug() << Q_FUNC_INFO << " SQL Error: " << q.lastError();
+            return false;
+        }
+    }
+
+    for (it = mPairs.begin(); it != mPairs.end(); ++it)
+    {
+        QPair<QLineEdit *, QLineEdit *> pair = *it;
+        pair.first->setReadOnly(true);
+        pair.second->setReadOnly(true);
+    }
+
+    return true;
 }

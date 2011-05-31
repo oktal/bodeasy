@@ -114,6 +114,12 @@
        </item>
        <item row="0" column="3">
         <widget class="QLabel" name="lblSeancesCount">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="text">
           <string>seancesCount</string>
          </property>
@@ -128,6 +134,12 @@
        </item>
        <item row="1" column="3">
         <widget class="QLabel" name="lblLastSeanceDate">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="text">
           <string>lastSeanceDate</string>
          </property>
@@ -142,6 +154,12 @@
        </item>
        <item row="2" column="3">
         <widget class="QLabel" name="lblNextSeanceDate">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="text">
           <string>nextSeanceDate</string>
          </property>
