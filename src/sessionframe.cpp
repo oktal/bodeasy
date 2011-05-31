@@ -203,7 +203,8 @@ void SessionFrame::on_btnFinish_clicked()
     {
         QMessageBox::information(this, trUtf8("Information"),
                                  trUtf8("La séance du %1 a bien été enregistrée.")
-                                 .arg(QDate::currentDate().toString("dddd M MMM yyyy")));
+                                 .arg(QDate::currentDate().toString(Qt::SystemLocaleLongDate)));
+        emit sessionFinished();
     }
     else
     {

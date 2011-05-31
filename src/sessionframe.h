@@ -23,6 +23,9 @@ public:
     void refresh();
     void start();
 
+signals:
+    void sessionFinished();
+
 private slots:
     void on_btnNext_clicked();
     void on_btnPrevious_clicked();
