@@ -14,6 +14,7 @@ class SessionsModel;
 class SessionContentModel;
 class SessionsMadeModel;
 class SessionFrame;
+class pChronometer;
 
 class MainWindow : public QMainWindow
 {
@@ -48,6 +49,7 @@ private:
     SessionContentModel *contentModel;
     SessionsMadeModel *sessionsMadeModel;
     SessionFrame *sessionFrame;
+    pChronometer* cChrono;
     QLabel *dateTimeLabel;
     QTimer *timer;
 
