@@ -8,6 +8,7 @@
 #include <QWidget>
 #include <QMessageBox>
 #include <QDate>
+#include <QSqlError>
 
 static int const RowMaximumWidgets = 2;
 static int const ColumnMaximumWidgets = 2;
@@ -158,6 +159,7 @@ void SessionFrame::on_btnFinish_clicked()
 
     /* Persist */
     const bool transaction = SqlHelper::transaction();
+    bool ok = true;
     for (it = exercises.constBegin(); it != exercises.constEnd(); ++it)
     {
         ExerciseWidget *ew = *it;
@@ -167,19 +169,48 @@ void SessionFrame::on_btnFinish_clicked()
             {
                 SqlHelper::rollback();
             }
-            return;
+            ok = false;
+            break;
         }
     }
 
-    if (transaction)
+    if (ok)
+    {
+
+        QSqlQuery query = SqlHelper::query();
+        query.prepare("INSERT INTO session_made(id_session, id_user, date) "
+                      "VALUES(:id_session, :id_user, :date)");
+        query.bindValue(":id_session", mSessionId);
+        query.bindValue(":id_user", mUserId);
+        query.bindValue(":date", QDate::currentDate());
+        if (!query.exec())
+        {
+            if (transaction)
+            {
+                SqlHelper::rollback();
+                ok = false;
+            }
+        }
+    }
+
+    if (transaction && ok)
     {
         SqlHelper::commit();
     }
 
     ui->btnFinish->setEnabled(false);
-    QMessageBox::information(this, trUtf8("Information"),
-                             trUtf8("La séance du %1 a bien été enregistrée.")
-                             .arg(QDate::currentDate().toString("dddd M MMM yyyy")));
+    if (ok)
+    {
+        QMessageBox::information(this, trUtf8("Information"),
+                                 trUtf8("La séance du %1 a bien été enregistrée.")
+                                 .arg(QDate::currentDate().toString("dddd M MMM yyyy")));
+    }
+    else
+    {
+        QMessageBox::critical(this, trUtf8("Erreur"),
+                              trUtf8("Erreur lors de l'enregistrement de la séance: %1")
+                              .arg(SqlHelper::query().lastError().text()));
+    }
 
 }
 
