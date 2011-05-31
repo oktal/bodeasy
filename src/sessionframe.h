@@ -1,6 +1,8 @@
 #ifndef SESSIONFRAME_H
 #define SESSIONFRAME_H
 
+#include "SessionProxy.h"
+
 #include <QFrame>
 #include <QList>
 
@@ -10,21 +12,23 @@ namespace Ui
 }
 class ExerciseWidget;
 
-class SessionFrame : public QFrame
+class SessionFrame : public QFrame, public SessionProxy
 {
     Q_OBJECT
 public:
     explicit SessionFrame(QWidget *parent = 0);
     ~SessionFrame();
 
-    QSize sizeHint() const;
-    void setSessionId(qint64 id);
-    void setUserId(qint64 id);
-    void refresh();
-    void start();
+    virtual QSize sizeHint() const;
+    
+    virtual void setSessionId(qint64 id);
+    virtual void setUserId(qint64 id);
+    virtual void refresh();
+    virtual void start();
+    virtual void stop();
 
 signals:
-    void sessionFinished();
+    virtual void sessionFinished();
 
 private slots:
     void on_btnNext_clicked();
