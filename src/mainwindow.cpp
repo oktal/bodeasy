@@ -13,6 +13,8 @@
 
 #include <QSqlTableModel>
 
+#include <QTimer>
+
 #include <QDebug>
 #include <QSqlError>
 #include <QCloseEvent>
@@ -24,7 +26,8 @@ MainWindow::MainWindow(QWidget *parent) :
     mUserId(-1),
     sessionsModel(new SessionsModel(this)),
     contentModel(new SessionContentModel(this)),
-    sessionFrame(new SessionFrame)
+    sessionFrame(new SessionFrame),
+    dateTimeLabel(new QLabel(this))
 {
     ui->setupUi(this);
     sessionFrame->setEnabled(false);
@@ -41,6 +44,20 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->lblPlanifiedSession->setEnabled(false);
 
     ui->cChrono->setFormat("hh:mm:ss:zzz");
+
+    QFont myFont("Monospace", 10, QFont::Bold);
+    dateTimeLabel->setFont(myFont);
+
+    QWidget *spacer = new QWidget(this);
+    spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    ui->toolBar->addWidget(spacer);
+    ui->toolBar->addWidget(dateTimeLabel);
+    timer = new QTimer(this);
+    timer->start(1000);
+    connect(timer, SIGNAL(timeout()), this, SLOT(onTimerTimeout()));
+    onTimerTimeout();
+
+    selectInformations();
 }
 
 MainWindow::~MainWindow()
@@ -137,7 +154,28 @@ void MainWindow::onSessionDeleted(qint64 id)
     }
 }
 
+void MainWindow::onTimerTimeout()
+{
+    const QString dt = QDateTime::currentDateTime().toString(
+                "dddd M MMM yyyy HH:mm:ss");
+    dateTimeLabel->setText(dt);
+}
+
 void MainWindow::selectInformations()
 {
+    QSqlQuery q = SqlHelper::query();
+    if (q.exec("SELECT date FROM exercise_result ORDER BY date DESC LIMIT 1"))
+    {
+        if (q.next())
+        {
+            QDate lastSeanceDate = q.value(0).toDate();
+            ui->lblLastSeanceDate->setText(lastSeanceDate.toString("dddd M MMM yyyy"));
+        }
+        else
+        {
+            ui->lblLastSeanceDate->setText(trUtf8("Aucune séance effectuée"));
+        }
+    }
 
+    ui->lblNextSeanceDate->setText(trUtf8("Aucune séance planifiée"));
 }

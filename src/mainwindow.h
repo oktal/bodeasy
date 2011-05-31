@@ -8,6 +8,8 @@ namespace Ui
     class MainWindow;
 }
 class QSqlTableModel;
+class QLabel;
+class QTimer;
 class SessionsModel;
 class SessionContentModel;
 class SessionFrame;
@@ -33,6 +35,8 @@ private slots:
     void onSessionUpdated(qint64 id);
     void onSessionDeleted(qint64 id);
 
+    void onTimerTimeout();
+
 private:
     void selectInformations();
 
@@ -41,6 +45,8 @@ private:
     SessionsModel *sessionsModel;
     SessionContentModel *contentModel;
     SessionFrame *sessionFrame;
+    QLabel *dateTimeLabel;
+    QTimer *timer;
 
 protected slots:
     virtual void closeEvent(QCloseEvent* event);
