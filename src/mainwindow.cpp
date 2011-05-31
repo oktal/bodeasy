@@ -43,7 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->lblPlanifiedSession->setText(trUtf8("Aucune séance planifiée"));
     ui->lblPlanifiedSession->setEnabled(false);
 
-    ui->cChrono->setFormat("hh:mm:ss:zzz");
+    ui->cChrono->setTextFormat("hh:mm:ss:zzz");
 
     QFont myFont("Monospace", 10, QFont::Bold);
     dateTimeLabel->setFont(myFont);
