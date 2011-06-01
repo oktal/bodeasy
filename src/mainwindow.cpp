@@ -32,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
     sessionsModel(new SessionsModel(this)),
     contentModel(new SessionContentModel(this)),
     sessionsMadeModel(new SessionsMadeModel(this)),
-    sessionWidget(new SessionIconView(this)),
+    sessionWidget(new SessionFrame(this)),
     sessionProxy(dynamic_cast<SessionProxy*>(sessionWidget)),
     cChrono(new pChronometer(this)),
     dateTimeLabel(new QLabel(this))
@@ -70,8 +70,6 @@ MainWindow::MainWindow(QWidget *parent) :
     onTimerTimeout();
 
     connect(sessionWidget, SIGNAL(sessionFinished()), this, SLOT(onSessionFinished()));
-
-    selectInformations();
 }
 
 MainWindow::~MainWindow()
@@ -105,6 +103,8 @@ void MainWindow::setUserId(qint64 id)
     ui->btnSee->setEnabled(sessionsMadeModel->rowCount() > 0);
     UsersModel users;
     setWindowTitle(QString("%1 (%2)").arg(qApp->applicationName()).arg(users.user(id).name));
+
+    selectInformations();
 }
 
 void MainWindow::on_exercisesAction_triggered()
@@ -187,7 +187,10 @@ void MainWindow::onTimerTimeout()
 void MainWindow::selectInformations()
 {
     QSqlQuery q = SqlHelper::query();
-    if (q.exec("SELECT date FROM exercise_result ORDER BY date DESC LIMIT 1"))
+    q.prepare("SELECT date FROM session_made WHERE id_user=:userId "
+              "ORDER BY date DESC LIMIT 1");
+    q.bindValue(":userId", mUserId);
+    if (q.exec())
     {
         if (q.next())
         {
