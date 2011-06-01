@@ -62,7 +62,8 @@ HEADERS	+= src/usersdialog.h \
 	src/SessionProxy.h \
 	src/views/icon/SessionIconModel.h \
 	src/views/icon/SessionIconDelegate.h \
-	src/views/icon/SessionIconView.h
+	src/views/icon/SessionIconView.h \
+    src/exercisewidgetdata.h
 
 SOURCES	+= src/main.cpp \
 	src/usersdialog.cpp \
@@ -79,6 +80,7 @@ SOURCES	+= src/main.cpp \
 	src/SessionProxy.cpp \
 	src/views/icon/SessionIconModel.cpp \
 	src/views/icon/SessionIconDelegate.cpp \
-	src/views/icon/SessionIconView.cpp
+	src/views/icon/SessionIconView.cpp \
+    src/exercisewidgetdata.cpp
 
 RESOURCES	+= src/ressources.qrc
