@@ -126,12 +126,12 @@ void ExercisesDialog::on_lstExercises_clicked( const QModelIndex &index )
     {
         ui->chkGroup2->setEnabled( true );
         ui->chkGroup2->setChecked( true );
+
         ui->cbGroup2->setEnabled( true );
-        ui->chkGroup3->setEnabled( true );
         ui->cbGroup2->setCurrentIndex( ui->cbGroup2->findData( e.groups[1] ) );
 
+        ui->chkGroup3->setEnabled( true );
         ui->chkGroup3->setChecked( e.groups.size() == 3 );
-        ui->chkGroup3->setEnabled( e.groups.size() == 3 );
         ui->cbGroup3->setEnabled( e.groups.size() == 3 );
         if ( e.groups.size() == 3 )
         {
@@ -142,6 +142,7 @@ void ExercisesDialog::on_lstExercises_clicked( const QModelIndex &index )
             ui->cbGroup3->setCurrentIndex( 0 );
         }
     } else {
+        ui->chkGroup2->setChecked( false );
         ui->cbGroup2->setEnabled( false );
         ui->cbGroup2->setCurrentIndex( 0 );
         ui->chkGroup3->setEnabled( false );
