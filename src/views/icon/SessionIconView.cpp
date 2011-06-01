@@ -46,13 +46,10 @@ void SessionIconView::refresh()
 
 void SessionIconView::start()
 {
-	setEnabled( true );
 }
 
 void SessionIconView::stop()
 {
-	setEnabled( false );
-	
     QList<ExerciseWidget*>::const_iterator it;
 
     bool isComplete = true;
