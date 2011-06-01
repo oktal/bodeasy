@@ -27,10 +27,10 @@ QVariant SessionsMadeModel::data(const QModelIndex &index, int role) const
         if (index.column() == 0)
         {
             const QSqlRecord rec = record(index.row());
-            const QDate date = rec.value("date").toDate();
+            const QDateTime dateTime = rec.value("date").toDateTime();
             const QString sessionName = rec.value("name").toString();
 
-            return QString("%1 - %2").arg(sessionName).arg(date.toString(Qt::SystemLocaleLongDate));
+            return QString("%1 - %2").arg(sessionName).arg(dateTime.toString(Qt::SystemLocaleLongDate));
         }
     }
 

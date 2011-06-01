@@ -132,7 +132,7 @@ void SessionFrame::stop()
                       "VALUES(:id_session, :id_user, :date)");
         query.bindValue(":id_session", mSessionId);
         query.bindValue(":id_user", mUserId);
-        query.bindValue(":date", QDate::currentDate());
+        query.bindValue(":date", QDateTime::currentDateTime());
         if (!query.exec())
         {
             if (transaction)
