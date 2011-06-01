@@ -12,7 +12,7 @@ namespace Ui
 }
 class ExerciseWidget;
 
-class SessionFrame : public QFrame, public SessionProxy
+class SessionFrame : public QFrame
 {
     Q_OBJECT
 public:
@@ -20,7 +20,8 @@ public:
     ~SessionFrame();
 
     virtual QSize sizeHint() const;
-    
+
+public slots:
     virtual void setSessionId(qint64 id);
     virtual void setUserId(qint64 id);
     virtual void refresh();

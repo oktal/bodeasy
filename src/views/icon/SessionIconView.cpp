@@ -9,7 +9,7 @@
 #include <QDate>
 
 SessionIconView::SessionIconView( QWidget* parent )
-	: QListView( parent ), SessionProxy(),
+	: QListView( parent ),
 	mSessionId( -1 ),
 	mUserId( -1 ),
 	mModel( new SessionIconModel( this ) ),

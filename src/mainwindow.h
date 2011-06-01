@@ -48,8 +48,7 @@ private:
     SessionsModel *sessionsModel;
     SessionContentModel *contentModel;
     SessionsMadeModel *sessionsMadeModel;
-    QWidget* sessionWidget;
-    SessionProxy *sessionProxy;
+    SessionProxy* sessionProxy;
     pChronometer* cChrono;
     QLabel *dateTimeLabel;
     QTimer *timer;

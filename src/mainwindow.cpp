@@ -32,14 +32,16 @@ MainWindow::MainWindow(QWidget *parent) :
     sessionsModel(new SessionsModel(this)),
     contentModel(new SessionContentModel(this)),
     sessionsMadeModel(new SessionsMadeModel(this)),
-    sessionWidget(new SessionFrame(this)),
-    sessionProxy(dynamic_cast<SessionProxy*>(sessionWidget)),
+    sessionProxy(new SessionProxy(this)),
     cChrono(new pChronometer(this)),
     dateTimeLabel(new QLabel(this))
 {
     ui->setupUi(this);
-    sessionWidget->setEnabled(false);
-    setCentralWidget(sessionWidget);
+    sessionProxy->setEnabled(false);
+    setCentralWidget(sessionProxy);
+    
+    //sessionProxy->setWidget(new SessionFrame(this));
+    sessionProxy->setWidget(new SessionIconView(this));
 
     ui->cmbSessions->setModel(sessionsModel);
     ui->lstContent->setModel(contentModel);
@@ -69,7 +71,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(timer, SIGNAL(timeout()), this, SLOT(onTimerTimeout()));
     onTimerTimeout();
 
-    connect(sessionWidget, SIGNAL(sessionFinished()), this, SLOT(onSessionFinished()));
+    connect(sessionProxy, SIGNAL(sessionFinished()), this, SLOT(onSessionFinished()));
 }
 
 MainWindow::~MainWindow()
