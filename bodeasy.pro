@@ -80,7 +80,6 @@ SOURCES	+= src/main.cpp \
 	src/SessionProxy.cpp \
 	src/views/icon/SessionIconModel.cpp \
 	src/views/icon/SessionIconDelegate.cpp \
-	src/views/icon/SessionIconView.cpp \
-    src/exercisewidgetdata.cpp
+	src/views/icon/SessionIconView.cpp
 
 RESOURCES	+= src/ressources.qrc

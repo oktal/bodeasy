@@ -6,6 +6,7 @@
 #include <QPair>
 
 #include "sql/exercise.h"
+#include "exercisewidgetdata.h"
 
 namespace Ui
 {
@@ -21,13 +22,8 @@ class ExerciseWidget : public QWidget
 public:
     explicit ExerciseWidget(qint64 id, QWidget *parent = 0);
     ~ExerciseWidget();
-    void setExerciseName(const QString &exerciseName);
-    void setExerciseType(Exercise::Type type);
-    void setExerciseDifficulty(Exercise::Difficulty difficulty);
-    void setExerciseRest(int rest);
-    void setExerciseUseWeight(bool weight);
-    void setExerciseRepetitions(int repetitions);
-    void setExerciseSeries(int series);
+    void setData(const ExerciseWidgetData &data);
+    const ExerciseWidgetData &data() const;
 
     bool save(qint64 userId, qint64 sessionId);
     bool isComplete() const;
@@ -40,11 +36,12 @@ private slots:
     void on_btnDeleteSerie_clicked();
 
 private:
+    void createLayout();
+
     Ui::ExerciseWidget *ui;
     QGridLayout *scrollAreaLayout;
+    ExerciseWidgetData mData;
     qint64 mExerciseId;
-    QString mExerciseName;
-    bool mUseWeight;
 
     QList<QPair<QLineEdit *, QLineEdit *> > mPairs;
     int mExtraSeries;
