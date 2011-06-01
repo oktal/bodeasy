@@ -40,8 +40,8 @@ MainWindow::MainWindow(QWidget *parent) :
     sessionProxy->setEnabled(false);
     setCentralWidget(sessionProxy);
     
-    //sessionProxy->setWidget(new SessionFrame(this));
-    sessionProxy->setWidget(new SessionIconView(this));
+    sessionProxy->setWidget(new SessionFrame(this));
+    //sessionProxy->setWidget(new SessionIconView(this));
 
     ui->cmbSessions->setModel(sessionsModel);
     ui->lstContent->setModel(contentModel);
@@ -148,6 +148,7 @@ void MainWindow::on_cmbSessions_activated(int index)
 
 void MainWindow::on_btnStart_clicked()
 {
+    sessionProxy->setEnabled(true);
     sessionProxy->start();
 }
 
@@ -174,6 +175,7 @@ void MainWindow::onSessionDeleted(qint64 id)
 
 void MainWindow::onSessionFinished()
 {
+    sessionProxy->setEnabled(false);
     const QSqlQuery query = sessionsMadeModel->query();
     sessionsMadeModel->setQuery(query.executedQuery(), SqlHelper::database());
     ui->lblLastSeanceDate->setText(QDate::currentDate().toString(Qt::SystemLocaleLongDate));

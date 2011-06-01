@@ -63,9 +63,7 @@ void SessionFrame::refresh()
 }
 
 void SessionFrame::start()
-{    
-    setEnabled(true);
-
+{
     ui->btnFirst->setEnabled(false);
     ui->btnPrevious->setEnabled(false);
     /* Enable Last and Next buttons if there are more than one page */
