@@ -149,14 +149,16 @@ void SessionIconView::selectExercises()
 			ids << QString::number( id );
 			
             ExerciseWidget* ew = new ExerciseWidget( id );
-			
-            ew->setExerciseName( query.value( 1 ).toString() );
-            ew->setExerciseType( Exercise::Type( query.value( 2 ).toInt() ) );
-            ew->setExerciseDifficulty( Exercise::Difficulty( query.value( 3 ).toInt() ) );
-            ew->setExerciseUseWeight( query.value( 4 ).toBool() );
-            ew->setExerciseRest( query.value( 5 ).toInt() );
-            ew->setExerciseRepetitions( query.value( 6 ).toInt() );
-            ew->setExerciseSeries( query.value( 7 ).toInt() );
+
+            ExerciseWidgetData data;
+            data.name = query.value( 1 ).toString();
+            data.type = Exercise::Type( query.value( 2 ).toInt() );
+            data.difficulty = Exercise::Difficulty( query.value( 3 ).toInt() );
+            data.weight = query.value( 4 ).toBool();
+            data.rest = query.value( 5 ).toInt();
+            data.repetitions = query.value( 6 ).toInt();
+            data.series = query.value( 7 ).toInt();
+            ew->setData(data);
 			
             mExercises[ id ] = ew;
         }

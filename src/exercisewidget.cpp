@@ -18,7 +18,6 @@ ExerciseWidget::ExerciseWidget(qint64 id, QWidget *parent) :
     ui(new Ui::ExerciseWidget),
     scrollAreaLayout(0),
     mExerciseId(id),
-    mUseWeight(true),
     mExtraSeries(0)
 {
     ui->setupUi(this);
@@ -36,7 +35,7 @@ void ExerciseWidget::on_btnAddSerie_clicked()
     txtResult->setFixedWidth(30);
     QLineEdit *txtLoad = new QLineEdit;
     txtLoad->setFixedWidth(30);
-    txtLoad->setEnabled(mUseWeight);
+    txtLoad->setEnabled(mData.weight);
 
     mPairs.append(qMakePair(txtResult, txtLoad));
     const int rowCount = mPairs.count();
@@ -64,15 +63,13 @@ void ExerciseWidget::on_btnDeleteSerie_clicked()
     }
 }
 
-void ExerciseWidget::setExerciseName(const QString &exerciseName)
+void ExerciseWidget::setData(const ExerciseWidgetData &data)
 {
-    mExerciseName = exerciseName;
-    ui->lblExerciseName->setText(exerciseName);
-}
+    mData = data;
 
-void ExerciseWidget::setExerciseType(Exercise::Type type)
-{
-    switch (type)
+    ui->lblExerciseName->setText(data.name);
+
+    switch (data.type)
     {
     case Exercise::Repetition:
         ui->lblType->setText(trUtf8("Répétition"));
@@ -81,11 +78,8 @@ void ExerciseWidget::setExerciseType(Exercise::Type type)
         ui->lblType->setText(trUtf8("Durée"));
         break;
     }
-}
 
-void ExerciseWidget::setExerciseDifficulty(Exercise::Difficulty difficulty)
-{
-    switch (difficulty)
+    switch (data.difficulty)
     {
     case Exercise::Easy:
         ui->lblDifficulty->setText(trUtf8("Facile"));
@@ -97,24 +91,20 @@ void ExerciseWidget::setExerciseDifficulty(Exercise::Difficulty difficulty)
         ui->lblDifficulty->setText(trUtf8("Difficile"));
         break;
     }
+
+    ui->lblRest->setText(QString("%1 secs.").arg(data.rest));
+    ui->lblRepetitions->setNum(data.repetitions);
+
+    createLayout();
 }
 
-void ExerciseWidget::setExerciseRest(int rest)
+const ExerciseWidgetData &ExerciseWidget::data() const
 {
-    ui->lblRest->setText(QString("%1 secs.").arg(rest));
+    return mData;
 }
 
-void ExerciseWidget::setExerciseUseWeight(bool weight)
-{
-    mUseWeight = weight;
-}
 
-void ExerciseWidget::setExerciseRepetitions(int repetitions)
-{
-    ui->lblRepetitions->setNum(repetitions);
-}
-
-void ExerciseWidget::setExerciseSeries(int series)
+void ExerciseWidget::createLayout()
 {
     delete scrollAreaLayout;
     mPairs.clear();
@@ -128,6 +118,7 @@ void ExerciseWidget::setExerciseSeries(int series)
     scrollAreaLayout->addWidget(new QLabel(trUtf8("Rés.")), 0, 1);
     scrollAreaLayout->addWidget(new QLabel(trUtf8("Charge")), 0, 2);
     int row = 1;
+    const int series = mData.series;
     for (int i = 0; i < series; ++i)
     {
         scrollAreaLayout->addWidget(new QLabel(trUtf8("Série %1").arg(i + 1)), row, 0);
@@ -156,7 +147,7 @@ void ExerciseWidget::changeEvent(QEvent *event)
         QListIterator<QPair<QLineEdit *, QLineEdit *> > it(mPairs);
         while (it.hasNext())
         {
-            it.next().second->setEnabled(mUseWeight);
+            it.next().second->setEnabled(mData.weight);
         }
 
         ui->btnDeleteSerie->setEnabled(false);
