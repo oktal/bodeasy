@@ -9,7 +9,7 @@ class SessionIconModel;
 class SessionIconDelegate;
 class ExerciseWidget;
 
-class SessionIconView : public QListView, public SessionProxy
+class SessionIconView : public QListView
 {
 	Q_OBJECT
 	friend class SessionIconDelegate;

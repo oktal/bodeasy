@@ -1,20 +1,31 @@
 #ifndef SESSIONPROXY_H
 #define SESSIONPROXY_H
 
-#include <QtGlobal>
+#include <QWidget>
+#include <QPointer>
 
-class SessionProxy
+class SessionProxy : public QWidget
 {
-public:
-	// public slots
-	virtual void setSessionId( qint64 id ) = 0;
-    virtual void setUserId( qint64 id ) = 0;
-    virtual void refresh() = 0;
-    virtual void start() = 0;
-	virtual void stop() = 0;
+	Q_OBJECT
 
-	// signals
-	virtual void sessionFinished() = 0;
+public:
+	SessionProxy( QWidget* parent = 0 );
+	
+	QWidget* widget() const;
+	void setWidget( QWidget* widget );
+
+public slots:
+	virtual void setSessionId( qint64 id );
+    virtual void setUserId( qint64 id );
+    virtual void refresh();
+    virtual void start();
+	virtual void stop();
+
+protected:
+	QPointer<QWidget> mWidget;
+
+signals:
+	void sessionFinished();
 };
 
 #endif // SESSIONPROXY_H

@@ -15,7 +15,7 @@ static int const RowMaximumWidgets = 2;
 static int const ColumnMaximumWidgets = 2;
 
 SessionFrame::SessionFrame(QWidget *parent) :
-    QFrame(parent), SessionProxy(), 
+    QFrame(parent),
     ui(new Ui::SessionFrame),
     mCurrentPage(0)
 {
