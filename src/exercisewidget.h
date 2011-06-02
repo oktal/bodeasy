@@ -13,7 +13,7 @@ namespace Ui
     class ExerciseWidget;
 }
 
-class QLineEdit;
+class QSpinBox;
 class QGridLayout;
 
 class ExerciseWidget : public QWidget
@@ -34,17 +34,19 @@ protected:
 private slots:
     void on_btnAddSerie_clicked();
     void on_btnDeleteSerie_clicked();
+    
+    void spinBox_valueChanged(int value);
 
 private:
+    typedef QPair<QSpinBox *, QSpinBox *> PairSpinBox;
+    ExerciseWidget::PairSpinBox addRow();
     void createLayout();
 
     Ui::ExerciseWidget *ui;
     QGridLayout *scrollAreaLayout;
     ExerciseWidgetData mData;
 
-    QList<QPair<QLineEdit *, QLineEdit *> > mPairs;
-    int mExtraSeries;
-
+    QList<ExerciseWidget::PairSpinBox> mPairs;
 };
 
 #endif // EXERCISEWIDGET_H
