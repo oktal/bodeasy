@@ -20,6 +20,8 @@ struct ExerciseWidgetData
     bool weight;
     int repetitions;
     int series;
+    
+    QList<QPair<int, int> > seriesData;
 };
 
 typedef QList<ExerciseWidgetData> ExerciseWidgetDataList;

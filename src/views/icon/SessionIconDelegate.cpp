@@ -4,12 +4,15 @@
 #include "exercisewidget.h"
 
 #include <QPainter>
+#include <QPixmapCache>
 #include <QDebug>
+#include <QTime>
 
 SessionIconDelegate::SessionIconDelegate( QObject* parent )
 	: QStyledItemDelegate( parent ),
 	mWidget( new ExerciseWidget )
 {
+	mWidget->resize( QSize( 450, 300 ) );
 }
 
 SessionIconDelegate::~SessionIconDelegate()
@@ -22,6 +25,7 @@ QWidget* SessionIconDelegate::createEditor( QWidget* parent, const QStyleOptionV
 	if ( index.column() == 0 ) {
 		ExerciseWidget* editor = new ExerciseWidget( parent );
 		editor->setFocusPolicy( Qt::StrongFocus );
+		editor->setAutoFillBackground( true );
 		return editor;
 	}
 	
@@ -31,9 +35,7 @@ QWidget* SessionIconDelegate::createEditor( QWidget* parent, const QStyleOptionV
 void SessionIconDelegate::paint( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const
 {
 	if ( index.isValid() ) {
-		const ExerciseWidgetData data = index.data( SessionIconModel::ExerciseDataRole ).value<ExerciseWidgetData>();
-		mWidget->setData( data );
-		painter->drawPixmap( option.rect.topLeft(), QPixmap::grabWidget( mWidget ) );
+		painter->drawPixmap( option.rect.topLeft(), cachedPixmap( index ) );
 	}
 	else {
 		QStyledItemDelegate::paint( painter, option, index );
@@ -58,7 +60,9 @@ void SessionIconDelegate::setModelData( QWidget* editor, QAbstractItemModel* mod
 	ExerciseWidget* ed = qobject_cast<ExerciseWidget*>( editor );
 	
 	if ( ed ) {
-		model->setData( index, QVariant::fromValue( ed->data() ), Qt::EditRole );
+		if ( model->setData( index, QVariant::fromValue( ed->data() ), Qt::EditRole ) ) {
+			cachePixmap( index, QPixmap::grabWidget( ed ) );
+		}
 	}
 	else {
 		QStyledItemDelegate::setModelData( editor, model, index );
@@ -68,4 +72,33 @@ void SessionIconDelegate::setModelData( QWidget* editor, QAbstractItemModel* mod
 QSize SessionIconDelegate::sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const
 {
 	return index.isValid() ? mWidget->size() : QStyledItemDelegate::sizeHint( option, index );
+}
+
+QString SessionIconDelegate::indexKey( const QModelIndex& index ) const
+{
+	return QString( "%1-%2" ).arg( index.row() ).arg( index.data( Qt::DisplayRole ).toString() );
+}
+
+void SessionIconDelegate::cachePixmap( const QModelIndex& index, const QPixmap& pixmap ) const
+{
+	const QString key = indexKey( index );
+	
+	if ( !QPixmapCache::insert( key, pixmap ) ) {
+		qWarning() << Q_FUNC_INFO << "Can't cache pixmap" << key << index;
+	}
+}
+
+QPixmap SessionIconDelegate::cachedPixmap( const QModelIndex& index ) const
+{
+	const QString key = indexKey( index );
+	QPixmap pixmap;
+	
+	if ( !QPixmapCache::find( key, pixmap ) ) {
+		const ExerciseWidgetData data = index.data( SessionIconModel::ExerciseDataRole ).value<ExerciseWidgetData>();
+		mWidget->setData( data );
+		pixmap = QPixmap::grabWidget( mWidget );
+		cachePixmap( index, pixmap );
+	}
+	
+	return pixmap;
 }
