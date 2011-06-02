@@ -21,6 +21,7 @@ SessionIconView::SessionIconView( QWidget* parent )
 	setResizeMode( QListView::Adjust );
 	setViewMode( QListView::IconMode );
 	setMovement( QListView::Static );
+	setSpacing( 5 );
 	setModel( mModel );
 	setItemDelegate( mDelegate );
 }

@@ -35,7 +35,15 @@ QWidget* SessionIconDelegate::createEditor( QWidget* parent, const QStyleOptionV
 void SessionIconDelegate::paint( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const
 {
 	if ( index.isValid() ) {
-		painter->drawPixmap( option.rect.topLeft(), cachedPixmap( index ) );
+		const bool isEditing = option.state & QStyle::State_Editing;
+		
+		if ( !isEditing ) {
+			//qWarning() << "Painting pixmap" << QTime::currentTime();
+			painter->drawPixmap( option.rect.topLeft(), cachedPixmap( index ) );
+		}
+		else {
+			//qWarning() << "NOT Painting pixmap" << QTime::currentTime();
+		}
 	}
 	else {
 		QStyledItemDelegate::paint( painter, option, index );
@@ -61,7 +69,8 @@ void SessionIconDelegate::setModelData( QWidget* editor, QAbstractItemModel* mod
 	
 	if ( ed ) {
 		if ( model->setData( index, QVariant::fromValue( ed->data() ), Qt::EditRole ) ) {
-			cachePixmap( index, QPixmap::grabWidget( ed ) );
+			mWidget->setData( ed->data() );
+			cachePixmap( index, QPixmap::grabWidget( mWidget ) );
 		}
 	}
 	else {
@@ -78,14 +87,29 @@ QString SessionIconDelegate::indexKey( const QModelIndex& index ) const
 {
 	return QString( "%1-%2" ).arg( index.row() ).arg( index.data( Qt::DisplayRole ).toString() );
 }
-
+#include <QLabel>
 void SessionIconDelegate::cachePixmap( const QModelIndex& index, const QPixmap& pixmap ) const
 {
 	const QString key = indexKey( index );
+	static QLabel* l1 = 0;
+	static QLabel* l2 = 0;
+	
+	if ( !l1 ) {
+		l1 = new QLabel;
+		l1->setWindowTitle( "l1" );
+		l2 = new QLabel;
+		l2->setWindowTitle( "l2" );
+	}
 	
 	if ( !QPixmapCache::insert( key, pixmap ) ) {
 		qWarning() << Q_FUNC_INFO << "Can't cache pixmap" << key << index;
 	}
+	
+	l1->setPixmap( pixmap );
+	l2->setPixmap( cachedPixmap( index ) );
+	
+	/*l1->show();
+	l2->show();*/
 }
 
 QPixmap SessionIconDelegate::cachedPixmap( const QModelIndex& index ) const
