@@ -1,0 +1,35 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/add-icon.png</file>
+        <file>images/delete-icon.png</file>
+        <file>images/save-icon.gif</file>
+        <file>images/close-icon.png</file>
+        <file>images/help-icon.png</file>
+        <file>images/minus-icon.png</file>
+        <file>images/plus-icon.png</file>
+        <file>images/icon-start.png</file>
+        <file>images/fitness-man.png</file>
+        <file>images/cancel-icon.png</file>
+        <file>images/check-icon.png</file>
+        <file>images/user-icon.png</file>
+        <file>images/calendar-icon.png</file>
+        <file>images/measure-icon.png</file>
+        <file>images/logout-icon.png</file>
+        <file>images/graph-icon.png</file>
+        <file>images/leftarrow-icon.png</file>
+        <file>images/rightarrow-icon.png</file>
+        <file>images/first-icon.png</file>
+        <file>images/last-icon.png</file>
+        <file>images/go-icon.png</file>
+        <file>images/checkround-icon.png</file>
+        <file>images/exercise-icon.png</file>
+        <file>images/table-icon.png</file>
+        <file>images/graph-icon2.png</file>
+        <file>images/clock-icon.png</file>
+    </qresource>
+    <qresource prefix="/sql">
+        <file alias="script001.sql">../db/database.sql</file>
+        <file alias="script002.sql">../db/triggers.sql</file>
+        <file alias="script003.sql">../db/musclegroups.sql</file>
+    </qresource>
+</RCC>
