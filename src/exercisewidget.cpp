@@ -180,7 +180,7 @@ void ExerciseWidget::changeEvent(QEvent *event)
             it.next().second->setEnabled(mData.weight);
         }
 
-        ui->btnDeleteSerie->setEnabled(false);
+        ui->btnDeleteSerie->setEnabled(mPairs.count() > mData.series);
     }
 }
 
