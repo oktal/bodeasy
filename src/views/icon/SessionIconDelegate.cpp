@@ -1,31 +1,28 @@
 #include "SessionIconDelegate.h"
+#include "SessionIconModel.h"
 #include "SessionIconView.h"
 #include "exercisewidget.h"
 
 #include <QPainter>
 #include <QDebug>
 
-SessionIconDelegate::SessionIconDelegate( SessionIconView* parent )
+SessionIconDelegate::SessionIconDelegate( QObject* parent )
 	: QStyledItemDelegate( parent ),
-	mView( parent )
+	mWidget( new ExerciseWidget )
 {
-	Q_ASSERT( mView );
 }
 
 SessionIconDelegate::~SessionIconDelegate()
 {
+	delete mWidget;
 }
 
 QWidget* SessionIconDelegate::createEditor( QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index ) const
 {
 	if ( index.column() == 0 ) {
-		ExerciseWidget* ew = mView->mExercises.value( index.data().toLongLong() );
-		
-		if ( ew ) {
-			ew->setParent( parent );
-		}
-		
-		return ew;
+		ExerciseWidget* editor = new ExerciseWidget( parent );
+		editor->setFocusPolicy( Qt::StrongFocus );
+		return editor;
 	}
 	
 	return QStyledItemDelegate::createEditor( parent, option, index );
@@ -33,18 +30,42 @@ QWidget* SessionIconDelegate::createEditor( QWidget* parent, const QStyleOptionV
 
 void SessionIconDelegate::paint( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const
 {
-	ExerciseWidget* ew = mView->mExercises.value( index.data().toLongLong() );
-	
-	if ( !ew ) {
-		QStyledItemDelegate::paint( painter, option, index );
+	if ( index.isValid() ) {
+		const ExerciseWidgetData data = index.data( SessionIconModel::ExerciseDataRole ).value<ExerciseWidgetData>();
+		mWidget->setData( data );
+		painter->drawPixmap( option.rect.topLeft(), QPixmap::grabWidget( mWidget ) );
 	}
 	else {
-		painter->drawPixmap( option.rect.topLeft(), QPixmap::grabWidget( ew ) );
+		QStyledItemDelegate::paint( painter, option, index );
+	}
+}
+
+void SessionIconDelegate::setEditorData( QWidget* editor, const QModelIndex& index ) const
+{
+	const ExerciseWidgetData data = index.data( SessionIconModel::ExerciseDataRole ).value<ExerciseWidgetData>();
+	ExerciseWidget* ed = qobject_cast<ExerciseWidget*>( editor );
+	
+	if ( ed ) {
+		ed->setData( data );
+	}
+	else {
+		QStyledItemDelegate::setEditorData( editor, index );
+	}
+}
+
+void SessionIconDelegate::setModelData( QWidget* editor, QAbstractItemModel* model, const QModelIndex& index ) const
+{
+	ExerciseWidget* ed = qobject_cast<ExerciseWidget*>( editor );
+	
+	if ( ed ) {
+		model->setData( index, QVariant::fromValue( ed->data() ), Qt::EditRole );
+	}
+	else {
+		QStyledItemDelegate::setModelData( editor, model, index );
 	}
 }
 
 QSize SessionIconDelegate::sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const
 {
-	ExerciseWidget* ew = mView->mExercises.value( index.data().toLongLong() );
-	return ew ? ew->size() : QStyledItemDelegate::sizeHint( option, index );
+	return index.isValid() ? mWidget->size() : QStyledItemDelegate::sizeHint( option, index );
 }

@@ -13,11 +13,10 @@
 
 #include <QDate>
 
-ExerciseWidget::ExerciseWidget(qint64 id, QWidget *parent) :
+ExerciseWidget::ExerciseWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ExerciseWidget),
     scrollAreaLayout(0),
-    mExerciseId(id),
     mExtraSeries(0)
 {
     ui->setupUi(this);
@@ -182,7 +181,7 @@ bool ExerciseWidget::save(qint64 userId, qint64 sessionId)
     q.bindValue(":date", QDate::currentDate());
     q.bindValue(":id_session", sessionId);
     q.bindValue(":id_user", userId);
-    q.bindValue(":id_exercise", mExerciseId);
+    q.bindValue(":id_exercise", mData.exerciseId);
 
     QList<QPair<QLineEdit *, QLineEdit *> >::const_iterator it;
     int serie = 0;
