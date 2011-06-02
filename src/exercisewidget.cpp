@@ -13,6 +13,8 @@
 
 #include <QDate>
 
+#include <limits>
+
 ExerciseWidget::ExerciseWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ExerciseWidget),
@@ -110,12 +112,12 @@ ExerciseWidget::PairSpinBox ExerciseWidget::addRow()
     QSpinBox *txtResult = new QSpinBox;
     txtResult->setObjectName(QString("txtResult_%1").arg(rowCount-1));
     txtResult->setMinimum(0);
-    txtResult->setMaximum(INT_MAX);
+    txtResult->setMaximum(std::numeric_limits<int>::max());
     txtResult->setFixedWidth(40);
     QSpinBox *txtLoad = new QSpinBox;
     txtLoad->setObjectName(QString("txtLoad_%1").arg(rowCount-1));
     txtLoad->setMinimum(0);
-    txtLoad->setMaximum(INT_MAX);
+    txtLoad->setMaximum(std::numeric_limits<int>::max());
     txtLoad->setFixedWidth(40);
     txtLoad->setEnabled(mData.weight);
 
