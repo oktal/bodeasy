@@ -22,9 +22,9 @@ public:
 protected:
 	ExerciseWidget* mWidget;
 	
-	QString indexKey( const QModelIndex& index ) const;
+	/*QString indexKey( const QModelIndex& index ) const;
 	void cachePixmap( const QModelIndex& index, const QPixmap& pixmap ) const;
-	QPixmap cachedPixmap( const QModelIndex& index ) const;
+	QPixmap cachedPixmap( const QModelIndex& index ) const;*/
 };
 
 #endif // SESSIONICONDELEGATE_H

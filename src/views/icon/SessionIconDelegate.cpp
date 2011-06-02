@@ -37,13 +37,18 @@ void SessionIconDelegate::paint( QPainter* painter, const QStyleOptionViewItem& 
 	if ( index.isValid() ) {
 		const bool isEditing = option.state & QStyle::State_Editing;
 		
-		if ( !isEditing ) {
+		//if ( !isEditing ) {
 			//qWarning() << "Painting pixmap" << QTime::currentTime();
-			painter->drawPixmap( option.rect.topLeft(), cachedPixmap( index ) );
-		}
-		else {
+			//painter->drawPixmap( option.rect.topLeft(), cachedPixmap( index ) );
+			
+			const ExerciseWidgetData data = index.data( SessionIconModel::ExerciseDataRole ).value<ExerciseWidgetData>();
+			mWidget->setData( data );
+			mWidget->render( painter, option.rect.topLeft() +QPoint( 276, 43 ), QRegion(), QWidget::DrawWindowBackground | QWidget::DrawChildren );
+			//painter->drawRect( option.rect.adjusted( 0, 0, -1, -1 ) );
+		//}
+		//else {
 			//qWarning() << "NOT Painting pixmap" << QTime::currentTime();
-		}
+		//}
 	}
 	else {
 		QStyledItemDelegate::paint( painter, option, index );
@@ -69,8 +74,8 @@ void SessionIconDelegate::setModelData( QWidget* editor, QAbstractItemModel* mod
 	
 	if ( ed ) {
 		if ( model->setData( index, QVariant::fromValue( ed->data() ), Qt::EditRole ) ) {
-			mWidget->setData( ed->data() );
-			cachePixmap( index, QPixmap::grabWidget( mWidget ) );
+			/*mWidget->setData( ed->data() );
+			cachePixmap( index, QPixmap::grabWidget( mWidget ) );*/
 		}
 	}
 	else {
@@ -83,7 +88,7 @@ QSize SessionIconDelegate::sizeHint( const QStyleOptionViewItem& option, const Q
 	return index.isValid() ? mWidget->size() : QStyledItemDelegate::sizeHint( option, index );
 }
 
-QString SessionIconDelegate::indexKey( const QModelIndex& index ) const
+/*QString SessionIconDelegate::indexKey( const QModelIndex& index ) const
 {
 	return QString( "%1-%2" ).arg( index.row() ).arg( index.data( Qt::DisplayRole ).toString() );
 }
@@ -108,8 +113,8 @@ void SessionIconDelegate::cachePixmap( const QModelIndex& index, const QPixmap& 
 	l1->setPixmap( pixmap );
 	l2->setPixmap( cachedPixmap( index ) );
 	
-	/*l1->show();
-	l2->show();*/
+	l1->show();
+	l2->show();
 }
 
 QPixmap SessionIconDelegate::cachedPixmap( const QModelIndex& index ) const
@@ -125,4 +130,4 @@ QPixmap SessionIconDelegate::cachedPixmap( const QModelIndex& index ) const
 	}
 	
 	return pixmap;
-}
+}*/
