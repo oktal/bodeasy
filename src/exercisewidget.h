@@ -20,7 +20,7 @@ class ExerciseWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ExerciseWidget(qint64 id, QWidget *parent = 0);
+    explicit ExerciseWidget(QWidget *parent = 0);
     ~ExerciseWidget();
     void setData(const ExerciseWidgetData &data);
     const ExerciseWidgetData &data() const;
@@ -41,7 +41,6 @@ private:
     Ui::ExerciseWidget *ui;
     QGridLayout *scrollAreaLayout;
     ExerciseWidgetData mData;
-    qint64 mExerciseId;
 
     QList<QPair<QLineEdit *, QLineEdit *> > mPairs;
     int mExtraSeries;

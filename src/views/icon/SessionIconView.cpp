@@ -7,6 +7,7 @@
 #include <QSqlQuery>
 #include <QMessageBox>
 #include <QDate>
+#include <QDebug>
 
 SessionIconView::SessionIconView( QWidget* parent )
 	: QListView( parent ),
@@ -50,7 +51,7 @@ void SessionIconView::start()
 
 void SessionIconView::stop()
 {
-    QList<ExerciseWidget*>::const_iterator it;
+    /*QList<ExerciseWidget*>::const_iterator it;
 
     bool isComplete = true;
 
@@ -119,7 +120,7 @@ void SessionIconView::stop()
         QMessageBox::critical( this, trUtf8( "Erreur" ),
                               trUtf8( "Erreur lors de l'enregistrement de la séance: %1" )
                               .arg( SqlHelper::lastError() ) );
-    }
+    }*/
 }
 
 void SessionIconView::selectExercises()
@@ -134,20 +135,12 @@ void SessionIconView::selectExercises()
     query.bindValue( ":sessionId", mSessionId );
 	
     if ( query.exec() ) {
-		QStringList ids;
-		
-		mModel->setStringList( QStringList() );
-		qDeleteAll( mExercises );
-		mExercises.clear();
+		ExerciseWidgetDataList widgetsData;
 		
         while ( query.next() ) {
-			const qint64 id = query.value( 0 ).toLongLong();
-			
-			ids << QString::number( id );
-			
-            ExerciseWidget* ew = new ExerciseWidget( id );
-
             ExerciseWidgetData data;
+			
+			data.exerciseId = query.value( 0 ).toLongLong();
             data.name = query.value( 1 ).toString();
             data.type = Exercise::Type( query.value( 2 ).toInt() );
             data.difficulty = Exercise::Difficulty( query.value( 3 ).toInt() );
@@ -155,11 +148,10 @@ void SessionIconView::selectExercises()
             data.rest = query.value( 5 ).toInt();
             data.repetitions = query.value( 6 ).toInt();
             data.series = query.value( 7 ).toInt();
-            ew->setData(data);
 			
-            mExercises[ id ] = ew;
+            widgetsData << data;
         }
 		
-		mModel->setStringList( ids );
+		mModel->setWidgetsData( widgetsData );
     }
 }

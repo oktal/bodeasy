@@ -3,11 +3,8 @@
 
 #include <QListView>
 
-#include "SessionProxy.h"
-
 class SessionIconModel;
 class SessionIconDelegate;
-class ExerciseWidget;
 
 class SessionIconView : public QListView
 {
@@ -30,7 +27,6 @@ protected:
     qint64 mUserId;
 	SessionIconModel* mModel;
 	SessionIconDelegate* mDelegate;
-	QHash<qint64, ExerciseWidget*> mExercises;
 
 protected slots:
 	void selectExercises();

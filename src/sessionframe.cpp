@@ -235,8 +235,9 @@ void SessionFrame::selectExercises()
     {
         while (query.next())
         {
-            ExerciseWidget *ew = new ExerciseWidget(query.value(0).toLongLong());
+            ExerciseWidget *ew = new ExerciseWidget();
             ExerciseWidgetData data;
+            data.exerciseId = query.value(0).toLongLong();
             data.name = query.value(1).toString();
             data.type = Exercise::Type(query.value(2).toInt());
             data.difficulty = Exercise::Difficulty(query.value(3).toInt());
