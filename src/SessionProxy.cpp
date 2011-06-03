@@ -57,3 +57,8 @@ void SessionProxy::stop()
 {
     QMetaObject::invokeMethod( mWidget, "stop" );
 }
+
+void SessionProxy::showResults( qint64 sessionMadeId )
+{
+    QMetaObject::invokeMethod( mWidget, "showResults", Q_ARG( qint64, sessionMadeId ) );
+}

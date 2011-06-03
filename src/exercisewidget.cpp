@@ -276,3 +276,58 @@ bool ExerciseWidget::save(qint64 userId, qint64 sessionId, qint64 sessionMadeId)
 
     return true;
 }
+
+void ExerciseWidget::selectResults(qint64 sessionMadeId)
+{
+    QSqlQuery query = SqlHelper::query();
+    query.prepare("SELECT result, load, serie_number FROM session_made_result_view "
+                  "WHERE id_session_made=:sessionMadeId AND id_exercise=:exerciseId "
+                  "ORDER BY serie_number");
+    query.bindValue(":sessionMadeId", sessionMadeId);
+    query.bindValue(":exerciseId", mData.exerciseId);
+
+    if (query.exec())
+    {
+        while (query.next())
+        {
+            const int serieNumber = query.value(2).toInt();
+            const int result = query.value(0).toInt();
+
+            const QString resultBoxName = QString("txtResult_%1").arg(serieNumber);
+            QSpinBox *resultBox = ui->scrollAreaWidgetContents->findChild<QSpinBox *>(resultBoxName);
+            if (resultBox)
+            {
+                resultBox->setValue(result);
+                resultBox->setReadOnly(true);
+                mData.seriesData[serieNumber].first = result;
+            }
+            else
+            {
+                qWarning() << Q_FUNC_INFO << " Couldn't find SpinBox " << resultBoxName;
+            }
+
+            if (mData.weight)
+            {
+                const int load = query.value(1).toInt();
+                const QString loadBoxName = QString("txtLoad_%1").arg(serieNumber);
+                QSpinBox *loadBox = ui->scrollAreaWidgetContents->findChild<QSpinBox *>(loadBoxName);
+                if (loadBox)
+                {
+                    loadBox->setValue(load);
+                    loadBox->setReadOnly(true);
+                    mData.seriesData[serieNumber].second = load;
+                }
+                else
+                {
+                    qWarning() << Q_FUNC_INFO << " Couldn't find SpinBox " << loadBoxName;
+                }
+            }
+
+        }
+        ui->btnAddSerie->setEnabled(false);
+    }
+    else
+    {
+        qWarning() << Q_FUNC_INFO << " SQL Error: " << query.lastError();
+    }
+}
