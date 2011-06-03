@@ -24,6 +24,7 @@
 #include <QSqlError>
 #include <QCloseEvent>
 #include <QMessageBox>
+#include <QSqlRecord>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -40,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
     sessionProxy->setEnabled(false);
     setCentralWidget(sessionProxy);
     
-    sessionProxy->setWidget(new SessionFrame(this));
+    //sessionProxy->setWidget(new SessionFrame(this));
     sessionProxy->setWidget(new SessionIconView(this));
 
     ui->cmbSessions->setModel(sessionsModel);
@@ -150,6 +151,14 @@ void MainWindow::on_btnStart_clicked()
 {
     sessionProxy->setEnabled(true);
     sessionProxy->start();
+}
+
+void MainWindow::on_btnSee_clicked()
+{
+    const int index = ui->cmbSessionsMade->currentIndex();
+    const QSqlRecord record = sessionsMadeModel->record(index);
+    const qint64 sessionId = record.value("id_session").toLongLong();
+    sessionProxy->setSessionId(sessionId);
 }
 
 void MainWindow::onSessionUpdated(qint64 id)

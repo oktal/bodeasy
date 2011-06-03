@@ -33,6 +33,7 @@ private slots:
     void on_userAction_triggered();
     void on_cmbSessions_activated(int index);
     void on_btnStart_clicked();
+    void on_btnSee_clicked();
 
     void onSessionUpdated(qint64 id);
     void onSessionDeleted(qint64 id);
