@@ -2,10 +2,11 @@
 -- Author:        Disk1
 -- Caption:       New Model
 -- Project:       Name of the project
--- Changed:       2011-05-02 09:20
+-- Changed:       2011-06-03 14:12
 -- Created:       2010-12-11 20:09
 PRAGMA foreign_keys = OFF;
 
+-- Schema: mydb
 BEGIN;
 CREATE TABLE "user"(
   "id_user" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL CHECK("id_user">=0),
@@ -104,7 +105,7 @@ CREATE TABLE "exercise_result"(
   "load" INTEGER,
   "date" DATETIME NOT NULL,
   "serie_number" INTEGER NOT NULL,
-  "id_exercice" INTEGER NOT NULL CHECK("id_exercice">=0),
+  "id_exercise" INTEGER NOT NULL CHECK("id_exercise">=0),
   "id_session" INTEGER NOT NULL CHECK("id_session">=0),
   "id_user" INTEGER NOT NULL CHECK("id_user">=0),
   CONSTRAINT "id_result_UNIQUE"
@@ -113,14 +114,14 @@ CREATE TABLE "exercise_result"(
     FOREIGN KEY("id_session")
     REFERENCES "session"("id_session"),
   CONSTRAINT "fk_id_exercise"
-    FOREIGN KEY("id_exercice")
+    FOREIGN KEY("id_exercise")
     REFERENCES "exercise"("id_exercise"),
   CONSTRAINT "fk_id_user"
     FOREIGN KEY("id_user")
     REFERENCES "user"("id_user")
 );
 CREATE INDEX "exercise_result.id_session_INDEX" ON "exercise_result"("id_session");
-CREATE INDEX "exercise_result.id_exercise_INDEX" ON "exercise_result"("id_exercice");
+CREATE INDEX "exercise_result.id_exercise_INDEX" ON "exercise_result"("id_exercise");
 CREATE INDEX "exercise_result.id_user_INDEX" ON "exercise_result"("id_user");
 CREATE TABLE "session_made"(
   "id_session_made" INTEGER PRIMARY KEY NOT NULL CHECK("id_session_made">=0),
@@ -138,4 +139,16 @@ CREATE TABLE "session_made"(
 );
 CREATE INDEX "session_made.id_session_INDEX" ON "session_made"("id_session");
 CREATE INDEX "session_made.fk_id_user" ON "session_made"("id_user");
+CREATE TABLE "session_made_result"(
+  "id_session_made" INTEGER NOT NULL CHECK("id_session_made">=0),
+  "id_result" INTEGER NOT NULL CHECK("id_result">=0),
+  PRIMARY KEY("id_session_made","id_result"),
+  CONSTRAINT "fk_session_made_result_session_made1"
+    FOREIGN KEY("id_session_made")
+    REFERENCES "session_made"("id_session_made"),
+  CONSTRAINT "fk_session_made_result_exercise_result1"
+    FOREIGN KEY("id_result")
+    REFERENCES "exercise_result"("id_result")
+);
+CREATE INDEX "session_made_result.fk_session_made_result_exercise_result1" ON "session_made_result"("id_result");
 COMMIT;

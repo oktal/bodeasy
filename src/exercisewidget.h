@@ -25,7 +25,7 @@ public:
     void setData(const ExerciseWidgetData &data);
     const ExerciseWidgetData &data() const;
 
-    bool save(qint64 userId, qint64 sessionId);
+    bool save(qint64 userId, qint64 sessionId, qint64 sessionMadeId);
     bool isComplete() const;
 
 protected:
@@ -41,6 +41,7 @@ private:
     typedef QPair<QSpinBox *, QSpinBox *> PairSpinBox;
     ExerciseWidget::PairSpinBox addRow();
     void createLayout();
+    bool saveResult(qint64 resultId, qint64 sessionMadeId);
 
     Ui::ExerciseWidget *ui;
     QGridLayout *scrollAreaLayout;

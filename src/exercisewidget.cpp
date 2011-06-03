@@ -201,20 +201,32 @@ bool ExerciseWidget::isComplete() const
      return true;
 }
 
+bool ExerciseWidget::saveResult(qint64 resultId, qint64 sessionMadeId)
+{
+    QSqlQuery query = SqlHelper::query();
+    query.prepare("INSERT INTO session_made_result(id_session_made, id_result) "
+                  "VALUES(:id_session_made, :id_result)");
+    query.bindValue(":id_session_made", sessionMadeId);
+    query.bindValue(":id_result", resultId);
+    return query.exec();
+}
+
 /**
   * \brief persist the exercise in database denoted by a \a userId and \a sessionId
 */
 
-bool ExerciseWidget::save(qint64 userId, qint64 sessionId)
+bool ExerciseWidget::save(qint64 userId, qint64 sessionId, qint64 sessionMadeId)
 {
     QSqlQuery q = SqlHelper::query();
     /* TO FIX : id_exercice => id_exercise */
-    q.prepare("INSERT INTO exercise_result(result, load, date, serie_number, id_exercice, id_session, id_user) "
+    q.prepare("INSERT INTO exercise_result(result, load, date, serie_number, id_exercise, id_session, id_user) "
               "VALUES(:result, :load, :date, :serie_number, :id_exercise, :id_session, :id_user)");
     q.bindValue(":date", QDate::currentDate());
     q.bindValue(":id_session", sessionId);
     q.bindValue(":id_user", userId);
     q.bindValue(":id_exercise", mData.exerciseId);
+
+
 
     QList<ExerciseWidget::PairSpinBox>::const_iterator it;
     int serie = 0;
@@ -246,7 +258,14 @@ bool ExerciseWidget::save(qint64 userId, qint64 sessionId)
             qDebug() << Q_FUNC_INFO << " SQL Error: " << q.lastError();
             return false;
         }
+        else
+        {
+            const qint64 resultId = q.lastInsertId().toLongLong();
+            saveResult(resultId, sessionMadeId);
+        }
     }
+
+
 
     for (it = mPairs.begin(); it != mPairs.end(); ++it)
     {
