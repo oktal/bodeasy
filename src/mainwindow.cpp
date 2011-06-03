@@ -144,6 +144,7 @@ void MainWindow::on_cmbSessions_activated(int index)
     const qint64 id = ui->cmbSessions->itemData(index).toLongLong();
     contentModel->setSessionId(id);
     sessionProxy->setSessionId(id);
+    sessionProxy->setEnabled(false);
     ui->btnStart->setEnabled(true);
 }
 
@@ -151,6 +152,7 @@ void MainWindow::on_btnStart_clicked()
 {
     sessionProxy->setEnabled(true);
     sessionProxy->start();
+    ui->btnSee->setEnabled(false);
 }
 
 void MainWindow::on_btnSee_clicked()
@@ -158,7 +160,14 @@ void MainWindow::on_btnSee_clicked()
     const int index = ui->cmbSessionsMade->currentIndex();
     const QSqlRecord record = sessionsMadeModel->record(index);
     const qint64 sessionId = record.value("id_session").toLongLong();
+    const qint64 sessionMadeId = record.value("id_session_made").toLongLong();
     sessionProxy->setSessionId(sessionId);
+    contentModel->setSessionId(sessionId);
+    sessionProxy->showResults(sessionMadeId);
+    sessionProxy->setEnabled(true);
+
+    ui->cmbSessions->setCurrentIndex(-1);
+    ui->btnStart->setEnabled(false);
 }
 
 void MainWindow::onSessionUpdated(qint64 id)
@@ -188,6 +197,7 @@ void MainWindow::onSessionFinished()
     const QSqlQuery query = sessionsMadeModel->query();
     sessionsMadeModel->setQuery(query.executedQuery(), SqlHelper::database());
     ui->lblLastSeanceDate->setText(QDate::currentDate().toString(Qt::SystemLocaleLongDate));
+    ui->btnSee->setEnabled(true);
 }
 
 void MainWindow::onTimerTimeout()

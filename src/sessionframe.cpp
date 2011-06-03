@@ -66,6 +66,7 @@ void SessionFrame::start()
 {
     ui->btnFirst->setEnabled(false);
     ui->btnPrevious->setEnabled(false);
+    ui->btnFinish->setEnabled(true);
     /* Enable Last and Next buttons if there are more than one page */
     if (ui->stackedWidget->count() == 1)
     {
@@ -252,6 +253,7 @@ void SessionFrame::selectExercises()
             data.rest = query.value(5).toInt();
             data.repetitions = query.value(6).toInt();
             data.series = query.value(7).toInt();
+            data.seriesData.reserve(data.series);
             ew->setData(data);
             exercises.append(ew);
         }
@@ -307,4 +309,17 @@ void SessionFrame::paginate()
         widget->setLayout(layout);
         ui->stackedWidget->addWidget(widget);
     }
+}
+
+
+void SessionFrame::showResults(qint64 sessionMadeId)
+{
+    start();
+
+    foreach (ExerciseWidget *ew, exercises)
+    {
+        ew->selectResults(sessionMadeId);
+    }
+
+    ui->btnFinish->setEnabled(false);
 }

@@ -18,6 +18,8 @@ class QGridLayout;
 
 class ExerciseWidget : public QWidget
 {
+    friend class SessionFrame;
+
     Q_OBJECT
 public:
     explicit ExerciseWidget(QWidget *parent = 0);
@@ -42,6 +44,7 @@ private:
     ExerciseWidget::PairSpinBox addRow();
     void createLayout();
     bool saveResult(qint64 resultId, qint64 sessionMadeId);
+    void selectResults(qint64 sessionMadeId);
 
     Ui::ExerciseWidget *ui;
     QGridLayout *scrollAreaLayout;

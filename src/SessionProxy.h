@@ -9,6 +9,7 @@ class SessionProxy : public QWidget
 	Q_OBJECT
 
 public:
+
 	SessionProxy( QWidget* parent = 0 );
 	
 	QWidget* widget() const;
@@ -20,6 +21,7 @@ public slots:
     virtual void refresh();
     virtual void start();
 	virtual void stop();
+    virtual void showResults( qint64 sessionMadeId );
 
 protected:
 	QPointer<QWidget> mWidget;
