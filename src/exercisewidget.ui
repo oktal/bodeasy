@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>402</width>
-    <height>249</height>
+    <width>400</width>
+    <height>247</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -15,9 +15,6 @@
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
-  </property>
-  <property name="windowTitle">
-   <string>Form</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QFrame#headerFrame {
@@ -89,8 +86,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>138</width>
-             <height>175</height>
+             <width>135</width>
+             <height>183</height>
             </rect>
            </property>
           </widget>
@@ -114,7 +111,7 @@
 border-style: none;</string>
          </property>
          <property name="frameShape">
-          <enum>QFrame::Box</enum>
+          <enum>QFrame::StyledPanel</enum>
          </property>
          <property name="frameShadow">
           <enum>QFrame::Plain</enum>
@@ -140,7 +137,7 @@ border-style: none;</string>
 border-style: none;</string>
          </property>
          <property name="frameShape">
-          <enum>QFrame::Box</enum>
+          <enum>QFrame::StyledPanel</enum>
          </property>
          <property name="frameShadow">
           <enum>QFrame::Plain</enum>
@@ -166,7 +163,7 @@ border-style: none;</string>
 border-style: none;</string>
          </property>
          <property name="frameShape">
-          <enum>QFrame::Box</enum>
+          <enum>QFrame::StyledPanel</enum>
          </property>
          <property name="frameShadow">
           <enum>QFrame::Plain</enum>
@@ -192,7 +189,7 @@ border-style: none;</string>
 border-style: none;</string>
          </property>
          <property name="frameShape">
-          <enum>QFrame::Box</enum>
+          <enum>QFrame::StyledPanel</enum>
          </property>
          <property name="frameShadow">
           <enum>QFrame::Plain</enum>
@@ -218,7 +215,7 @@ border-style: none;</string>
 border-style: none;</string>
          </property>
          <property name="frameShape">
-          <enum>QFrame::Box</enum>
+          <enum>QFrame::StyledPanel</enum>
          </property>
          <property name="frameShadow">
           <enum>QFrame::Plain</enum>
@@ -244,7 +241,7 @@ border-style: none;</string>
 border-style: none;</string>
          </property>
          <property name="frameShape">
-          <enum>QFrame::Box</enum>
+          <enum>QFrame::StyledPanel</enum>
          </property>
          <property name="frameShadow">
           <enum>QFrame::Plain</enum>
@@ -270,7 +267,7 @@ border-style: none;</string>
 border-style: none;</string>
          </property>
          <property name="frameShape">
-          <enum>QFrame::Box</enum>
+          <enum>QFrame::StyledPanel</enum>
          </property>
          <property name="frameShadow">
           <enum>QFrame::Plain</enum>
@@ -296,7 +293,7 @@ border-style: none;</string>
 border-style: none;</string>
          </property>
          <property name="frameShape">
-          <enum>QFrame::Box</enum>
+          <enum>QFrame::StyledPanel</enum>
          </property>
          <property name="frameShadow">
           <enum>QFrame::Plain</enum>
