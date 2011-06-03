@@ -29,7 +29,8 @@
     </qresource>
     <qresource prefix="/sql">
         <file alias="script001.sql">../db/database.sql</file>
-        <file alias="script002.sql">../db/triggers.sql</file>
-        <file alias="script003.sql">../db/musclegroups.sql</file>
+        <file alias="script002.sql">../db/views.sql</file>
+        <file alias="script003.sql">../db/triggers.sql</file>
+        <file alias="script004.sql">../db/musclegroups.sql</file>
     </qresource>
 </RCC>

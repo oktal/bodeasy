@@ -108,23 +108,9 @@ void SessionFrame::stop()
     /* Persist */
     const bool transaction = SqlHelper::transaction();
     bool ok = true;
-    for (it = exercises.constBegin(); it != exercises.constEnd(); ++it)
-    {
-        ExerciseWidget *ew = *it;
-        if(!ew->save(mUserId, mSessionId))
-        {
-            if (transaction)
-            {
-                SqlHelper::rollback();
-            }
-            ok = false;
-            break;
-        }
-    }
 
-    if (ok)
+    qint64 sessionMadeId = -1;
     {
-
         QSqlQuery query = SqlHelper::query();
         query.prepare("INSERT INTO session_made(id_session, id_user, date) "
                       "VALUES(:id_session, :id_user, :date)");
@@ -137,6 +123,27 @@ void SessionFrame::stop()
             {
                 SqlHelper::rollback();
                 ok = false;
+            }
+        }
+        else
+        {
+            sessionMadeId = query.lastInsertId().toLongLong();
+        }
+    }
+
+    if (ok)
+    {
+        for (it = exercises.constBegin(); it != exercises.constEnd(); ++it)
+        {
+            ExerciseWidget *ew = *it;
+            if(!ew->save(mUserId, mSessionId, sessionMadeId))
+            {
+                if (transaction)
+                {
+                    SqlHelper::rollback();
+                }
+                ok = false;
+                break;
             }
         }
     }
