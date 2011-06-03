@@ -31,7 +31,7 @@ ExerciseWidget::~ExerciseWidget()
 void ExerciseWidget::on_btnAddSerie_clicked()
 {
     addRow();
-    ui->btnDeleteSerie->setEnabled(mPairs.count() > mData.series);
+    ui->btnDeleteSerie->setEnabled(true);
 }
 
 void ExerciseWidget::on_btnDeleteSerie_clicked()
@@ -131,7 +131,6 @@ ExerciseWidget::PairSpinBox ExerciseWidget::addRow()
         mData.seriesData << qMakePair(txtResult->value(), txtLoad->value());
     }
 
-    ui->btnDeleteSerie->setEnabled(mPairs.count() > mData.series);
     
     connect(txtResult ,SIGNAL(valueChanged(int)), this, SLOT(spinBox_valueChanged(int)));
     connect(txtLoad ,SIGNAL(valueChanged(int)), this, SLOT(spinBox_valueChanged(int)));
@@ -182,7 +181,7 @@ void ExerciseWidget::changeEvent(QEvent *event)
             it.next().second->setEnabled(mData.weight);
         }
 
-        ui->btnDeleteSerie->setEnabled(mPairs.count() > mData.series);
+        //ui->btnDeleteSerie->setEnabled(mPairs.count() > mData.series);
     }
 }
 
@@ -292,6 +291,19 @@ void ExerciseWidget::selectResults(qint64 sessionMadeId)
         {
             const int serieNumber = query.value(2).toInt();
             const int result = query.value(0).toInt();
+
+            if (serieNumber >= mData.series)
+            {
+                addRow();
+                const QString labelName = QString("lblTitle_%1").arg(serieNumber);
+                QLabel *lblSerie = ui->scrollAreaWidgetContents->findChild<QLabel *>(labelName);
+                if (lblSerie)
+                {
+                    const QString text = lblSerie->text();
+                    lblSerie->setText(
+                           QString("<img src=\":/images/plus-icon.png\" width=12 height=12 />%1").arg(text));
+                }
+            }
 
             const QString resultBoxName = QString("txtResult_%1").arg(serieNumber);
             QSpinBox *resultBox = ui->scrollAreaWidgetContents->findChild<QSpinBox *>(resultBoxName);
