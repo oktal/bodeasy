@@ -154,7 +154,7 @@ void ExerciseWidget::createLayout()
     scrollAreaLayout = new QGridLayout;
     scrollAreaLayout->setContentsMargins(QMargins(0, 0, 0, 0));
     scrollAreaLayout->setSizeConstraint(QLayout::SetFixedSize);
-    scrollAreaLayout->setHorizontalSpacing(20);
+    scrollAreaLayout->setHorizontalSpacing(10);
     scrollAreaLayout->addWidget(new QLabel(trUtf8("Rés.")), 0, 1);
     scrollAreaLayout->addWidget(new QLabel(trUtf8("Charge")), 0, 2);
     
@@ -182,7 +182,7 @@ void ExerciseWidget::changeEvent(QEvent *event)
             it.next().second->setEnabled(mData.weight);
         }
 
-        ui->btnDeleteSerie->setEnabled(false);
+        ui->btnDeleteSerie->setEnabled(mPairs.count() > mData.series);
     }
 }
 

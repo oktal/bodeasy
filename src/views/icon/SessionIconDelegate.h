@@ -3,6 +3,8 @@
 
 #include <QStyledItemDelegate>
 
+#include "sql/exercise.h"
+
 class ExerciseWidget;
 
 class SessionIconDelegate : public QStyledItemDelegate
@@ -22,9 +24,10 @@ public:
 protected:
 	ExerciseWidget* mWidget;
 	
-	QString indexKey( const QModelIndex& index ) const;
-	void cachePixmap( const QModelIndex& index, const QPixmap& pixmap ) const;
-	QPixmap cachedPixmap( const QModelIndex& index ) const;
+	QString typeToString( Exercise::Type type ) const;
+	QString difficultyToString( Exercise::Difficulty difficulty ) const;
+	void drawFrame( QPainter* painter, const QRect& rect, int radius, const QBrush& pen, const QBrush& brush, const QString& text = QString::null, const QBrush& color = QColor( Qt::black ), int flags = Qt::AlignCenter, const QFont& font = QFont(), int padding = 5 ) const;
+	void drawExercise( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const;
 };
 
 #endif // SESSIONICONDELEGATE_H
