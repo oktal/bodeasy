@@ -22,6 +22,8 @@ struct ExerciseWidgetData
     bool weight;
     int repetitions;
     int series;
+
+    int number;
     
     QList<QPair<int, int> > seriesData;
 };

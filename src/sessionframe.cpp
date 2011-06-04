@@ -241,6 +241,7 @@ void SessionFrame::selectExercises()
     query.bindValue(":sessionId", mSessionId);
     if (query.exec())
     {
+        int number = 1;
         while (query.next())
         {
             ExerciseWidget *ew = new ExerciseWidget();
@@ -255,8 +256,10 @@ void SessionFrame::selectExercises()
             data.repetitions = query.value(7).toInt();
             data.series = query.value(8).toInt();
             data.seriesData.reserve(data.series);
+            data.number = number;
             ew->setData(data);
             exercises.append(ew);
+            ++number;
         }
     }
 }
