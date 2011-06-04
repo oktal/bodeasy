@@ -8,11 +8,13 @@
 
 struct ExerciseWidgetData
 {
-    ExerciseWidgetData() : exerciseId(-1), rest(0), weight(false), repetitions(0), series(0)
+    ExerciseWidgetData() : exerciseId(-1), sessionExerciseId(-1), rest(0),
+                           weight(false), repetitions(0), series(0)
     {
     }
 
     qint64 exerciseId;
+    qint64 sessionExerciseId;
     QString name;
     Exercise::Type type;
     Exercise::Difficulty difficulty;

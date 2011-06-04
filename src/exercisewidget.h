@@ -44,7 +44,7 @@ private:
     ExerciseWidget::PairSpinBox addRow();
     void createLayout();
     bool saveResult(qint64 resultId, qint64 sessionMadeId);
-    void selectResults(qint64 sessionMadeId);
+    void selectResults();
 
     Ui::ExerciseWidget *ui;
     QGridLayout *scrollAreaLayout;
