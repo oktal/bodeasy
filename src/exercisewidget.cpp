@@ -218,13 +218,15 @@ bool ExerciseWidget::save(qint64 userId, qint64 sessionId, qint64 sessionMadeId)
 {
     QSqlQuery q = SqlHelper::query();
     /* TO FIX : id_exercice => id_exercise */
-    q.prepare("INSERT INTO exercise_result(result, load, date, serie_number, id_exercise, id_session, id_user) "
-              "VALUES(:result, :load, :date, :serie_number, :id_exercise, :id_session, :id_user)");
+    q.prepare("INSERT INTO exercise_result(result, load, date, serie_number, id_exercise, id_session, "
+                                          "id_session_exercise, id_user) "
+              "VALUES(:result, :load, :date, :serie_number, :id_exercise, :id_session, "
+                               ":id_session_exercise, :id_user)");
     q.bindValue(":date", QDate::currentDate());
     q.bindValue(":id_session", sessionId);
     q.bindValue(":id_user", userId);
     q.bindValue(":id_exercise", mData.exerciseId);
-
+    q.bindValue(":id_session_exercise", mData.sessionExerciseId);
 
 
     QList<ExerciseWidget::PairSpinBox>::const_iterator it;
@@ -276,14 +278,13 @@ bool ExerciseWidget::save(qint64 userId, qint64 sessionId, qint64 sessionMadeId)
     return true;
 }
 
-void ExerciseWidget::selectResults(qint64 sessionMadeId)
+void ExerciseWidget::selectResults()
 {
     QSqlQuery query = SqlHelper::query();
     query.prepare("SELECT result, load, serie_number FROM session_made_result_view "
-                  "WHERE id_session_made=:sessionMadeId AND id_exercise=:exerciseId "
+                  "WHERE id_session_exercise=:sessionExerciseId "
                   "ORDER BY serie_number");
-    query.bindValue(":sessionMadeId", sessionMadeId);
-    query.bindValue(":exerciseId", mData.exerciseId);
+    query.bindValue(":sessionExerciseId", mData.sessionExerciseId);
 
     if (query.exec())
     {

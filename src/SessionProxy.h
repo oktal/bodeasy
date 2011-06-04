@@ -21,7 +21,7 @@ public slots:
     virtual void refresh();
     virtual void start();
 	virtual void stop();
-    virtual void showResults( qint64 sessionMadeId );
+    virtual void showResults();
 
 protected:
 	QPointer<QWidget> mWidget;

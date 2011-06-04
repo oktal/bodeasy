@@ -2,7 +2,7 @@
 -- Author:        Disk1
 -- Caption:       New Model
 -- Project:       Name of the project
--- Changed:       2011-06-03 14:12
+-- Changed:       2011-06-04 11:57
 -- Created:       2010-12-11 20:09
 PRAGMA foreign_keys = OFF;
 
@@ -108,6 +108,7 @@ CREATE TABLE "exercise_result"(
   "id_exercise" INTEGER NOT NULL CHECK("id_exercise">=0),
   "id_session" INTEGER NOT NULL CHECK("id_session">=0),
   "id_user" INTEGER NOT NULL CHECK("id_user">=0),
+  "id_session_exercise" INTEGER NOT NULL,
   CONSTRAINT "id_result_UNIQUE"
     UNIQUE("id_result"),
   CONSTRAINT "fk_id_session"
@@ -118,11 +119,15 @@ CREATE TABLE "exercise_result"(
     REFERENCES "exercise"("id_exercise"),
   CONSTRAINT "fk_id_user"
     FOREIGN KEY("id_user")
-    REFERENCES "user"("id_user")
+    REFERENCES "user"("id_user"),
+  CONSTRAINT "fk_exercise_result_session_exercise1"
+    FOREIGN KEY("id_session_exercise")
+    REFERENCES "session_exercise"("id_session_exercise")
 );
 CREATE INDEX "exercise_result.id_session_INDEX" ON "exercise_result"("id_session");
 CREATE INDEX "exercise_result.id_exercise_INDEX" ON "exercise_result"("id_exercise");
 CREATE INDEX "exercise_result.id_user_INDEX" ON "exercise_result"("id_user");
+CREATE INDEX "exercise_result.fk_exercise_result_session_exercise1" ON "exercise_result"("id_session_exercise");
 CREATE TABLE "session_made"(
   "id_session_made" INTEGER PRIMARY KEY NOT NULL CHECK("id_session_made">=0),
   "id_session" INTEGER NOT NULL CHECK("id_session">=0),

@@ -1,3 +1,8 @@
+v.2011.06.04
+	* [CHANGES] [Mathieu Stefani] <mathieu.stefani at supinfo dot com>
+	   
+	   added `exercise_result.id_session_exercise` foreign key column
+
 v.2011.06.03
 	* [FIX] [Mathieu Stefani] <mathieu.stefani at supinfo dot com>
 	

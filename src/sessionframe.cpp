@@ -234,7 +234,7 @@ void SessionFrame::selectExercises()
 {
     QSqlQuery query = SqlHelper::query();
     query.prepare("SELECT se.id_exercise, e.name, e.type, e.difficulty, e.weight, "
-                  "se.rest, se.repetitions, se.series FROM "
+                  "se.id_session_exercise, se.rest, se.repetitions, se.series FROM "
                   "session_exercise se INNER JOIN exercise e "
                   "ON se.id_exercise = e.id_exercise "
                   "WHERE id_session=:sessionId");
@@ -250,9 +250,10 @@ void SessionFrame::selectExercises()
             data.type = Exercise::Type(query.value(2).toInt());
             data.difficulty = Exercise::Difficulty(query.value(3).toInt());
             data.weight = query.value(4).toBool();
-            data.rest = query.value(5).toInt();
-            data.repetitions = query.value(6).toInt();
-            data.series = query.value(7).toInt();
+            data.sessionExerciseId = query.value(5).toLongLong();
+            data.rest = query.value(6).toInt();
+            data.repetitions = query.value(7).toInt();
+            data.series = query.value(8).toInt();
             data.seriesData.reserve(data.series);
             ew->setData(data);
             exercises.append(ew);
@@ -312,13 +313,13 @@ void SessionFrame::paginate()
 }
 
 
-void SessionFrame::showResults(qint64 sessionMadeId)
+void SessionFrame::showResults()
 {
     start();
 
     foreach (ExerciseWidget *ew, exercises)
     {
-        ew->selectResults(sessionMadeId);
+        ew->selectResults();
     }
 
     ui->btnFinish->setEnabled(false);

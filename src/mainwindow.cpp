@@ -160,10 +160,9 @@ void MainWindow::on_btnSee_clicked()
     const int index = ui->cmbSessionsMade->currentIndex();
     const QSqlRecord record = sessionsMadeModel->record(index);
     const qint64 sessionId = record.value("id_session").toLongLong();
-    const qint64 sessionMadeId = record.value("id_session_made").toLongLong();
     sessionProxy->setSessionId(sessionId);
     contentModel->setSessionId(sessionId);
-    sessionProxy->showResults(sessionMadeId);
+    sessionProxy->showResults();
     sessionProxy->setEnabled(true);
 
     ui->cmbSessions->setCurrentIndex(-1);
