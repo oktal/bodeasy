@@ -14,6 +14,9 @@ class SessionIconView : public QListView
 public:
 	SessionIconView( QWidget* parent = 0 );
 	virtual ~SessionIconView();
+	
+	virtual QSize minimumSizeHint() const;
+	virtual QSize sizeHint() const;
 
 public slots:
 	virtual void setSessionId( qint64 id );

@@ -71,7 +71,10 @@ void SessionIconDelegate::setModelData( QWidget* editor, QAbstractItemModel* mod
 
 QSize SessionIconDelegate::sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const
 {
-	return index.isValid() ? QSize( 450, 300 ) : QStyledItemDelegate::sizeHint( option, index );
+	Q_UNUSED( option );
+	Q_UNUSED( index );
+	return QSize( 450, 300 );
+	//return index.isValid() ? QSize( 450, 300 ) : QStyledItemDelegate::sizeHint( option, index );
 }
 
 QString SessionIconDelegate::exerciseWidgetTr( const QString& string ) const
