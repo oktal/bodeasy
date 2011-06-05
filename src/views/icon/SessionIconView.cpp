@@ -128,8 +128,8 @@ void SessionIconView::selectExercises()
 {
     QSqlQuery query = SqlHelper::query();
 	
-    query.prepare( "SELECT se.id_exercise, e.name, e.type, e.difficulty, e.weight, "
-                  "se.rest, se.repetitions, se.series FROM "
+    query.prepare( "SELECT se.id_exercise, e.name, e.type, e.difficulty, e.weight, e.description, "
+                  "se.id_session_exercise, se.rest, se.repetitions, se.series FROM "
                   "session_exercise se INNER JOIN exercise e "
                   "ON se.id_exercise = e.id_exercise "
                   "WHERE id_session=:sessionId" );
@@ -146,9 +146,12 @@ void SessionIconView::selectExercises()
             data.type = Exercise::Type( query.value( 2 ).toInt() );
             data.difficulty = Exercise::Difficulty( query.value( 3 ).toInt() );
             data.weight = query.value( 4 ).toBool();
-            data.rest = query.value( 5 ).toInt();
-            data.repetitions = query.value( 6 ).toInt();
-            data.series = query.value( 7 ).toInt();
+			data.description = query.value( 5 ).toString();
+			data.sessionExerciseId = query.value( 6 ).toLongLong();
+            data.rest = query.value( 7 ).toInt();
+            data.repetitions = query.value( 8 ).toInt();
+            data.series = query.value( 9 ).toInt();
+			data.seriesData.reserve( data.series );
 			
             widgetsData << data;
         }
