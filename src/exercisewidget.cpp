@@ -92,7 +92,7 @@ void ExerciseWidget::setData(const ExerciseWidgetData &data)
         break;
     }
 
-    ui->lblRest->setText(QString("%1 secs.").arg(data.rest));
+    ui->lblRest->setText(trUtf8("%1 secs.").arg(data.rest));
     ui->lblRepetitions->setNum(data.repetitions);
     ui->txtDescription->setPlainText(data.description);
 
