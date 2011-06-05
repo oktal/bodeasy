@@ -41,42 +41,7 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QHBoxLayout" name="headerLayout" stretch="5,0,95">
-      <item>
-       <widget class="QLabel" name="lblNumber">
-        <property name="font">
-         <font>
-          <pointsize>11</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">border: 1px solid black;
-background-color: rgb(210, 210, 210);
-color: rgb(100, 100, 100);</string>
-        </property>
-        <property name="text">
-         <string>#N</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Maximum</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
        <widget class="QLabel" name="lblExerciseName">
         <property name="font">
@@ -105,18 +70,6 @@ color: rgb(100, 100, 100);</string>
         <string>Séries</string>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
-        <property name="leftMargin">
-         <number>9</number>
-        </property>
-        <property name="topMargin">
-         <number>5</number>
-        </property>
-        <property name="rightMargin">
-         <number>5</number>
-        </property>
-        <property name="bottomMargin">
-         <number>5</number>
-        </property>
         <item>
          <widget class="QScrollArea" name="scrollArea">
           <property name="styleSheet">
@@ -141,8 +94,8 @@ color: rgb(100, 100, 100);</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>139</width>
-             <height>171</height>
+             <width>129</width>
+             <height>177</height>
             </rect>
            </property>
            <property name="styleSheet">
