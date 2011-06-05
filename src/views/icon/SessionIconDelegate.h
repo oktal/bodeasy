@@ -21,7 +21,7 @@ public:
 	virtual QSize sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const;
 
 protected:
-	QTextDocument mDocument;
+	mutable QTextDocument mDocument;
 	
 	QString exerciseWidgetTr( const QString& string ) const;
 	QString typeToString( Exercise::Type type ) const;
