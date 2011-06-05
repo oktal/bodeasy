@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>247</height>
+    <width>398</width>
+    <height>245</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -32,9 +32,6 @@
    </property>
    <item>
     <widget class="QFrame" name="headerFrame">
-     <property name="styleSheet">
-      <string notr="true"/>
-     </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -94,8 +91,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>129</width>
-             <height>177</height>
+             <width>127</width>
+             <height>175</height>
             </rect>
            </property>
            <property name="styleSheet">
@@ -334,8 +331,17 @@ border-style: none;</string>
            <height>45</height>
           </size>
          </property>
+         <property name="tabChangesFocus">
+          <bool>true</bool>
+         </property>
+         <property name="undoRedoEnabled">
+          <bool>false</bool>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
+         </property>
+         <property name="tabStopWidth">
+          <number>40</number>
          </property>
         </widget>
        </item>
