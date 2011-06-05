@@ -119,7 +119,6 @@ void SessionIconDelegate::drawFakeLabel( QPainter* painter, const QStyleOptionFr
 	style->drawControl( QStyle::CE_ShapedFrame, &option, painter, widget );
 	
 	const QRect rect = option.rect.adjusted( option.lineWidth, option.lineWidth, -option.lineWidth, -option.lineWidth );
-	QTextDocument document;
 	QTextOption textOption;
 	
 	textOption.setAlignment( align );
@@ -127,9 +126,9 @@ void SessionIconDelegate::drawFakeLabel( QPainter* painter, const QStyleOptionFr
 	textOption.setAlignment( align );
 	textOption.setWrapMode( QTextOption::WrapAtWordBoundaryOrAnywhere );
 	
-	document.setDefaultFont( painter->font() );
-	document.setDocumentMargin( 0 );
-	document.setDefaultTextOption( textOption );
+	mDocument.setDefaultFont( painter->font() );
+	mDocument.setDocumentMargin( 0 );
+	mDocument.setDefaultTextOption( textOption );
 	
 	switch ( format ) {
 		case Qt::AutoText:
@@ -140,19 +139,19 @@ void SessionIconDelegate::drawFakeLabel( QPainter* painter, const QStyleOptionFr
 				format = Qt::PlainText;
 			}
 		case Qt::RichText:
-			document.setHtml( text );
+			mDocument.setHtml( text );
 			break;
 		case Qt::PlainText:
 		case Qt::LogText:
-			document.setPlainText( text );
+			mDocument.setPlainText( text );
 			break;
 	}
 	
-	if ( document.size().width() > rect.width() ) {
-		document.setTextWidth( rect.width() );
+	if ( mDocument.size().width() > rect.width() ) {
+		mDocument.setTextWidth( rect.width() );
 	}
 	
-	QRect r = QRect( rect.topLeft(), document.size().toSize() );
+	QRect r = QRect( rect.topLeft(), mDocument.size().toSize() );
 	
 	// horizontal
 	if ( align & Qt::AlignLeft ) {
@@ -189,7 +188,7 @@ void SessionIconDelegate::drawFakeLabel( QPainter* painter, const QStyleOptionFr
 	}
 	
 	painter->translate( r.topLeft() );
-	document.drawContents( painter, QRect( QPoint(), QSize( r.size().width(), rect.height() ) ) );
+	mDocument.drawContents( painter, QRect( QPoint(), QSize( r.size().width(), rect.height() ) ) );
 	painter->translate( -r.topLeft() );
 }
 
