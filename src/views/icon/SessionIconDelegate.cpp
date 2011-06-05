@@ -4,21 +4,17 @@
 #include "exercisewidget.h"
 
 #include <QPainter>
-#include <QPixmapCache>
+#include <QApplication>
 #include <QDebug>
 #include <QTime>
-#include <QApplication>
 
 SessionIconDelegate::SessionIconDelegate( QObject* parent )
-	: QStyledItemDelegate( parent ),
-	mWidget( new ExerciseWidget )
+	: QStyledItemDelegate( parent )
 {
-	mWidget->resize( QSize( 450, 300 ) );
 }
 
 SessionIconDelegate::~SessionIconDelegate()
 {
-	delete mWidget;
 }
 
 QWidget* SessionIconDelegate::createEditor( QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index ) const
@@ -40,14 +36,12 @@ void SessionIconDelegate::paint( QPainter* painter, const QStyleOptionViewItem& 
 {
 	if ( index.isValid() ) {
 		if ( !( option.state & QStyle::State_Editing ) ) {
-			painter->save();
 			drawExercise( painter, option, index );
-			painter->restore();
+			return;
 		}
 	}
-	else {
-		QStyledItemDelegate::paint( painter, option, index );
-	}
+	
+	QStyledItemDelegate::paint( painter, option, index );
 }
 
 void SessionIconDelegate::setEditorData( QWidget* editor, const QModelIndex& index ) const
@@ -57,10 +51,10 @@ void SessionIconDelegate::setEditorData( QWidget* editor, const QModelIndex& ind
 	
 	if ( ed ) {
 		ed->setData( data );
+		return;
 	}
-	else {
-		QStyledItemDelegate::setEditorData( editor, index );
-	}
+	
+	QStyledItemDelegate::setEditorData( editor, index );
 }
 
 void SessionIconDelegate::setModelData( QWidget* editor, QAbstractItemModel* model, const QModelIndex& index ) const
@@ -69,24 +63,29 @@ void SessionIconDelegate::setModelData( QWidget* editor, QAbstractItemModel* mod
 	
 	if ( ed ) {
 		model->setData( index, QVariant::fromValue( ed->data() ), Qt::EditRole );
+		return;
 	}
-	else {
-		QStyledItemDelegate::setModelData( editor, model, index );
-	}
+	
+	QStyledItemDelegate::setModelData( editor, model, index );
 }
 
 QSize SessionIconDelegate::sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const
 {
-	return index.isValid() ? mWidget->size() : QStyledItemDelegate::sizeHint( option, index );
+	return index.isValid() ? QSize( 450, 300 ) : QStyledItemDelegate::sizeHint( option, index );
+}
+
+QString SessionIconDelegate::exerciseWidgetTr( const QString& string ) const
+{
+	return QApplication::translate( "ExerciseWidget", string.toLatin1().constData() );
 }
 
 QString SessionIconDelegate::typeToString( Exercise::Type type ) const
 {
 	switch ( type ) {
 		case Exercise::Repetition:
-			return trUtf8( "Répétition" );
+			return exerciseWidgetTr( QString::fromUtf8( "Répétition" ) );
 		case Exercise::Duration:
-			return trUtf8( "Durée" );
+			return exerciseWidgetTr( QString::fromUtf8( "Durée" ) );
     }
 	
 	return QString::null;
@@ -96,135 +95,261 @@ QString SessionIconDelegate::difficultyToString( Exercise::Difficulty difficulty
 {
 	switch ( difficulty ) {
 		case Exercise::Easy:
-			return trUtf8( "Facile" );
+			return exerciseWidgetTr( QString::fromUtf8( "Facile" ) );
 		case Exercise::Medium:
-			return trUtf8( "Moyen" );
+			return exerciseWidgetTr( QString::fromUtf8( "Moyen" ) );
 		case Exercise::Hard:
-			return trUtf8( "Difficile" );
+			return exerciseWidgetTr( QString::fromUtf8( "Difficile" ) );
     }
 	
 	return QString::null;
 }
 
-void SessionIconDelegate::drawFrame( QPainter* painter, const QRect& rect, int radius, const QBrush& pen, const QBrush& brush, const QString& text, const QBrush& color, int flags, const QFont& font, int padding ) const
+void SessionIconDelegate::drawFakeLabel( QPainter* painter, const QStyleOptionFrameV3& option, const QString& text, Qt::Alignment align, Qt::TextFormat format, QStyle* style, QWidget* widget ) const
 {
-	painter->setPen( QPen( pen, 1 ) );
-	painter->setBrush( brush );
-	painter->drawRoundedRect( rect.adjusted( 0, 0, pen != Qt::NoBrush ? -1 : 0, pen != Qt::NoBrush ? -1 : 0 ), radius, radius );
-	
-	if ( !text.isEmpty() ) {
-		painter->setFont( font );
-		painter->setPen( QPen( color, 1 ) );
-		painter->setBrush( Qt::NoBrush );
-		painter->drawText( rect.adjusted( radius +( flags & Qt::AlignHCenter ? 0: padding ), radius +( flags & Qt::AlignVCenter ? 0: padding ), -radius, -radius ), flags, text );
+	if ( !style ) {
+		style = QApplication::style();
 	}
+	
+	// fucking hack for background painting ???
+	painter->setPen( Qt::NoPen );
+	painter->setBrush( option.palette.color( QPalette::Window ) );
+	painter->drawRect( option.rect );
+	
+	style->drawControl( QStyle::CE_ShapedFrame, &option, painter, widget );
+	
+	const QRect rect = option.rect.adjusted( option.lineWidth, option.lineWidth, -option.lineWidth, -option.lineWidth );
+	QTextDocument document;
+	QTextOption textOption;
+	
+	textOption.setAlignment( align );
+	textOption.setTabStop( 40 );
+	textOption.setAlignment( align );
+	textOption.setWrapMode( QTextOption::WrapAtWordBoundaryOrAnywhere );
+	
+	document.setDefaultFont( painter->font() );
+	document.setDocumentMargin( 0 );
+	document.setDefaultTextOption( textOption );
+	
+	switch ( format ) {
+		case Qt::AutoText:
+			if ( Qt::mightBeRichText( text ) ) {
+				format = Qt::RichText;
+			}
+			else {
+				format = Qt::PlainText;
+			}
+		case Qt::RichText:
+			document.setHtml( text );
+			break;
+		case Qt::PlainText:
+		case Qt::LogText:
+			document.setPlainText( text );
+			break;
+	}
+	
+	if ( document.size().width() > rect.width() ) {
+		document.setTextWidth( rect.width() );
+	}
+	
+	QRect r = QRect( rect.topLeft(), document.size().toSize() );
+	
+	// horizontal
+	if ( align & Qt::AlignLeft ) {
+		// nothing to do
+	}
+	else if ( align & Qt::AlignRight ) {
+		r.moveRight( rect.right() );
+	}
+	else if ( align & Qt::AlignHCenter ) {
+		r.moveCenter( QPoint( rect.center().x(), r.center().y() ) );
+	}
+	else if ( align & Qt::AlignJustify ) {
+		r.moveCenter( QPoint( rect.center().x(), r.center().y() ) );
+	}
+	
+	// vertical
+	if ( align & Qt::AlignTop ) {
+		r.moveTop( rect.top() );
+	}
+	else if ( align & Qt::AlignBottom ) {
+		if ( r.height() <= rect.height() ) {
+			r.moveBottom( rect.bottom() );
+		}
+	}
+	else if ( align & Qt::AlignVCenter ) {
+		if ( r.height() <= rect.height() ) {
+			r.moveCenter( QPoint( r.center().x(), rect.center().y() ) );
+		}
+	}
+	
+	// absolute
+	if ( align & Qt::AlignAbsolute ) {
+		// nothing to do
+	}
+	
+	painter->translate( r.topLeft() );
+	document.drawContents( painter, QRect( QPoint(), QSize( r.size().width(), rect.height() ) ) );
+	painter->translate( -r.topLeft() );
+}
+
+QStyleOptionFrameV3 makeStyleOptionFrame( const QStyleOptionViewItem& option, int frameStyle, int lineWidth = 1, int midLineWidth = 1, QStyleOptionFrameV3::FrameFeatures features = QStyleOptionFrameV2::None )
+{
+	const int frameShape  = frameStyle & QFrame::Shape_Mask;
+    const int frameShadow = frameStyle & QFrame::Shadow_Mask;
+	QStyleOptionFrameV3 opt;
+	
+	opt.QStyleOption::operator=( option );
+	opt.frameShape = QFrame::Shape( int( opt.frameShape ) | frameShape );
+	opt.features = features;
+	
+	switch ( frameShape ) {
+		case QFrame::Box:
+		case QFrame::HLine:
+		case QFrame::VLine:
+		case QFrame::StyledPanel:
+		case QFrame::Panel:
+			opt.lineWidth = lineWidth;
+			opt.midLineWidth = midLineWidth;
+			break;
+		default:
+			// most frame styles do not handle customized line and midline widths
+			// (see updateFrameWidth()).
+			//opt.lineWidth = d->frameWidth;
+			opt.lineWidth = lineWidth;
+			break;
+	}
+	
+	if ( frameShadow == QFrame::Sunken ) {
+		opt.state |= QStyle::State_Sunken;
+	}
+	else if ( frameShadow == QFrame::Raised ) {
+		opt.state |= QStyle::State_Raised;
+	}
+	
+	return opt;
 }
 
 void SessionIconDelegate::drawExercise( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const
 {
 	const ExerciseWidgetData data = index.data( SessionIconModel::ExerciseDataRole ).value<ExerciseWidgetData>();
-	const bool isEnabled = option.state & QStyle::State_Enabled;
-	const bool isSelected = option.state & QStyle::State_Selected;
-	const bool isHovered = option.state & QStyle::State_MouseOver;
 	const int margin = 5;
-	const int boxSpacing = 5;
+	const int spacing = 5;
+	const int headerHeight = 29;
+	const int descriptionTitleHeight = 19;
 	const QRect rect = option.rect.adjusted( margin, margin, -margin, -margin );
-	const QRect nameRect = rect.adjusted( 0, 0, 0, -( rect.height() /100.0 *90.0 ) );
-	const QRect rightRect = rect.adjusted( ( rect.width() /2 ) +boxSpacing, nameRect.bottom() +boxSpacing, 0, 0 );
-	QRect descriptionRect = rightRect.adjusted( 0, ( rightRect.height() /2 ) +boxSpacing, 0, 0 );
-	const QRect descriptionTitleRect = descriptionRect.adjusted( 0, boxSpacing, 0, -( descriptionRect.height() /100.0 *80.0 ) );
-	descriptionRect = descriptionRect.adjusted( 0, descriptionRect.height() /100.0 *25.0, 0, 0 );
-	const QFont font = painter->font();
-	QFont nameFont = painter->font();
+	const int boxWidth = ( ( rect.width() /2 ) -( spacing *2 ) ) /2;
+	const int boxHeight = ( ( rect.height() /2 ) -headerHeight -( spacing *4 ) ) /3;
 	
-	nameFont.setBold( true );
-	
-	painter->setRenderHint( QPainter::Antialiasing );
+	painter->setRenderHint( QPainter::Antialiasing, true );
 	
 	// fill background
 	painter->setPen( Qt::NoPen );
 	painter->setBrush( option.palette.brush( QPalette::Window ) );
-	painter->drawRoundedRect( option.rect, 5, 5 );
+	painter->drawRoundedRect( option.rect, margin, margin );
 	
 	// draw selection / hover
-	if ( isEnabled && ( isSelected || isHovered ) ) {
+	if ( option.state & QStyle::State_Enabled && ( option.state & QStyle::State_Selected || option.state & QStyle::State_MouseOver ) ) {
 		const QColor highlight = option.palette.brush( QPalette::Highlight ).color();
 		const QColor lighter = highlight.lighter( 150 );
 		const QColor darker = highlight.darker( 140 );
+		const int radius = 5;
 		QLinearGradient gradient( option.rect.topLeft(), option.rect.bottomLeft() );
 		gradient.setColorAt( 0, lighter );
-		gradient.setColorAt( 1, isSelected ? highlight : darker );
+		gradient.setColorAt( 1, option.state & QStyle::State_Selected ? highlight : darker );
 		
-		drawFrame( painter, option.rect, 5, darker, gradient );
+		painter->setPen( QPen( darker, 1 ) );
+        painter->setBrush( gradient );
+        painter->drawRoundedRect( option.rect.adjusted( 1, 1, darker != Qt::NoPen ? -1 : 0, darker != Qt::NoPen ? -1 : 0 ), radius, radius );
 	}
 	
-	// draw exercise name
-	drawFrame( painter, nameRect, 0, QColor( 117, 117, 117 ), QColor( 232, 232, 232 ), data.name, QColor( Qt::black ), Qt::AlignVCenter | Qt::AlignLeft, nameFont );
+	// header
+	QStyleOptionFrameV3 headerOption = makeStyleOptionFrame( option, QFrame::StyledPanel | QFrame::Sunken );
+	headerOption.rect = QRect( rect.topLeft(), QSize( rect.width(), headerHeight ) );
+	headerOption.palette.setColor( QPalette::Window, QColor( 232, 232, 232 ) );
+	headerOption.palette.setColor( QPalette::Dark, QColor( 117, 117, 117 ) );
+	drawFakeLabel( painter, headerOption, QString( "<b>%1</b>" ).arg( data.name ) );
 	
 	// draw type, difficulty, repetition, rest
+	const QPoint boxOrigin = headerOption.rect.bottomLeft() +QPoint( ( rect.width() /2 ) +spacing, spacing );
+	QStyleOptionFrameV3 boxOption = makeStyleOptionFrame( option, QFrame::NoFrame );
+	boxOption.rect = QRect( rect.topLeft(), QSize( boxWidth, boxHeight ) );
+	boxOption.palette.setColor( QPalette::Window, QColor( 232, 232, 232 ) );
+	boxOption.palette.setColor( QPalette::WindowText, QColor( 0, 0, 0 ) );
+	
 	for ( int x = 0; x < 2; x++ ) {
-		const int width = ( rightRect.width() -( boxSpacing *1 ) ) /2;
-		const int height = ( rightRect.height() -( boxSpacing *3 ) ) /8;
-		
 		for ( int y = 0; y < 4; y++ ) {
-			const QPoint sp = QPoint( boxSpacing *x, boxSpacing *y );
-			const QPoint p = QPoint( width *x, height *y );
-			QRect r = QRect( QPoint( rightRect.topLeft() ) +sp +p, QSize( width, height ) );
-			QFont f = font;
-			QString t;
+			const int xx = ( x *spacing ) +( x *boxWidth );
+			const int yy = ( y *spacing ) +( y *boxHeight );
+			bool bold = false;
+			QString text;
+			
+			boxOption.rect.moveTopLeft( boxOrigin +QPoint( xx, yy ) );
 			
 			switch ( y ) {
 				case 0: {
 					if ( x == 0 ) {
-						f.setBold( true );
-						t = trUtf8( "Type" );
+						bold = true;
+						text = exerciseWidgetTr( QString::fromUtf8( "Type" ) );
 					}
 					else {
-						t = typeToString( data.type );
+						text = typeToString( data.type );
 					}
 					
 					break;
 				}
 				case 1: {
 					if ( x == 0 ) {
-						f.setBold( true );
-						t = trUtf8( "Difficulté" );
+						bold = true;
+						text = exerciseWidgetTr( QString::fromUtf8( "Difficulté" ) );
 					}
 					else {
-						t = difficultyToString( data.difficulty );
+						text = difficultyToString( data.difficulty );
 					}
 					
 					break;
 				}
 				case 2: {
 					if ( x == 0 ) {
-						f.setBold( true );
-						t = trUtf8( "Répétitions" );
+						bold = true;
+						text = exerciseWidgetTr( QString::fromUtf8( "Répétitions" ) );
 					}
 					else {
-						t = QString::number( data.repetitions );
+						text = QString::number( data.repetitions );
 					}
 					
 					break;
 				}
 				case 3: {
 					if ( x == 0 ) {
-						f.setBold( true );
-						t = trUtf8( "Repos" );
+						bold = true;
+						text = exerciseWidgetTr( QString::fromUtf8( "Repos" ) );
 					}
 					else {
-						t = tr( "%1 secs." ).arg( data.rest );
+						text = exerciseWidgetTr( QString::fromUtf8( "%1 secs." ) ).arg( data.rest );
 					}
 					
 					break;
 				}
 			}
 			
-			drawFrame( painter, r, 0, QColor( 117, 117, 117 ), QColor( 232, 232, 232 ), t, QColor( Qt::black ), Qt::AlignCenter, f );
+			if ( bold ) {
+				text = QString( "<b>%1</b>" ).arg( text );
+			}
+			
+			drawFakeLabel( painter, boxOption, text );
 		}
 	}
 	
+	// draw description title
+	QStyleOptionFrameV3 descriptionTitleOption = makeStyleOptionFrame( option, QFrame::NoFrame );
+	descriptionTitleOption.rect = QRect( boxOption.rect.topLeft() +QPoint( -( spacing +boxWidth ), boxHeight +spacing ), QSize( ( rect.width() /2 ) -spacing, descriptionTitleHeight ) );
+	descriptionTitleOption.palette.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ) );
+	drawFakeLabel( painter, descriptionTitleOption, exerciseWidgetTr( QString::fromUtf8( "Description" ) ), Qt::AlignLeft | Qt::AlignVCenter );
+	
 	// draw description
-	drawFrame( painter, descriptionTitleRect, 0, Qt::NoBrush, Qt::NoBrush, tr( "Description" ), QColor( Qt::black ), Qt::AlignVCenter | Qt::AlignLeft, font );
-	drawFrame( painter, descriptionRect, 0, Qt::black, Qt::white, tr( "test de merde \nsur plusieurs ligne de bruns qui put\n hihihih\test :)" ), Qt::black, Qt::AlignLeft | Qt::AlignTop, font );
+	QStyleOptionFrameV3 descriptionOption = makeStyleOptionFrame( option, QFrame::StyledPanel | QFrame::Sunken, 1, 0 );
+	descriptionOption.rect = descriptionTitleOption.rect.adjusted( 0, descriptionTitleOption.rect.height() +spacing, 0, ( ( rect.height() -headerHeight -spacing ) /2 ) -spacing -descriptionTitleHeight -spacing -spacing -spacing );
+	descriptionOption.palette.setColor( QPalette::Window, QColor( 255, 255, 255 ) );
+	drawFakeLabel( painter, descriptionOption, data.description, Qt::AlignLeft | Qt::AlignTop );
 }
