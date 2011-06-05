@@ -257,7 +257,7 @@ void SessionFrame::selectExercises()
             data.repetitions = query.value(8).toInt();
             data.series = query.value(9).toInt();
             data.seriesData.reserve(data.series);
-            data.number = number;
+            //data.number = number;
             ew->setData(data);
             exercises.append(ew);
             ++number;
