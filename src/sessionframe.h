@@ -24,7 +24,7 @@ public:
 public slots:
     virtual void setSessionId(qint64 id);
     virtual void setUserId(qint64 id);
-    virtual void showResults();
+    virtual void showResults(qint64 sessionMadeId);
     virtual void refresh();
     virtual void start();
     virtual void stop();

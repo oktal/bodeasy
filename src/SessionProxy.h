@@ -15,13 +15,19 @@ public:
 	QWidget* widget() const;
 	void setWidget( QWidget* widget );
 
+    bool isRunning() const;
+    void setRunning( bool running );
+
 public slots:
 	virtual void setSessionId( qint64 id );
     virtual void setUserId( qint64 id );
     virtual void refresh();
     virtual void start();
 	virtual void stop();
-    virtual void showResults();
+    virtual void showResults( qint64 sessionMadeId );
+
+private:
+    bool mRunning;
 
 protected:
 	QPointer<QWidget> mWidget;

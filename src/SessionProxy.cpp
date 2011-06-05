@@ -3,7 +3,8 @@
 #include <QVBoxLayout>
 
 SessionProxy::SessionProxy( QWidget* parent )
-    : QWidget( parent )
+    : QWidget( parent ),
+      mRunning( false )
 {
     QVBoxLayout* vl = new QVBoxLayout( this );
     vl->setMargin( 0 );
@@ -33,6 +34,16 @@ void SessionProxy::setWidget( QWidget* widget )
     }
 }
 
+bool SessionProxy::isRunning() const
+{
+    return mRunning;
+}
+
+void SessionProxy::setRunning( bool running )
+{
+    mRunning = running;
+}
+
 void SessionProxy::setSessionId( qint64 id )
 {
     QMetaObject::invokeMethod( mWidget, "setSessionId", Q_ARG( qint64, id ) );
@@ -58,7 +69,7 @@ void SessionProxy::stop()
     QMetaObject::invokeMethod( mWidget, "stop" );
 }
 
-void SessionProxy::showResults()
+void SessionProxy::showResults( qint64 sessionMadeId )
 {
-    QMetaObject::invokeMethod( mWidget, "showResults" );
+    QMetaObject::invokeMethod( mWidget, "showResults", Q_ARG( qint64, sessionMadeId ) );
 }

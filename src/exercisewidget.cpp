@@ -94,6 +94,7 @@ void ExerciseWidget::setData(const ExerciseWidgetData &data)
 
     ui->lblRest->setText(QString("%1 secs.").arg(data.rest));
     ui->lblRepetitions->setNum(data.repetitions);
+    ui->txtDescription->setPlainText(data.description);
 
     ui->lblNumber->setText(QString("#%1").arg(data.number));
 
@@ -193,7 +194,7 @@ bool ExerciseWidget::isComplete() const
      while (it.hasNext())
      {
          ExerciseWidget::PairSpinBox pair = it.next();
-         if (pair.first->value() == 0 || pair.second->value() == 0)
+         if (pair.first->value() == 0 || (mData.weight && pair.second->value() == 0))
          {
              return false;
          }
@@ -280,12 +281,13 @@ bool ExerciseWidget::save(qint64 userId, qint64 sessionId, qint64 sessionMadeId)
     return true;
 }
 
-void ExerciseWidget::selectResults()
+void ExerciseWidget::selectResults(qint64 sessionMadeId)
 {
     QSqlQuery query = SqlHelper::query();
     query.prepare("SELECT result, load, serie_number FROM session_made_result_view "
-                  "WHERE id_session_exercise=:sessionExerciseId "
+                  "WHERE id_session_made=:sessionMadeId AND id_session_exercise=:sessionExerciseId "
                   "ORDER BY serie_number");
+    query.bindValue(":sessionMadeId", sessionMadeId);
     query.bindValue(":sessionExerciseId", mData.sessionExerciseId);
 
     if (query.exec())

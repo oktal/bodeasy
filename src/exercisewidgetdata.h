@@ -22,6 +22,7 @@ struct ExerciseWidgetData
     bool weight;
     int repetitions;
     int series;
+    QString description;
 
     int number;
     

@@ -82,14 +82,43 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
-    const QString text = trUtf8( "Êtes vous sûr de vouloir quitter '%1'?" ).arg(qApp->applicationName());
-    
-    if (QMessageBox::question(this, QString::null, text, QMessageBox::Yes, QMessageBox::No) == QMessageBox::No)
+    if ( sessionProxy->isRunning() )
     {
-        event->ignore();
-        return;
+        const QString text = trUtf8( "Une séance non enregistrée est en cours. Que "
+                                     "souhaitez-vous faire ?" );
+        QMessageBox box( this );
+        box.setText( text );
+        box.setIcon( QMessageBox::Warning );
+        QAbstractButton *saveButton = box.addButton( trUtf8( "Enregistrer et quitter" ), QMessageBox::RejectRole );
+        QAbstractButton *closeButton = box.addButton( trUtf8( "Quitter sans sauvegarder" ), QMessageBox::AcceptRole );
+        QAbstractButton *cancelButton = box.addButton( trUtf8( "Annuler" ), QMessageBox::ApplyRole );
+        box.exec();
+        QAbstractButton *clickedButton = box.clickedButton();
+        if ( clickedButton == saveButton )
+        {
+            sessionProxy->stop();
+        }
+        else if ( clickedButton == closeButton )
+        {
+            event->accept();
+        }
+        else if ( clickedButton == cancelButton )
+        {
+            event->ignore();
+            return;
+        }
     }
-    
+
+    else
+    {
+        const QString text = trUtf8( "Êtes vous sûr de vouloir quitter '%1'?" ).arg(qApp->applicationName());
+
+        if (QMessageBox::question(this, QString::null, text, QMessageBox::Yes, QMessageBox::No) == QMessageBox::No)
+        {
+            event->ignore();
+            return;
+        }
+    }
     QMainWindow::closeEvent(event);
 }
 
@@ -152,6 +181,7 @@ void MainWindow::on_btnStart_clicked()
 {
     sessionProxy->setEnabled(true);
     sessionProxy->start();
+    sessionProxy->setRunning(true);
     ui->btnSee->setEnabled(false);
 }
 
@@ -160,9 +190,10 @@ void MainWindow::on_btnSee_clicked()
     const int index = ui->cmbSessionsMade->currentIndex();
     const QSqlRecord record = sessionsMadeModel->record(index);
     const qint64 sessionId = record.value("id_session").toLongLong();
+    const qint64 sessionMadeId = record.value("id_session_made").toLongLong();
     sessionProxy->setSessionId(sessionId);
     contentModel->setSessionId(sessionId);
-    sessionProxy->showResults();
+    sessionProxy->showResults(sessionMadeId);
     sessionProxy->setEnabled(true);
 
     ui->cmbSessions->setCurrentIndex(-1);
@@ -193,6 +224,7 @@ void MainWindow::onSessionDeleted(qint64 id)
 void MainWindow::onSessionFinished()
 {
     sessionProxy->setEnabled(false);
+    sessionProxy->setRunning(false);
     const QSqlQuery query = sessionsMadeModel->query();
     sessionsMadeModel->setQuery(query.executedQuery(), SqlHelper::database());
     ui->lblLastSeanceDate->setText(QDate::currentDate().toString(Qt::SystemLocaleLongDate));
