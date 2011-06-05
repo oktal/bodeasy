@@ -4,6 +4,7 @@
 #include "exercisewidget.h"
 #include "sql/SqlHelper.h"
 
+#include <QScrollBar>
 #include <QSqlQuery>
 #include <QMessageBox>
 #include <QDate>
@@ -28,6 +29,20 @@ SessionIconView::SessionIconView( QWidget* parent )
 
 SessionIconView::~SessionIconView()
 {
+}
+
+QSize SessionIconView::minimumSizeHint() const
+{
+	return sizeHint();
+}
+
+QSize SessionIconView::sizeHint() const
+{
+	return
+		mDelegate->sizeHint( QStyleOptionViewItem(), QModelIndex() )
+		+QSize( style()->pixelMetric( QStyle::PM_ScrollBarExtent ), 0 )
+		+QSize( spacing() *2, 0 )
+		;
 }
 
 void SessionIconView::setSessionId( qint64 id )
