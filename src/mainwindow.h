@@ -37,6 +37,7 @@ private slots:
 
     void onSessionUpdated(qint64 id);
     void onSessionDeleted(qint64 id);
+    void onSessionStarted(bool readOnly);
     void onSessionFinished();
 
     void onTimerTimeout();

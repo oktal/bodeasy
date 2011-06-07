@@ -4,35 +4,51 @@
 #include <QWidget>
 #include <QPointer>
 
+#include "exercisewidgetdata.h"
+
 class SessionProxy : public QWidget
 {
 	Q_OBJECT
 
 public:
-
+	enum Type {
+		Unknown,
+		Session,
+		SessionMade
+	};
+	
 	SessionProxy( QWidget* parent = 0 );
 	
 	QWidget* widget() const;
 	void setWidget( QWidget* widget );
 
     bool isRunning() const;
-    void setRunning( bool running );
+	bool isReadOnly() const;
 
 public slots:
-	virtual void setSessionId( qint64 id );
-    virtual void setUserId( qint64 id );
-    virtual void refresh();
-    virtual void start();
-	virtual void stop();
-    virtual void showResults( qint64 sessionMadeId );
-
-private:
-    bool mRunning;
+	void setRunning( bool running, SessionProxy::Type type = SessionProxy::Unknown, bool readOnly = false );
+    void setUserId( qint64 id );
+	void setSessionId( qint64 id );
+	void setSessionMadeId( qint64 id );
+	void commit( const ExerciseWidgetDataList& data );
+	void rollback();
+	void updateModel();
 
 protected:
 	QPointer<QWidget> mWidget;
+	SessionProxy::Type mType;
+	bool mRunning;
+	bool mReadOnly;
+	qint64 mUserId;
+	qint64 mSessionId;
+	qint64 mSessionMadeId;
+	
+	ExerciseWidgetDataList selectExercises() const;
 
 signals:
+	void error( const QString& error );
+	void sessionStarted( bool readOnly );
+	void sessionCommited( const ExerciseWidgetDataList& data );
 	void sessionFinished();
 };
 

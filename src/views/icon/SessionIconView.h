@@ -3,6 +3,9 @@
 
 #include <QListView>
 
+#include "exercisewidgetdata.h"
+
+class SessionProxy;
 class SessionIconModel;
 class SessionIconDelegate;
 
@@ -17,26 +20,20 @@ public:
 	
 	virtual QSize minimumSizeHint() const;
 	virtual QSize sizeHint() const;
+	
+	SessionProxy* sessionProxy() const;
 
 public slots:
-	virtual void setSessionId( qint64 id );
-    virtual void setUserId( qint64 id );
-    virtual void refresh();
-    virtual void start();
-	virtual void stop();
+	void sessionUpdated( const ExerciseWidgetDataList& data, bool readOnly );
+	ExerciseWidgetDataList sessionData() const;
 
 protected:
-	qint64 mSessionId;
-    qint64 mUserId;
 	SessionIconModel* mModel;
 	SessionIconDelegate* mDelegate;
 
-protected slots:
-	void selectExercises();
-	//void on_btnFinish_clicked();
-
 signals:
-	virtual void sessionFinished();
+	void commitSession( const ExerciseWidgetDataList& data );
+	void finishSession();
 };
 
 #endif // SESSIONICONVIEW_H
