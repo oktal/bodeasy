@@ -71,15 +71,9 @@ void SessionIconView::sessionUpdated( const ExerciseWidgetDataList& data, bool r
 
 void SessionIconView::commitSession( bool askUser )
 {
-	if ( askUser ) {
-		const QString text = tr( "Save data?" );
-		
-		if ( QMessageBox::question( this, QString::null, text, QMessageBox::No, QMessageBox::Yes ) == QMessageBox::No ) {
-			emit finishSession();
-			return;
-		}
-	}
+	SessionProxy* proxy = sessionProxy();
 	
-	emit commitSession( mModel->widgetsData() );
-	emit finishSession();
+	if ( proxy->commit( mModel->widgetsData(), askUser ) ) {
+		proxy->finishSession();
+	}
 }
