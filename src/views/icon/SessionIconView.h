@@ -25,7 +25,7 @@ public:
 
 public slots:
 	void sessionUpdated( const ExerciseWidgetDataList& data, bool readOnly );
-	ExerciseWidgetDataList sessionData() const;
+	void commitSession( bool askUser = false );
 
 protected:
 	SessionIconModel* mModel;

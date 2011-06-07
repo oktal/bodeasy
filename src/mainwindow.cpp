@@ -38,7 +38,6 @@ MainWindow::MainWindow(QWidget *parent) :
     dateTimeLabel(new QLabel(this))
 {
     ui->setupUi(this);
-    sessionProxy->setEnabled(false);
     setCentralWidget(sessionProxy);
     
     //sessionProxy->setWidget(new SessionFrame(this));
@@ -227,13 +226,11 @@ void MainWindow::onSessionDeleted(qint64 id)
 
 void MainWindow::onSessionStarted(bool readOnly)
 {
-    sessionProxy->setEnabled(true);
     ui->btnStart->setEnabled(readOnly);
 }
 
 void MainWindow::onSessionFinished()
 {
-    sessionProxy->setEnabled(false);
     ui->btnStart->setEnabled(ui->cmbSessions->currentIndex() != -1);
     const QSqlQuery query = sessionsMadeModel->query();
     sessionsMadeModel->setQuery(query.executedQuery(), SqlHelper::database());

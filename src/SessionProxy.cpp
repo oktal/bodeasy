@@ -39,7 +39,7 @@ void SessionProxy::setWidget( QWidget* widget )
     if ( mWidget ) {
         layout()->addWidget( mWidget );
 		connect( mWidget, SIGNAL( commitSession( const ExerciseWidgetDataList& ) ), this, SLOT( commit( const ExerciseWidgetDataList& ) ), Qt::UniqueConnection );
-		connect( mWidget, SIGNAL( finishSession() ), this, SIGNAL( sessionFinished() ), Qt::UniqueConnection );
+		connect( mWidget, SIGNAL( finishSession() ), this, SLOT( finishSession() ), Qt::UniqueConnection );
     }
 }
 
@@ -55,16 +55,13 @@ bool SessionProxy::isReadOnly() const
 
 void SessionProxy::setRunning( bool running, SessionProxy::Type type, bool readOnly )
 {
-//qWarning() << Q_FUNC_INFO << running << readOnly << type;
     if ( mRunning == running && mReadOnly == readOnly && mType == type ) {
         return;
     }
     
     if ( mRunning ) {
         if ( !mReadOnly ) {
-			#warning FIX ME
-			// request user confirmation before commit
-            //commit();
+            QMetaObject::invokeMethod( mWidget, "commitSession", Q_ARG( bool, true ) );
         }
     }
     
@@ -100,6 +97,81 @@ void SessionProxy::setSessionMadeId( qint64 id )
 void SessionProxy::updateModel()
 {
 	QMetaObject::invokeMethod( mWidget, "sessionUpdated", Q_ARG( ExerciseWidgetDataList, selectExercises() ), Q_ARG( bool, mReadOnly ) );
+}
+
+void SessionProxy::rollback()
+{
+	if ( mRunning ) {
+		mType = SessionProxy::Unknown;
+		mRunning = false;
+		updateModel();
+		emit sessionFinished();
+	}
+}
+
+ExerciseWidgetDataList SessionProxy::selectExercises() const
+{
+    ExerciseWidgetDataList dataList;
+    
+    if ( mSessionId == -1 && mSessionMadeId == -1 ) {
+        return dataList;
+    }
+    
+    QSqlQuery query = SqlHelper::query();
+	
+    query.prepare( "SELECT se.id_exercise, e.name, e.type, e.difficulty, e.weight, e.description, "
+                  "se.id_session_exercise, se.rest, se.repetitions, se.series FROM "
+                  "session_exercise se INNER JOIN exercise e "
+                  "ON se.id_exercise = e.id_exercise "
+                  "WHERE id_session=:sessionId" );
+    query.bindValue( ":sessionId", mSessionId );
+	
+    if ( query.exec() ) {
+        while ( query.next() ) {
+            ExerciseWidgetData data;
+			
+			data.exerciseId = query.value( 0 ).toLongLong();
+            data.name = query.value( 1 ).toString();
+            data.type = Exercise::Type( query.value( 2 ).toInt() );
+            data.difficulty = Exercise::Difficulty( query.value( 3 ).toInt() );
+            data.weight = query.value( 4 ).toBool();
+			data.description = query.value( 5 ).toString();
+			data.sessionExerciseId = query.value( 6 ).toLongLong();
+            data.rest = query.value( 7 ).toInt();
+            data.repetitions = query.value( 8 ).toInt();
+            data.series = query.value( 9 ).toInt();
+			data.seriesData.reserve( data.series );
+			
+			if ( mType == SessionProxy::SessionMade ) {
+				QSqlQuery querySeries = SqlHelper::query();
+				querySeries.prepare( "SELECT result, load, serie_number FROM session_made_result_view "
+									"WHERE id_session_made=:sessionMadeId AND id_session_exercise=:sessionExerciseId "
+									"ORDER BY serie_number" );
+				querySeries.bindValue( ":sessionMadeId", mSessionMadeId );
+				querySeries.bindValue( ":sessionExerciseId", data.exerciseId );
+
+				if ( querySeries.exec() ) {
+					int index = 0;
+					
+					while ( querySeries.next() ) {
+						data.seriesData[ index ].first = querySeries.value( 0 ).toInt();
+						data.seriesData[ index ].second = querySeries.value( 1 ).toInt();
+						index++;
+					}
+				}
+				else {
+					emit const_cast<SessionProxy*>( this )->error( SqlHelper::lastError() );
+				}
+			}
+			
+            dataList << data;
+        }
+    }
+    else {
+        emit const_cast<SessionProxy*>( this )->error( SqlHelper::lastError() );
+    }
+    
+    return dataList;
 }
 
 void SessionProxy::commit( const ExerciseWidgetDataList& data )
@@ -180,75 +252,11 @@ void SessionProxy::commit( const ExerciseWidgetDataList& data )
 	emit sessionCommited( data );
 }
 
-void SessionProxy::rollback()
+void SessionProxy::finishSession()
 {
-	if ( mRunning ) {
-		mRunning = false;
-		emit sessionFinished();
-	}
-}
-
-ExerciseWidgetDataList SessionProxy::selectExercises() const
-{
-    ExerciseWidgetDataList dataList;
-    
-    if ( mSessionId == -1 && mSessionMadeId == -1 ) {
-        return dataList;
-    }
-    
-    QSqlQuery query = SqlHelper::query();
-	
-    query.prepare( "SELECT se.id_exercise, e.name, e.type, e.difficulty, e.weight, e.description, "
-                  "se.id_session_exercise, se.rest, se.repetitions, se.series FROM "
-                  "session_exercise se INNER JOIN exercise e "
-                  "ON se.id_exercise = e.id_exercise "
-                  "WHERE id_session=:sessionId" );
-    query.bindValue( ":sessionId", mSessionId );
-	
-    if ( query.exec() ) {
-        while ( query.next() ) {
-            ExerciseWidgetData data;
-			
-			data.exerciseId = query.value( 0 ).toLongLong();
-            data.name = query.value( 1 ).toString();
-            data.type = Exercise::Type( query.value( 2 ).toInt() );
-            data.difficulty = Exercise::Difficulty( query.value( 3 ).toInt() );
-            data.weight = query.value( 4 ).toBool();
-			data.description = query.value( 5 ).toString();
-			data.sessionExerciseId = query.value( 6 ).toLongLong();
-            data.rest = query.value( 7 ).toInt();
-            data.repetitions = query.value( 8 ).toInt();
-            data.series = query.value( 9 ).toInt();
-			data.seriesData.reserve( data.series );
-			
-			if ( mType == SessionProxy::SessionMade ) {
-				QSqlQuery querySeries = SqlHelper::query();
-				querySeries.prepare( "SELECT result, load, serie_number FROM session_made_result_view "
-									"WHERE id_session_made=:sessionMadeId AND id_session_exercise=:sessionExerciseId "
-									"ORDER BY serie_number" );
-				querySeries.bindValue( ":sessionMadeId", mSessionMadeId );
-				querySeries.bindValue( ":sessionExerciseId", data.exerciseId );
-
-				if ( querySeries.exec() ) {
-					int index = 0;
-					
-					while ( querySeries.next() ) {
-						data.seriesData[ index ].first = querySeries.value( 0 ).toInt();
-						data.seriesData[ index ].second = querySeries.value( 1 ).toInt();
-						index++;
-					}
-				}
-				else {
-					emit const_cast<SessionProxy*>( this )->error( SqlHelper::lastError() );
-				}
-			}
-			
-            dataList << data;
-        }
-    }
-    else {
-        emit const_cast<SessionProxy*>( this )->error( SqlHelper::lastError() );
-    }
-    
-    return dataList;
+	mType = SessionProxy::Unknown;
+	mRunning = false;
+	mReadOnly = true;
+	updateModel();
+	emit sessionFinished();
 }
