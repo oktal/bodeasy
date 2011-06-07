@@ -20,6 +20,8 @@ SessionFrame::SessionFrame(QWidget *parent) :
     mCurrentPage(0)
 {
     ui->setupUi(this);
+    ui->lblObjective->hide();
+    ui->chkObjectiveDone->hide();
 }
 
 SessionFrame::~SessionFrame()
@@ -35,6 +37,7 @@ QSize SessionFrame::sizeHint() const
 void SessionFrame::setSessionId(qint64 id)
 {
     mSessionId = id;
+    selectObjective();
     refresh();
 }
 
@@ -67,6 +70,7 @@ void SessionFrame::start()
     ui->btnFirst->setEnabled(false);
     ui->btnPrevious->setEnabled(false);
     ui->btnFinish->setEnabled(true);
+    ui->chkObjectiveDone->setChecked(false);
     /* Enable Last and Next buttons if there are more than one page */
     if (ui->stackedWidget->count() == 1)
     {
@@ -115,11 +119,12 @@ void SessionFrame::stop()
     qint64 sessionMadeId = -1;
     {
         QSqlQuery query = SqlHelper::query();
-        query.prepare("INSERT INTO session_made(id_session, id_user, date) "
-                      "VALUES(:id_session, :id_user, :date)");
+        query.prepare("INSERT INTO session_made(id_session, id_user, date, objective_achieved) "
+                      "VALUES(:id_session, :id_user, :date, :achievedObjective)");
         query.bindValue(":id_session", mSessionId);
         query.bindValue(":id_user", mUserId);
         query.bindValue(":date", QDateTime::currentDateTime());
+        query.bindValue(":achievedObjective", ui->chkObjectiveDone->isChecked());
         if (!query.exec())
         {
             if (transaction)
@@ -130,6 +135,7 @@ void SessionFrame::stop()
         }
         else
         {
+
             sessionMadeId = query.lastInsertId().toLongLong();
         }
     }
@@ -226,6 +232,34 @@ void SessionFrame::on_btnLast_clicked()
 void SessionFrame::on_btnFinish_clicked()
 {
     stop();
+}
+
+/*!
+  * \brief Select the objective associated to the session
+*/
+
+void SessionFrame::selectObjective()
+{
+    QSqlQuery query = SqlHelper::query();
+    query.prepare("SELECT objective FROM session WHERE id_session=:sessionId");
+    query.bindValue(":sessionId", mSessionId);
+    if (query.exec())
+    {
+        if (query.next())
+        {
+            const QString objective = query.value(0).toString();
+            ui->lblObjective->setText(trUtf8("Objectif: %1").arg(
+                                          objective.isEmpty() ? trUtf8("Aucun objectif pour cette séance")
+                                                              : objective));
+            ui->lblObjective->show();
+            ui->chkObjectiveDone->show();
+            ui->chkObjectiveDone->setEnabled(!objective.isEmpty());
+        }
+    }
+    else
+    {
+        qWarning() << Q_FUNC_INFO << " SQL Error " << query.lastError();
+    }
 }
 
 /*!
@@ -334,4 +368,23 @@ void SessionFrame::showResults(qint64 sessionMadeId)
     }
 
     ui->btnFinish->setEnabled(false);
+
+    {
+        QSqlQuery query = SqlHelper::query();
+        query.prepare("SELECT objective_achieved FROM session_made WHERE id_session_made=:sessionMadeId");
+        query.bindValue(":sessionMadeId", sessionMadeId);
+        if (query.exec())
+        {
+            if (query.next())
+            {
+                const bool achievedObjective = query.value(0).toBool();
+                ui->chkObjectiveDone->setChecked(achievedObjective);
+                ui->chkObjectiveDone->setEnabled(false);
+            }
+        }
+        else
+        {
+            qWarning() << Q_FUNC_INFO << " SQL Error " << query.lastError();
+        }
+    }
 }

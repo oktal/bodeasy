@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setCentralWidget(sessionProxy);
     
     sessionProxy->setWidget(new SessionFrame(this));
-    sessionProxy->setWidget(new SessionIconView(this));
+    //sessionProxy->setWidget(new SessionIconView(this));
 
     ui->cmbSessions->setModel(sessionsModel);
     ui->lstContent->setModel(contentModel);

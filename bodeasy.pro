@@ -46,7 +46,7 @@ FORMS	+= src/usersdialog.ui \
 	src/sessionsdialog.ui \
 	src/mensurationsdialog.ui \
 	src/mainwindow.ui \
-	src/sessionframe.ui
+    src/sessionframe.ui \
 
 HEADERS	+= src/usersdialog.h \
 	src/exercisewidget.h \
