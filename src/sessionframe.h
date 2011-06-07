@@ -41,6 +41,7 @@ private slots:
 
 private:
     void selectExercises();
+    void selectObjective();
     void paginate();
 
     Ui::SessionFrame *ui;
