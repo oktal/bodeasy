@@ -30,10 +30,6 @@ public slots:
 protected:
 	SessionIconModel* mModel;
 	SessionIconDelegate* mDelegate;
-
-signals:
-	void commitSession( const ExerciseWidgetDataList& data );
-	void finishSession();
 };
 
 #endif // SESSIONICONVIEW_H

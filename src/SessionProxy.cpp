@@ -3,7 +3,10 @@
 
 #include <QVBoxLayout>
 #include <QVariant>
+#include <QDate>
+#include <QMessageBox>
 #include <QDebug>
+#include <QSqlError>
 
 SessionProxy::SessionProxy( QWidget* parent )
     : QWidget( parent ),
@@ -38,8 +41,6 @@ void SessionProxy::setWidget( QWidget* widget )
     
     if ( mWidget ) {
         layout()->addWidget( mWidget );
-		connect( mWidget, SIGNAL( commitSession( const ExerciseWidgetDataList& ) ), this, SLOT( commit( const ExerciseWidgetDataList& ) ), Qt::UniqueConnection );
-		connect( mWidget, SIGNAL( finishSession() ), this, SLOT( finishSession() ), Qt::UniqueConnection );
     }
 }
 
@@ -97,6 +98,94 @@ void SessionProxy::setSessionMadeId( qint64 id )
 void SessionProxy::updateModel()
 {
 	QMetaObject::invokeMethod( mWidget, "sessionUpdated", Q_ARG( ExerciseWidgetDataList, selectExercises() ), Q_ARG( bool, mReadOnly ) );
+}
+
+bool SessionProxy::commit( const ExerciseWidgetDataList& data, bool askUser )
+{
+	if ( askUser ) {
+		bool isComplete = true;
+
+		// Check if each exercise is complete
+		foreach ( const ExerciseWidgetData& d, data ) {
+			if ( !isCompleteExercise( d ) ) {
+				isComplete = false;
+				break;
+			}
+		}
+
+		if ( !isComplete ) {
+			const int r = QMessageBox::warning( this, trUtf8( "Attention" ),
+							trUtf8( "Certains champs n'ont pas été remplis. Ils seront "
+							"mis à 0. Voulez-vous vraiment terminer la séance ?" ),
+							QMessageBox::Yes, QMessageBox::No );
+
+			if ( r == QMessageBox::No ) {
+				return false;
+			}
+		}
+	}
+	
+    // Persist
+    const bool transaction = SqlHelper::transaction();
+    bool ok = true;
+	
+	foreach ( const ExerciseWidgetData& d, data ) {
+		if ( !saveExercise( d ) ) {
+			emit error( SqlHelper::lastError() );
+			ok = false;
+			qWarning() << "erreur1";
+			break;
+		}
+	}
+
+	if ( ok ) {
+		QSqlQuery query = SqlHelper::query();
+
+		query.prepare( "INSERT INTO session_made(id_session, id_user, date) VALUES(:id_session, :id_user, :date)" );
+		query.bindValue( ":id_session", mSessionId );
+		query.bindValue( ":id_user", mUserId );
+		query.bindValue( ":date", QDate::currentDate() );
+
+		if ( !query.exec() ) {
+			ok = false;
+			qWarning() << Q_FUNC_INFO << query.lastError().text();
+		}
+	}
+	
+    if ( transaction ) {
+		if ( ok ) {
+			SqlHelper::commit();
+		}
+		else {
+			SqlHelper::rollback();
+		}
+    }
+	
+    if ( ok ) {
+        QMessageBox::information( this, trUtf8( "Information" ),
+                                 trUtf8( "La séance du %1 a bien été enregistrée." )
+                                 .arg( QDate::currentDate().toString( Qt::SystemLocaleLongDate ) ) );
+    }
+    else  {
+        QMessageBox::critical( this, trUtf8( "Erreur" ),
+                              trUtf8( "Erreur lors de l'enregistrement de la séance: %1" )
+                              .arg( SqlHelper::lastError() ) );
+    }
+	
+	if ( ok ) {
+		emit sessionCommited( data );
+	}
+	
+	return ok;
+}
+
+void SessionProxy::finishSession()
+{
+	mType = SessionProxy::Unknown;
+	mRunning = false;
+	mReadOnly = true;
+	updateModel();
+	emit sessionFinished();
 }
 
 void SessionProxy::rollback()
@@ -174,89 +263,72 @@ ExerciseWidgetDataList SessionProxy::selectExercises() const
     return dataList;
 }
 
-void SessionProxy::commit( const ExerciseWidgetDataList& data )
+bool SessionProxy::isCompleteExercise( const ExerciseWidgetData& data ) const
 {
-	/*
-	QList<ExerciseWidget*>::const_iterator it;
-
-    bool isComplete = true;
-
-    // Check if each exercise is complete
-	foreach ( ExerciseWidget* ew, mExercises ) {
-        if ( !ew->isComplete() ) {
-            isComplete = false;
-            break;
-        }
-    }
+	foreach ( const ExerciseWidgetData::PairIntInt& pair, data.seriesData ) {
+		if ( pair.first == 0 || ( data.weight && pair.second == 0 ) ) {
+			return false;
+		}
+	}
 	
-    if ( !isComplete ) {
-        const int r = QMessageBox::warning( this, trUtf8( "Attention" ),
-                                            trUtf8( "Certains champs n'ont pas été remplis. Ils seront "
-                                                   "mis à 0. Voulez-vous vraiment terminer la séance ?" ),
-                                            QMessageBox::Yes, QMessageBox::No );
-		
-        if ( r == QMessageBox::No ) {
-            return;
-        }
-    }
-	
-    // Persist
-    const bool transaction = SqlHelper::transaction();
-    bool ok = true;
-	
-    foreach ( ExerciseWidget* ew, mExercises ) {
-        if ( !ew->save( mUserId, mSessionId ) )
-        {
-            if ( transaction ) {
-                SqlHelper::rollback();
-            }
-			
-            ok = false;
-            break;
-        }
-    }
-
-    if ( ok ) {
-        QSqlQuery query = SqlHelper::query();
-		
-        query.prepare( "INSERT INTO session_made(id_session, id_user, date) VALUES(:id_session, :id_user, :date)" );
-        query.bindValue( ":id_session", mSessionId );
-        query.bindValue( ":id_user", mUserId );
-        query.bindValue( ":date", QDate::currentDate() );
-		
-        if ( !query.exec() ) {
-            if ( transaction ) {
-                SqlHelper::rollback();
-                ok = false;
-            }
-        }
-    }
-	
-    if ( transaction && ok ) {
-        SqlHelper::commit();
-    }
-	
-    if ( ok ) {
-        QMessageBox::information( this, trUtf8( "Information" ),
-                                 trUtf8( "La séance du %1 a bien été enregistrée." )
-                                 .arg( QDate::currentDate().toString( Qt::SystemLocaleLongDate ) ) );
-        emit sessionFinished();
-    }
-    else  {
-        QMessageBox::critical( this, trUtf8( "Erreur" ),
-                              trUtf8( "Erreur lors de l'enregistrement de la séance: %1" )
-                              .arg( SqlHelper::lastError() ) );
-    }
-	*/
-	
-	emit sessionCommited( data );
+	return true;
 }
 
-void SessionProxy::finishSession()
+bool SessionProxy::saveExerciseSeries( qint64 resultId )
 {
-	mType = SessionProxy::Unknown;
-	mRunning = false;
-	mReadOnly = true;
-	updateModel();
-	emit sessionFinished();
+	QSqlQuery query = SqlHelper::query();
+	
+	query.prepare( "INSERT INTO session_made_result(id_session_made, id_result) "
+				"VALUES(:id_session_made, :id_result)" );
+	query.bindValue( ":id_session_made", mSessionMadeId );
+	query.bindValue( ":id_result", resultId );
+	
+	const int ok = query.exec();
+	
+	if ( !ok ) {
+		emit error( SqlHelper::lastError() );
+		qWarning() << Q_FUNC_INFO << query.lastError().text();
+	}
+	
+	return ok;
+}
+
+bool SessionProxy::saveExercise( const ExerciseWidgetData& data )
+{
+    QSqlQuery query = SqlHelper::query();
+	
+	query.prepare( "INSERT INTO exercise_result(result, load, date, serie_number, id_exercise, id_session, "
+					"id_session_exercise, id_user) "
+				"VALUES(:result, :load, :date, :serie_number, :id_exercise, :id_session, "
+					":id_session_exercise, :id_user)" );
+    query.bindValue( ":date", QDate::currentDate() );
+    query.bindValue( ":id_session", mSessionId );
+    query.bindValue( ":id_user", mUserId );
+    query.bindValue( ":id_exercise", data.exerciseId );
+    query.bindValue( ":id_session_exercise", data.sessionExerciseId );
+	
+	int serie = 0;
+	
+	foreach ( const ExerciseWidgetData::PairIntInt& pair, data.seriesData ) {
+		query.bindValue( ":serie_number", serie++ );
+		query.bindValue( ":result", pair.first );
+
+		if ( !data.weight ) {
+			query.bindValue( ":load", QVariant() );
+		}
+		else {
+			query.bindValue( ":load", pair.second );
+		}
+
+		if ( !query.exec() ) {
+			emit error( SqlHelper::lastError() );
+			qWarning() << Q_FUNC_INFO << query.lastError().text() << query.executedQuery() << query.lastQuery();
+			return false;
+		}
+		else {
+			saveExerciseSeries( query.lastInsertId().toLongLong() );
+		}
+	}
+	
+	return true;
 }

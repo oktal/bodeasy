@@ -77,11 +77,11 @@ void SessionFrame::start()
 
 void SessionFrame::stop()
 {
-    QList<ExerciseWidget *>::const_iterator it;
+    /*QList<ExerciseWidget *>::const_iterator it;
 
     bool isComplete = true;
 
-    /* Check if each exercise is complete */
+    // Check if each exercise is complete
     for (it = exercises.constBegin(); it != exercises.constEnd(); ++it)
     {
         ExerciseWidget *ew = *it;
@@ -108,7 +108,7 @@ void SessionFrame::stop()
         }
     }
 
-    /* Persist */
+    // Persist
     const bool transaction = SqlHelper::transaction();
     bool ok = true;
 
@@ -169,7 +169,7 @@ void SessionFrame::stop()
         QMessageBox::critical(this, trUtf8("Erreur"),
                               trUtf8("Erreur lors de l'enregistrement de la séance: %1")
                               .arg(SqlHelper::lastError()));
-    }
+    }*/
 }
 
 void SessionFrame::on_btnNext_clicked()
@@ -326,12 +326,12 @@ void SessionFrame::paginate()
 
 void SessionFrame::showResults(qint64 sessionMadeId)
 {
-    start();
+    /*start();
 
     foreach (ExerciseWidget *ew, exercises)
     {
         ew->selectResults(sessionMadeId);
     }
 
-    ui->btnFinish->setEnabled(false);
+    ui->btnFinish->setEnabled(false);*/
 }

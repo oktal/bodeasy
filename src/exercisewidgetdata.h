@@ -26,7 +26,8 @@ struct ExerciseWidgetData
 
     int number;
     
-    QList<QPair<int, int> > seriesData;
+    typedef QPair<int, int> PairIntInt;
+    QList<PairIntInt> seriesData;
 };
 
 typedef QList<ExerciseWidgetData> ExerciseWidgetDataList;
