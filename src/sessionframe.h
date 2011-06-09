@@ -2,6 +2,7 @@
 #define SESSIONFRAME_H
 
 #include "SessionProxy.h"
+#include "exercisewidgetdata.h"
 
 #include <QFrame>
 #include <QList>
@@ -20,14 +21,20 @@ public:
     ~SessionFrame();
 
     virtual QSize sizeHint() const;
+    SessionProxy* sessionProxy() const;
 
 public slots:
+    void sessionUpdated(const ExerciseWidgetDataList& data, bool readOnly);
+    void commitSession(bool askUser = false);
+
+    /*
     virtual void setSessionId(qint64 id);
     virtual void setUserId(qint64 id);
     virtual void showResults(qint64 sessionMadeId);
     virtual void refresh();
     virtual void start();
     virtual void stop();
+    */
 
 signals:
     virtual void sessionFinished();
@@ -42,6 +49,8 @@ private slots:
 private:
     void selectExercises();
     void paginate();
+    ExerciseWidgetDataList widgetsData() const;
+    void start();
 
     Ui::SessionFrame *ui;
     qint64 mSessionId;

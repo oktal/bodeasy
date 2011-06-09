@@ -8,6 +8,7 @@
 #include <QScrollBar>
 #include <QSqlQuery>
 #include <QMessageBox>
+#include <QToolButton>
 #include <QDate>
 #include <QDebug>
 
@@ -16,6 +17,9 @@ SessionIconView::SessionIconView( QWidget* parent )
 	mModel( new SessionIconModel( this ) ),
 	mDelegate( new SessionIconDelegate( this ) )
 {
+	QToolButton* button = new QToolButton( this );
+	button->setIcon( QIcon( ":/images/checkround-icon.png" ) );
+	
 	setUniformItemSizes( true );
 	setAlternatingRowColors( false );
 	setResizeMode( QListView::Adjust );
@@ -24,6 +28,10 @@ SessionIconView::SessionIconView( QWidget* parent )
 	setSpacing( 5 );
 	setModel( mModel );
 	setItemDelegate( mDelegate );
+	setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
+	setCornerWidget( button );
+	
+	connect( button, SIGNAL( clicked() ), this, SLOT( commitSession() ) );
 }
 
 SessionIconView::~SessionIconView()
@@ -61,7 +69,11 @@ void SessionIconView::sessionUpdated( const ExerciseWidgetDataList& data, bool r
 	mModel->setWidgetsData( data );
 }
 
-ExerciseWidgetDataList SessionIconView::sessionData() const
+void SessionIconView::commitSession( bool askUser )
 {
-	return mModel->widgetsData();
+	SessionProxy* proxy = sessionProxy();
+	
+	if ( proxy->commit( mModel->widgetsData(), askUser ) ) {
+		proxy->finishSession();
+	}
 }

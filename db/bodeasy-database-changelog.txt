@@ -1,3 +1,8 @@
+v.2011.06.07
+	* [CHANGES] [Mathieu Stefani] <mathieu.stefani at supinfo dot com>
+	
+	    added `session_made.objective_achieved` column
+
 v.2011.06.04
 	* [CHANGES] [Mathieu Stefani] <mathieu.stefani at supinfo dot com>
 	   
