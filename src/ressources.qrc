@@ -26,7 +26,6 @@
         <file>images/table-icon.png</file>
         <file>images/graph-icon2.png</file>
         <file>images/clock-icon.png</file>
-        <file>images/tools-icon.png</file>
         <file>images/thumbup-icon.png</file>
     </qresource>
     <qresource prefix="/sql">
