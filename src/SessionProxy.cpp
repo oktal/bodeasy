@@ -266,7 +266,7 @@ ExerciseWidgetDataList SessionProxy::selectExercises() const
 									"WHERE id_session_made=:sessionMadeId AND id_session_exercise=:sessionExerciseId "
 									"ORDER BY serie_number" );
 				querySeries.bindValue( ":sessionMadeId", mSessionMadeId );
-				querySeries.bindValue( ":sessionExerciseId", data.exerciseId );
+				querySeries.bindValue( ":sessionExerciseId", data.sessionExerciseId );
 
 				if ( querySeries.exec() ) {
 					int index = 0;

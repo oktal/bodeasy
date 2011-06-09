@@ -23,8 +23,6 @@ public:
 	
 	Q_INVOKABLE ExerciseWidgetDataList widgetsData() const;
 	Q_INVOKABLE void setWidgetsData( const ExerciseWidgetDataList& data, bool readOnly );
-
-
 	
 protected:
 	SessionProxy* mProxy;
