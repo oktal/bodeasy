@@ -30,7 +30,7 @@ public slots:
     virtual void stop();
 
 signals:
-    virtual void sessionFinished();
+    void sessionFinished();
 
 private slots:
     void on_btnNext_clicked();

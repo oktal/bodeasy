@@ -8,11 +8,12 @@
 
 struct ExerciseWidgetData
 {
-    ExerciseWidgetData() : exerciseId(-1), sessionExerciseId(-1), rest(0),
-                           weight(false), repetitions(0), series(0)
+    ExerciseWidgetData() : modified(false), exerciseId(-1), sessionExerciseId(-1), rest(0),
+                           weight(false), repetitions(0), series(0), number(-1)
     {
     }
 
+    bool modified;
     qint64 exerciseId;
     qint64 sessionExerciseId;
     QString name;

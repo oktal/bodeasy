@@ -15,19 +15,19 @@ class SessionIconView : public QListView
 	friend class SessionIconDelegate;
 	
 public:
-	SessionIconView( QWidget* parent = 0 );
+	SessionIconView( SessionProxy* proxy );
 	virtual ~SessionIconView();
 	
 	virtual QSize minimumSizeHint() const;
 	virtual QSize sizeHint() const;
 	
-	SessionProxy* sessionProxy() const;
+	Q_INVOKABLE ExerciseWidgetDataList widgetsData() const;
+	Q_INVOKABLE void setWidgetsData( const ExerciseWidgetDataList& data, bool readOnly );
 
-public slots:
-	void sessionUpdated( const ExerciseWidgetDataList& data, bool readOnly );
-	void commitSession( bool askUser = false );
 
+	
 protected:
+	SessionProxy* mProxy;
 	SessionIconModel* mModel;
 	SessionIconDelegate* mDelegate;
 };

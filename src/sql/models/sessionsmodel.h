@@ -21,6 +21,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     bool removeRow(int row, const QModelIndex &parent = QModelIndex());
 
+    Session session(int index) const;
     Session session(const QModelIndex &index) const;
     bool addSession(Session &session);
     bool updateSession(const Session &session);

@@ -31,6 +31,7 @@ ExerciseWidget::~ExerciseWidget()
 void ExerciseWidget::on_btnAddSerie_clicked()
 {
     addRow();
+    mData.modified = true;
     ui->btnDeleteSerie->setEnabled(true);
 }
 
@@ -44,6 +45,7 @@ void ExerciseWidget::on_btnDeleteSerie_clicked()
 
     mPairs.removeLast();
     mData.seriesData.removeLast();
+    mData.modified = true;
     
     ui->btnDeleteSerie->setEnabled(mPairs.count() > mData.series);
 }
@@ -52,19 +54,27 @@ void ExerciseWidget::spinBox_valueChanged(int value)
 {
     QSpinBox* sb = qobject_cast<QSpinBox*>(sender());
     const int row = sb->objectName().section('_', -1, -1).toInt();
+    int* variable = 0;
     
     if (sb->objectName().startsWith("txtResult") )
     {
-        mData.seriesData[ row ].first = value;
+        variable = &mData.seriesData[ row ].first;
     }
     else if (sb->objectName().startsWith("txtLoad") )
     {
-        mData.seriesData[ row ].second = value;
+        variable = &mData.seriesData[ row ].second;
     }
+    
+    if ( *variable != value ) {
+        mData.modified = true;
+    }
+    
+    *variable = value;
 }
 
 void ExerciseWidget::setData(const ExerciseWidgetData &data)
 {
+    const bool modified = data.modified;
     mData = data;
 
     ui->lblExerciseName->setText(data.name);
@@ -99,6 +109,8 @@ void ExerciseWidget::setData(const ExerciseWidgetData &data)
     ui->lblNumber->setText(QString("#%1").arg(data.number));
 
     createLayout();
+    
+    mData.modified = modified;
 }
 
 const ExerciseWidgetData &ExerciseWidget::data() const

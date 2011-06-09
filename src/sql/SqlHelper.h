@@ -20,10 +20,8 @@ namespace SqlHelper
 	QString databaseLocalFilePath();
 	QSqlDatabase database();
 	QSqlQuery query();
-	QString lastError();
+	QString lastError( const QSqlQuery& query = QSqlQuery(), const char* function = 0 );
 	bool executeSqlScript( const QString& filePath );
-	
-	void debugQuery( const QSqlQuery& query, const char* function );
 };
 
 #endif // SQLHELPER_H

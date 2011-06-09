@@ -326,6 +326,7 @@ void SessionFrame::paginate()
 
 void SessionFrame::showResults(qint64 sessionMadeId)
 {
+    Q_UNUSED(sessionMadeId);
     /*start();
 
     foreach (ExerciseWidget *ew, exercises)
