@@ -1,22 +1,19 @@
 #include "SessionIconView.h"
 #include "SessionIconModel.h"
 #include "SessionIconDelegate.h"
-#include "exercisewidget.h"
 #include "SessionProxy.h"
-#include "sql/SqlHelper.h"
 
-#include <QScrollBar>
-#include <QSqlQuery>
-#include <QMessageBox>
 #include <QToolButton>
-#include <QDate>
 #include <QDebug>
 
-SessionIconView::SessionIconView( QWidget* parent )
-	: QListView( parent ),
+SessionIconView::SessionIconView( SessionProxy* proxy )
+	: QListView( proxy ),
+	mProxy( proxy ),
 	mModel( new SessionIconModel( this ) ),
 	mDelegate( new SessionIconDelegate( this ) )
 {
+	Q_ASSERT( proxy );
+	
 	QToolButton* button = new QToolButton( this );
 	button->setIcon( QIcon( ":/images/checkround-icon.png" ) );
 	
@@ -25,13 +22,15 @@ SessionIconView::SessionIconView( QWidget* parent )
 	setResizeMode( QListView::Adjust );
 	setViewMode( QListView::IconMode );
 	setMovement( QListView::Static );
+	setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
+	setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
+	setAutoScroll( false );
 	setSpacing( 5 );
 	setModel( mModel );
 	setItemDelegate( mDelegate );
-	setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
 	setCornerWidget( button );
 	
-	connect( button, SIGNAL( clicked() ), this, SLOT( commitSession() ) );
+	connect( button, SIGNAL( clicked() ), mProxy, SLOT( stop() ) );
 }
 
 SessionIconView::~SessionIconView()
@@ -52,12 +51,12 @@ QSize SessionIconView::sizeHint() const
 		;
 }
 
-SessionProxy* SessionIconView::sessionProxy() const
+Q_INVOKABLE ExerciseWidgetDataList SessionIconView::widgetsData() const
 {
-	return qobject_cast<SessionProxy*>( parentWidget() );
+	return mModel->widgetsData();
 }
 
-void SessionIconView::sessionUpdated( const ExerciseWidgetDataList& data, bool readOnly )
+void SessionIconView::setWidgetsData( const ExerciseWidgetDataList& data, bool readOnly )
 {
 	if ( readOnly ) {
 		setEditTriggers( QAbstractItemView::NoEditTriggers );
@@ -67,13 +66,4 @@ void SessionIconView::sessionUpdated( const ExerciseWidgetDataList& data, bool r
 	}
 	
 	mModel->setWidgetsData( data );
-}
-
-void SessionIconView::commitSession( bool askUser )
-{
-	SessionProxy* proxy = sessionProxy();
-	
-	if ( proxy->commit( mModel->widgetsData(), askUser ) ) {
-		proxy->finishSession();
-	}
 }

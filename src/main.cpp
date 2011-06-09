@@ -24,7 +24,8 @@ int main( int argc, char* argv[] )
     MainWindow mw;
     mw.setWindowTitle( app.applicationName() );
     mw.setUserId( dialog.userId() );
-    mw.showMaximized();
+    mw.resize( 800, 600 );
+    mw.show();
 
     const int result = app.exec();
     SqlHelper::closeDatabase();

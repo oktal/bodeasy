@@ -40,8 +40,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setCentralWidget(sessionProxy);
     
-    //sessionProxy->setWidget(new SessionFrame(this));
-    sessionProxy->setWidget(new SessionIconView(this));
+    //sessionProxy->setWidget(new SessionFrame(sessionProxy));
+    sessionProxy->setWidget(new SessionIconView(sessionProxy));
 
     ui->cmbSessions->setModel(sessionsModel);
     ui->lstContent->setModel(contentModel);
@@ -171,21 +171,37 @@ void MainWindow::on_userAction_triggered()
 
 void MainWindow::on_cmbSessions_activated(int index)
 {
-    const qint64 id = ui->cmbSessions->itemData(index).toLongLong();
-    sessionProxy->setRunning(false);
-    contentModel->setSessionId(id);
-    sessionProxy->setSessionId(id);
-    
-    if (index != -1)
+    if (sessionProxy->stop())
     {
-        sessionProxy->setRunning(true,SessionProxy::Session,true);
+        const qint64 id = ui->cmbSessions->itemData(index).toLongLong();
+        
+        contentModel->setSessionId(id);
+        sessionProxy->setSessionId(id);
+        
+        if (index != -1)
+        {
+            sessionProxy->setRunning(true,SessionProxy::Session,true);
+        }
+        
+        ui->btnStart->setEnabled(index != -1);
     }
-    
-    ui->btnStart->setEnabled(index != -1);
+    else
+    {
+        const bool blocked = ui->cmbSessions->blockSignals( true );
+        const qint64 sessionId = sessionProxy->sessionId();
+        index = ui->cmbSessions->findData( sessionId );
+        ui->cmbSessions->setCurrentIndex( index );
+        ui->cmbSessions->blockSignals( blocked );
+    }
 }
 
 void MainWindow::on_btnStart_clicked()
 {
+    const int index = ui->cmbSessions->currentIndex();
+    const qint64 sessionId = sessionsModel->session(index).id;
+    
+    sessionProxy->setSessionId(sessionId);
+    contentModel->setSessionId(sessionId);
     sessionProxy->setRunning(true,SessionProxy::Session,false);
 }
 
@@ -195,17 +211,21 @@ void MainWindow::on_btnSee_clicked()
     const QSqlRecord record = sessionsMadeModel->record(index);
     const qint64 sessionId = record.value("id_session").toLongLong();
     const qint64 sessionMadeId = record.value("id_session_made").toLongLong();
-    sessionProxy->setRunning(false);
-    sessionProxy->setSessionId(sessionId);
-    contentModel->setSessionId(sessionId);
-    sessionProxy->setSessionMadeId(sessionMadeId);
-    sessionProxy->setRunning(true,SessionProxy::SessionMade,true);
+    
+    if (sessionProxy->stop())
+    {
+        sessionProxy->setSessionId(sessionId);
+        contentModel->setSessionId(sessionId);
+        sessionProxy->setSessionMadeId(sessionMadeId);
+        sessionProxy->setRunning(true,SessionProxy::SessionMade,true);
+    }
 }
 
 void MainWindow::onSessionUpdated(qint64 id)
 {
     const int index = ui->cmbSessions->currentIndex();
     const qint64 currentId = ui->cmbSessions->itemData(index).toLongLong();
+    
     if (id == currentId)
     {
         contentModel->update();
@@ -217,16 +237,16 @@ void MainWindow::onSessionDeleted(qint64 id)
 {
     if (id == contentModel->sessionId())
     {
-        sessionProxy->rollback();
         ui->cmbSessions->setCurrentIndex(-1);
         contentModel->setSessionId(-1);
         sessionProxy->setSessionId(-1);
+        sessionProxy->rollback();
     }
 }
 
 void MainWindow::onSessionStarted(bool readOnly)
 {
-    ui->btnStart->setEnabled(readOnly);
+    ui->btnStart->setEnabled(readOnly && ui->cmbSessions->currentIndex() != -1);
 }
 
 void MainWindow::onSessionFinished()

@@ -24,14 +24,19 @@ QModelIndex SessionsModel::index(const Session &session) const
     return QModelIndex();
 }
 
-Session SessionsModel::session(const QModelIndex &index) const
+Session SessionsModel::session(int index) const
 {
-    if (index.row() < 0 || index.row() >= mSessions.count())
+    if (index < 0 || index >= mSessions.count())
     {
         return Session();
     }
 
-    return mSessions[index.row()];
+    return mSessions[index];
+}
+
+Session SessionsModel::session(const QModelIndex &index) const
+{
+    return session(index.row());
 }
 
 bool SessionsModel::addSession(Session &session)

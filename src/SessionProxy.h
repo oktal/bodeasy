@@ -22,19 +22,23 @@ public:
 	QWidget* widget() const;
 	void setWidget( QWidget* widget );
 
+	qint64 userId() const;
+	qint64 sessionId() const;
+	qint64 sessionMadeId() const;
+	
     bool isRunning() const;
 	bool isReadOnly() const;
 
 public slots:
-	void setRunning( bool running, SessionProxy::Type type = SessionProxy::Unknown, bool readOnly = false );
+	bool setRunning( bool running, SessionProxy::Type type, bool readOnly );
+	bool stop();
     void setUserId( qint64 id );
 	void setSessionId( qint64 id );
 	void setSessionMadeId( qint64 id );
-	void rollback();
 	void updateModel();
 	
-	bool commit( const ExerciseWidgetDataList& data, bool askUser );
-	void finishSession();
+	bool commit( const ExerciseWidgetDataList& data );
+	void rollback();
 
 protected:
 	QPointer<QWidget> mWidget;
@@ -46,6 +50,7 @@ protected:
 	qint64 mSessionMadeId;
 	
 	ExerciseWidgetDataList selectExercises() const;
+	bool isModified( const ExerciseWidgetDataList& data ) const;
 	bool isCompleteExercise( const ExerciseWidgetData& data ) const;
 	bool saveExerciseSeries( qint64 resultId );
 	bool saveExercise( const ExerciseWidgetData& data );
