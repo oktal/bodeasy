@@ -25,15 +25,11 @@ public:
 
 public slots:
 	void sessionUpdated( const ExerciseWidgetDataList& data, bool readOnly );
-	ExerciseWidgetDataList sessionData() const;
+	void commitSession( bool askUser = false );
 
 protected:
 	SessionIconModel* mModel;
 	SessionIconDelegate* mDelegate;
-
-signals:
-	void commitSession( const ExerciseWidgetDataList& data );
-	void finishSession();
 };
 
 #endif // SESSIONICONVIEW_H

@@ -30,9 +30,11 @@ public slots:
     void setUserId( qint64 id );
 	void setSessionId( qint64 id );
 	void setSessionMadeId( qint64 id );
-	void commit( const ExerciseWidgetDataList& data );
 	void rollback();
 	void updateModel();
+	
+    bool commit( const ExerciseWidgetDataList& data, bool askUser );
+	void finishSession();
 
 protected:
 	QPointer<QWidget> mWidget;
@@ -44,6 +46,9 @@ protected:
 	qint64 mSessionMadeId;
 	
 	ExerciseWidgetDataList selectExercises() const;
+	bool isCompleteExercise( const ExerciseWidgetData& data ) const;
+	bool saveExerciseSeries( qint64 resultId );
+	bool saveExercise( const ExerciseWidgetData& data );
 
 signals:
 	void error( const QString& error );
