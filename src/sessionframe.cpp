@@ -37,7 +37,7 @@ SessionProxy *SessionFrame::sessionProxy() const
     return qobject_cast<SessionProxy*>(parentWidget());
 }
 
-void SessionFrame::sessionUpdated(const ExerciseWidgetDataList &data, bool readOnly)
+void SessionFrame::setWidgetsData(const ExerciseWidgetDataList &data, bool readOnly)
 {
     mCurrentPage = 0;
 
@@ -72,16 +72,6 @@ void SessionFrame::sessionUpdated(const ExerciseWidgetDataList &data, bool readO
 
 }
 
-void SessionFrame::commitSession(bool askUser)
-{
-    SessionProxy* proxy = sessionProxy();
-
-    /*
-    if (proxy->commit(widgetsData(), askUser)) {
-        proxy->finishSession();
-    }
-    */
-}
 
 ExerciseWidgetDataList SessionFrame::widgetsData() const
 {
@@ -161,7 +151,7 @@ void SessionFrame::on_btnLast_clicked()
 
 void SessionFrame::on_btnFinish_clicked()
 {
-    commitSession();
+
 }
 
 
@@ -215,17 +205,3 @@ void SessionFrame::paginate()
         ui->stackedWidget->addWidget(widget);
     }
 }
-
-/*
-void SessionFrame::showResults(qint64 sessionMadeId)
-{
-    start();
-
-    foreach (ExerciseWidget *ew, exercises)
-    {
-        ew->selectResults(sessionMadeId);
-    }
-
-    ui->btnFinish->setEnabled(false);
-}
-*/
