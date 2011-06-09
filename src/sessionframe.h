@@ -23,21 +23,8 @@ public:
     virtual QSize sizeHint() const;
     SessionProxy* sessionProxy() const;
 
-public slots:
-    void sessionUpdated(const ExerciseWidgetDataList& data, bool readOnly);
-    void commitSession(bool askUser = false);
-
-    /*
-    virtual void setSessionId(qint64 id);
-    virtual void setUserId(qint64 id);
-    virtual void showResults(qint64 sessionMadeId);
-    virtual void refresh();
-    virtual void start();
-    virtual void stop();
-    */
-
-signals:
-    void sessionFinished();
+    Q_INVOKABLE ExerciseWidgetDataList widgetsData() const;
+    Q_INVOKABLE void setWidgetsData( const ExerciseWidgetDataList& data, bool readOnly );
 
 private slots:
     void on_btnNext_clicked();
@@ -47,9 +34,7 @@ private slots:
     void on_btnFinish_clicked();
 
 private:
-    void selectExercises();
     void paginate();
-    ExerciseWidgetDataList widgetsData() const;
     void start();
 
     Ui::SessionFrame *ui;

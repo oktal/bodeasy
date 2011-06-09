@@ -51,7 +51,7 @@ QSize SessionIconView::sizeHint() const
 		;
 }
 
-Q_INVOKABLE ExerciseWidgetDataList SessionIconView::widgetsData() const
+ExerciseWidgetDataList SessionIconView::widgetsData() const
 {
 	return mModel->widgetsData();
 }
