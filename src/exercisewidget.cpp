@@ -18,7 +18,8 @@
 ExerciseWidget::ExerciseWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ExerciseWidget),
-    scrollAreaLayout(0)
+    scrollAreaLayout(0),
+    mReadOnly(false)
 {
     ui->setupUi(this);
 }
@@ -26,6 +27,24 @@ ExerciseWidget::ExerciseWidget(QWidget *parent) :
 ExerciseWidget::~ExerciseWidget()
 {
     delete ui;
+}
+
+void ExerciseWidget::setReadOnly(bool readOnly)
+{
+    foreach (const ExerciseWidget::PairSpinBox &pair, mPairs)
+    {
+        pair.first->setReadOnly(readOnly);
+        pair.second->setReadOnly(readOnly);
+    }
+
+    ui->btnAddSerie->setEnabled(!readOnly);
+
+    mReadOnly = readOnly;
+}
+
+bool ExerciseWidget::isReadOnly() const
+{
+    return mReadOnly;
 }
 
 void ExerciseWidget::on_btnAddSerie_clicked()

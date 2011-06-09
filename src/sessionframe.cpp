@@ -55,21 +55,18 @@ void SessionFrame::setWidgetsData(const ExerciseWidgetDataList &data, bool readO
     {
         ExerciseWidget *ew = new ExerciseWidget;
         ew->setData(d);
+        ew->setReadOnly(readOnly);
         exercises.append(ew);
     }
 
     paginate();
     ui->stackedWidget->setCurrentIndex(0);
 
-    if (!readOnly)
-    {
-        start();
-    }
-    else
+    start();
+    if (readOnly)
     {
         ui->btnFinish->setEnabled(false);
     }
-
 }
 
 

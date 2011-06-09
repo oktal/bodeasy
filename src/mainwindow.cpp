@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     
     sessionProxy->setWidget(new SessionFrame(sessionProxy));
     //sessionProxy->setWidget(new SessionIconView(sessionProxy));
+    sessionProxy->setEnabled(false);
 
     ui->cmbSessions->setModel(sessionsModel);
     ui->lstContent->setModel(contentModel);
@@ -181,17 +182,18 @@ void MainWindow::on_cmbSessions_activated(int index)
         if (index != -1)
         {
             sessionProxy->setRunning(true,SessionProxy::Session,true);
+            sessionProxy->setEnabled(false);
         }
         
         ui->btnStart->setEnabled(index != -1);
     }
     else
     {
-        const bool blocked = ui->cmbSessions->blockSignals( true );
+        //const bool blocked = ui->cmbSessions->blockSignals( true );
         const qint64 sessionId = sessionProxy->sessionId();
         index = ui->cmbSessions->findData( sessionId );
         ui->cmbSessions->setCurrentIndex( index );
-        ui->cmbSessions->blockSignals( blocked );
+        //ui->cmbSessions->blockSignals( blocked );
     }
 }
 
@@ -203,6 +205,7 @@ void MainWindow::on_btnStart_clicked()
     sessionProxy->setSessionId(sessionId);
     contentModel->setSessionId(sessionId);
     sessionProxy->setRunning(true,SessionProxy::Session,false);
+    sessionProxy->setEnabled(true);
 }
 
 void MainWindow::on_btnSee_clicked()
@@ -218,6 +221,7 @@ void MainWindow::on_btnSee_clicked()
         contentModel->setSessionId(sessionId);
         sessionProxy->setSessionMadeId(sessionMadeId);
         sessionProxy->setRunning(true,SessionProxy::SessionMade,true);
+        sessionProxy->setEnabled(true);
     }
 }
 
