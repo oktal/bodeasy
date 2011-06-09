@@ -2,7 +2,7 @@
 -- Author:        Disk1
 -- Caption:       New Model
 -- Project:       Name of the project
--- Changed:       2011-06-07 21:13
+-- Changed:       2011-06-04 11:57
 -- Created:       2010-12-11 20:09
 PRAGMA foreign_keys = OFF;
 
@@ -130,9 +130,8 @@ CREATE INDEX "exercise_result.id_user_INDEX" ON "exercise_result"("id_user");
 CREATE INDEX "exercise_result.fk_exercise_result_session_exercise1" ON "exercise_result"("id_session_exercise");
 CREATE TABLE "session_made"(
   "id_session_made" INTEGER PRIMARY KEY NOT NULL CHECK("id_session_made">=0),
-  "objective_achieved" BOOL NOT NULL,
-  "date" DATETIME NOT NULL,
   "id_session" INTEGER NOT NULL CHECK("id_session">=0),
+  "date" DATETIME NOT NULL,
   "id_user" INTEGER NOT NULL CHECK("id_user">=0),
   CONSTRAINT "id_session_made_UNIQUE"
     UNIQUE("id_session_made"),
