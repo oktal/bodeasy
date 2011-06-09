@@ -257,7 +257,6 @@ ExerciseWidgetDataList SessionProxy::selectExercises() const
             data.rest = query.value( 7 ).toInt();
             data.repetitions = query.value( 8 ).toInt();
             data.series = query.value( 9 ).toInt();
-			data.seriesData.reserve( data.series );
 			data.number = number++;
 			
 			if ( mType == SessionProxy::SessionMade ) {
@@ -269,12 +268,11 @@ ExerciseWidgetDataList SessionProxy::selectExercises() const
 				querySeries.bindValue( ":sessionExerciseId", data.sessionExerciseId );
 
 				if ( querySeries.exec() ) {
-					int index = 0;
 					
 					while ( querySeries.next() ) {
-						data.seriesData[ index ].first = querySeries.value( 0 ).toInt();
-						data.seriesData[ index ].second = querySeries.value( 1 ).toInt();
-						index++;
+                        const int result = querySeries.value( 0 ).toInt();
+                        const int load = querySeries.value( 1 ).toInt();
+                        data.seriesData << qMakePair( result, load );
 					}
 				}
 				else {

@@ -199,6 +199,22 @@ void ExerciseWidget::createLayout()
         ExerciseWidget::PairSpinBox pair = addRow();
         pair.first->setValue(values.first);
         pair.second->setValue(values.second);
+
+        /*
+
+        if (i >= mData.series)
+        {
+            const QString labelName = QString("lblTitle_%1").arg(i);
+            QLabel *lblSerie = ui->scrollAreaWidgetContents->findChild<QLabel *>(labelName);
+            if (lblSerie)
+            {
+                const QString text = lblSerie->text();
+                lblSerie->setText(
+                       QString("<img src=\":/images/plus-icon.png\" width=12 height=12 />%1").arg(text));
+            }
+        }
+        */
+
     }
 
     ui->scrollAreaWidgetContents->setLayout(scrollAreaLayout);
