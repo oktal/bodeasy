@@ -27,6 +27,7 @@ public:
 	qint64 sessionMadeId() const;
 	
     bool isRunning() const;
+	SessionProxy::Type type() const;
 	bool isReadOnly() const;
 
 public slots:
@@ -57,7 +58,7 @@ protected:
 
 signals:
 	void error( const QString& error );
-	void sessionStarted( bool readOnly );
+	void sessionStarted( SessionProxy::Type type, bool readOnly );
 	void sessionCommited( const ExerciseWidgetDataList& data );
 	void sessionFinished();
 };

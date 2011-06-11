@@ -64,6 +64,11 @@ bool SessionProxy::isRunning() const
     return mRunning;
 }
 
+SessionProxy::Type SessionProxy::type() const
+{
+	return mType;
+}
+
 bool SessionProxy::isReadOnly() const
 {
     return mReadOnly;
@@ -102,7 +107,7 @@ bool SessionProxy::setRunning( bool running, SessionProxy::Type type, bool readO
     updateModel();
     
     if ( mRunning ) {
-        emit sessionStarted( mReadOnly );
+        emit sessionStarted( mType, mReadOnly );
     }
     else {
         emit sessionFinished();
