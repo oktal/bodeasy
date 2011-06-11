@@ -18,7 +18,8 @@
 ExerciseWidget::ExerciseWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ExerciseWidget),
-    scrollAreaLayout(0)
+    scrollAreaLayout(0),
+    mReadOnly(false)
 {
     ui->setupUi(this);
 }
@@ -26,6 +27,24 @@ ExerciseWidget::ExerciseWidget(QWidget *parent) :
 ExerciseWidget::~ExerciseWidget()
 {
     delete ui;
+}
+
+void ExerciseWidget::setReadOnly(bool readOnly)
+{
+    foreach (const ExerciseWidget::PairSpinBox &pair, mPairs)
+    {
+        pair.first->setReadOnly(readOnly);
+        pair.second->setReadOnly(readOnly);
+    }
+
+    ui->btnAddSerie->setEnabled(!readOnly);
+
+    mReadOnly = readOnly;
+}
+
+bool ExerciseWidget::isReadOnly() const
+{
+    return mReadOnly;
 }
 
 void ExerciseWidget::on_btnAddSerie_clicked()
@@ -180,6 +199,19 @@ void ExerciseWidget::createLayout()
         ExerciseWidget::PairSpinBox pair = addRow();
         pair.first->setValue(values.first);
         pair.second->setValue(values.second);
+
+        if (i >= mData.series)
+        {
+            const QString labelName = QString("lblTitle_%1").arg(i);
+            QLabel *lblSerie = ui->scrollAreaWidgetContents->findChild<QLabel *>(labelName);
+            if (lblSerie)
+            {
+                const QString text = lblSerie->text();
+                lblSerie->setText(
+                       QString("<img src=\":/images/plus-icon.png\" width=12 height=12 />%1").arg(text));
+            }
+        }
+
     }
 
     ui->scrollAreaWidgetContents->setLayout(scrollAreaLayout);
