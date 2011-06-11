@@ -200,8 +200,6 @@ void ExerciseWidget::createLayout()
         pair.first->setValue(values.first);
         pair.second->setValue(values.second);
 
-        /*
-
         if (i >= mData.series)
         {
             const QString labelName = QString("lblTitle_%1").arg(i);
@@ -213,7 +211,6 @@ void ExerciseWidget::createLayout()
                        QString("<img src=\":/images/plus-icon.png\" width=12 height=12 />%1").arg(text));
             }
         }
-        */
 
     }
 

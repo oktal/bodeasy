@@ -20,6 +20,8 @@ SessionFrame::SessionFrame(QWidget *parent) :
     mCurrentPage(0)
 {
     ui->setupUi(this);
+    ui->lblObjective->hide();
+    ui->chkObjectiveDone->hide();
 }
 
 SessionFrame::~SessionFrame()
@@ -67,6 +69,13 @@ void SessionFrame::setWidgetsData(const ExerciseWidgetDataList &data, bool readO
     {
         ui->btnFinish->setEnabled(false);
     }
+}
+
+void SessionFrame::setObjective(const QString &objective)
+{
+    ui->lblObjective->show();
+    ui->chkObjectiveDone->show();
+    ui->lblObjective->setText(objective);
 }
 
 
@@ -148,7 +157,11 @@ void SessionFrame::on_btnLast_clicked()
 
 void SessionFrame::on_btnFinish_clicked()
 {
+    SessionProxy *proxy = sessionProxy();
+    if (proxy->commit(widgetsData(), ui->chkObjectiveDone->isChecked()))
+    {
 
+    }
 }
 
 

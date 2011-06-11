@@ -24,7 +24,8 @@ public:
     SessionProxy* sessionProxy() const;
 
     Q_INVOKABLE ExerciseWidgetDataList widgetsData() const;
-    Q_INVOKABLE void setWidgetsData( const ExerciseWidgetDataList& data, bool readOnly );
+    Q_INVOKABLE void setWidgetsData(const ExerciseWidgetDataList& data, bool readOnly);
+    Q_INVOKABLE void setObjective(const QString &objective);
 
 private slots:
     void on_btnNext_clicked();
