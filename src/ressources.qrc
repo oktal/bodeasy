@@ -34,5 +34,7 @@
         <file alias="script003.sql">../db/triggers.sql</file>
         <file alias="script004.sql">../db/musclegroups.sql</file>
         <file alias="script005.sql">../db/exercises.sql</file>
+        <file alias="script006.sql">../db/sessions.sql</file>
+        <file alias="script007.sql">../db/users.sql</file>
     </qresource>
 </RCC>
