@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "SessionProxy.h"
+
 namespace Ui
 {
     class MainWindow;
@@ -13,7 +15,6 @@ class QTimer;
 class SessionsModel;
 class SessionContentModel;
 class SessionsMadeModel;
-class SessionProxy;
 class pChronometer;
 
 class MainWindow : public QMainWindow
@@ -37,7 +38,7 @@ private slots:
 
     void onSessionUpdated(qint64 id);
     void onSessionDeleted(qint64 id);
-    void onSessionStarted(bool readOnly);
+    void onSessionStarted(SessionProxy::Type type, bool readOnly);
     void onSessionFinished();
 
     void onTimerTimeout();

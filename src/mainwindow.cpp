@@ -2,7 +2,6 @@
 #include "ui_mainwindow.h"
 #include "widgets/pChronometer.h"
 
-#include "SessionProxy.h"
 #include "sessionframe.h"
 #include "views/icon/SessionIconView.h"
 
@@ -72,7 +71,7 @@ MainWindow::MainWindow(QWidget *parent) :
     onTimerTimeout();
 
     //connect(sessionProxy, SIGNAL(error(const QString&)), this, SLOT(onSessionError(const QString&)));
-    connect(sessionProxy, SIGNAL(sessionStarted(bool)), this, SLOT(onSessionStarted(bool)));
+    connect(sessionProxy, SIGNAL(sessionStarted(SessionProxy::Type,bool)), this, SLOT(onSessionStarted(SessionProxy::Type,bool)));
     //connect(sessionProxy, SIGNAL(sessionCommited(const ExerciseWidgetDataList&)), this, SLOT(onSessionCommited(const ExerciseWidgetDataList&)));
     connect(sessionProxy, SIGNAL(sessionFinished()), this, SLOT(onSessionFinished()));
 }
@@ -187,11 +186,9 @@ void MainWindow::on_cmbSessions_activated(int index)
     }
     else
     {
-        const bool blocked = ui->cmbSessions->blockSignals( true );
         const qint64 sessionId = sessionProxy->sessionId();
         index = ui->cmbSessions->findData( sessionId );
         ui->cmbSessions->setCurrentIndex( index );
-        ui->cmbSessions->blockSignals( blocked );
     }
 }
 
@@ -244,13 +241,15 @@ void MainWindow::onSessionDeleted(qint64 id)
     }
 }
 
-void MainWindow::onSessionStarted(bool readOnly)
+void MainWindow::onSessionStarted(SessionProxy::Type type, bool readOnly)
 {
+    sessionProxy->setEnabled(!readOnly || type == SessionProxy::SessionMade);
     ui->btnStart->setEnabled(readOnly && ui->cmbSessions->currentIndex() != -1);
 }
 
 void MainWindow::onSessionFinished()
 {
+    sessionProxy->setEnabled(false);
     ui->btnStart->setEnabled(ui->cmbSessions->currentIndex() != -1);
     const QSqlQuery query = sessionsMadeModel->query();
     sessionsMadeModel->setQuery(query.executedQuery(), SqlHelper::database());
