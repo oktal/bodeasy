@@ -18,14 +18,15 @@ class QGridLayout;
 
 class ExerciseWidget : public QWidget
 {
-    friend class SessionFrame;
-
     Q_OBJECT
 public:
     explicit ExerciseWidget(QWidget *parent = 0);
     ~ExerciseWidget();
     void setData(const ExerciseWidgetData &data);
     const ExerciseWidgetData &data() const;
+
+    void setReadOnly(bool readOnly);
+    bool isReadOnly() const;
 
 protected:
     void changeEvent(QEvent *);
@@ -46,6 +47,7 @@ private:
     ExerciseWidgetData mData;
 
     QList<ExerciseWidget::PairSpinBox> mPairs;
+    bool mReadOnly;
 };
 
 #endif // EXERCISEWIDGET_H

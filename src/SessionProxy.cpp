@@ -139,9 +139,10 @@ void SessionProxy::setSessionMadeId( qint64 id )
 void SessionProxy::updateModel()
 {
 	QMetaObject::invokeMethod( mWidget, "setWidgetsData", Q_ARG( ExerciseWidgetDataList, selectExercises() ), Q_ARG( bool, mReadOnly ) );
+    QMetaObject::invokeMethod( mWidget, "setObjective", Q_ARG( QString, selectObjective() ) );
 }
 
-bool SessionProxy::commit( const ExerciseWidgetDataList& data )
+bool SessionProxy::commit( const ExerciseWidgetDataList& data, bool objectiveAchieved )
 {
 	bool isComplete = true;
 
@@ -170,10 +171,12 @@ bool SessionProxy::commit( const ExerciseWidgetDataList& data )
 	
 	QSqlQuery query = SqlHelper::query();
 
-	query.prepare( "INSERT INTO session_made(id_session, id_user, date) VALUES(:id_session, :id_user, :date)" );
+    query.prepare( "INSERT INTO session_made(id_session, id_user, date, objective_achieved) "
+                   "VALUES(:id_session, :id_user, :date, :objectiveAchieved)" );
 	query.bindValue( ":id_session", mSessionId );
 	query.bindValue( ":id_user", mUserId );
 	query.bindValue( ":date", QDateTime::currentDateTime() );
+    query.bindValue( ":objectiveAchieved", objectiveAchieved );
 
 	ok = query.exec();
 	
@@ -262,7 +265,6 @@ ExerciseWidgetDataList SessionProxy::selectExercises() const
             data.rest = query.value( 7 ).toInt();
             data.repetitions = query.value( 8 ).toInt();
             data.series = query.value( 9 ).toInt();
-			data.seriesData.reserve( data.series );
 			data.number = number++;
 			
 			if ( mType == SessionProxy::SessionMade ) {
@@ -274,12 +276,11 @@ ExerciseWidgetDataList SessionProxy::selectExercises() const
 				querySeries.bindValue( ":sessionExerciseId", data.sessionExerciseId );
 
 				if ( querySeries.exec() ) {
-					int index = 0;
 					
 					while ( querySeries.next() ) {
-						data.seriesData[ index ].first = querySeries.value( 0 ).toInt();
-						data.seriesData[ index ].second = querySeries.value( 1 ).toInt();
-						index++;
+                        const int result = querySeries.value( 0 ).toInt();
+                        const int load = querySeries.value( 1 ).toInt();
+                        data.seriesData << qMakePair( result, load );
 					}
 				}
 				else {
@@ -295,6 +296,19 @@ ExerciseWidgetDataList SessionProxy::selectExercises() const
     }
     
     return dataList;
+}
+
+QString SessionProxy::selectObjective() const
+{
+    QSqlQuery query = SqlHelper::query();
+    query.prepare( "SELECT objective FROM session WHERE id_session=:sessionId" );
+    query.bindValue( ":sessionId", mSessionId );
+    if ( query.exec() && query.next() )
+    {
+        return query.value( 0 ).toString();
+    }
+
+    return QString();
 }
 
 bool SessionProxy::isModified( const ExerciseWidgetDataList& data ) const
