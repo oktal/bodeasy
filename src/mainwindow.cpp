@@ -39,9 +39,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setCentralWidget(sessionProxy);
     
-    sessionProxy->setWidget(new SessionFrame(sessionProxy));
-    //sessionProxy->setWidget(new SessionIconView(sessionProxy));
-    sessionProxy->setEnabled(false);
+    //sessionProxy->setWidget(new SessionFrame(sessionProxy));
+    sessionProxy->setWidget(new SessionIconView(sessionProxy));
 
     ui->cmbSessions->setModel(sessionsModel);
     ui->lstContent->setModel(contentModel);
@@ -181,7 +180,6 @@ void MainWindow::on_cmbSessions_activated(int index)
         if (index != -1)
         {
             sessionProxy->setRunning(true,SessionProxy::Session,true);
-            sessionProxy->setEnabled(false);
         }
         
         ui->btnStart->setEnabled(index != -1);
@@ -202,7 +200,6 @@ void MainWindow::on_btnStart_clicked()
     sessionProxy->setSessionId(sessionId);
     contentModel->setSessionId(sessionId);
     sessionProxy->setRunning(true,SessionProxy::Session,false);
-    //sessionProxy->setEnabled(true);
 }
 
 void MainWindow::on_btnSee_clicked()
@@ -218,7 +215,6 @@ void MainWindow::on_btnSee_clicked()
         contentModel->setSessionId(sessionId);
         sessionProxy->setSessionMadeId(sessionMadeId);
         sessionProxy->setRunning(true,SessionProxy::SessionMade,true);
-        //sessionProxy->setEnabled(true);
     }
 }
 
