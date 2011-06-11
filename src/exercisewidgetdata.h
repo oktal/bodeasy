@@ -3,6 +3,8 @@
 
 #include <QString>
 #include <QMetaType>
+#include <QPair>
+#include <QList>
 
 #include "sql/exercise.h"
 
