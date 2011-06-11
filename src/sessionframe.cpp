@@ -4,6 +4,7 @@
 #include "sql/SqlHelper.h"
 #include "sql/exercise.h"
 #include "exercisewidgetdata.h"
+#include "SessionProxy.h"
 
 #include <QDebug>
 #include <QWidget>
@@ -14,14 +15,16 @@
 static int const RowMaximumWidgets = 2;
 static int const ColumnMaximumWidgets = 2;
 
-SessionFrame::SessionFrame(QWidget *parent) :
-    QFrame(parent),
+SessionFrame::SessionFrame(SessionProxy *proxy) :
+    QFrame(proxy),
     ui(new Ui::SessionFrame),
-    mCurrentPage(0)
+    mCurrentPage(0),
+    mProxy(proxy)
 {
     ui->setupUi(this);
     ui->lblObjective->hide();
     ui->chkObjectiveDone->hide();
+    connect(ui->btnFinish, SIGNAL(clicked()), mProxy, SLOT(stop()));
 }
 
 SessionFrame::~SessionFrame()
@@ -32,11 +35,6 @@ SessionFrame::~SessionFrame()
 QSize SessionFrame::sizeHint() const
 {
     return QSize(600, 500);
-}
-
-SessionProxy *SessionFrame::sessionProxy() const
-{
-    return qobject_cast<SessionProxy*>(parentWidget());
 }
 
 void SessionFrame::setWidgetsData(const ExerciseWidgetDataList &data, bool readOnly)
@@ -153,15 +151,6 @@ void SessionFrame::on_btnLast_clicked()
 
     ui->btnPrevious->setEnabled(true);
     ui->btnFirst->setEnabled(true);
-}
-
-void SessionFrame::on_btnFinish_clicked()
-{
-    SessionProxy *proxy = sessionProxy();
-    if (proxy->commit(widgetsData(), ui->chkObjectiveDone->isChecked()))
-    {
-
-    }
 }
 
 

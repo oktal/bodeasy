@@ -1,7 +1,6 @@
 #ifndef SESSIONFRAME_H
 #define SESSIONFRAME_H
 
-#include "SessionProxy.h"
 #include "exercisewidgetdata.h"
 
 #include <QFrame>
@@ -12,16 +11,16 @@ namespace Ui
     class SessionFrame;
 }
 class ExerciseWidget;
+class SessionProxy;
 
 class SessionFrame : public QFrame
 {
     Q_OBJECT
 public:
-    explicit SessionFrame(QWidget *parent = 0);
+    explicit SessionFrame(SessionProxy *proxy);
     ~SessionFrame();
 
     virtual QSize sizeHint() const;
-    SessionProxy* sessionProxy() const;
 
     Q_INVOKABLE ExerciseWidgetDataList widgetsData() const;
     Q_INVOKABLE void setWidgetsData(const ExerciseWidgetDataList& data, bool readOnly);
@@ -32,7 +31,6 @@ private slots:
     void on_btnPrevious_clicked();
     void on_btnFirst_clicked();
     void on_btnLast_clicked();
-    void on_btnFinish_clicked();
 
 private:
     void paginate();
@@ -43,6 +41,7 @@ private:
     qint64 mUserId;
     QList<ExerciseWidget *> exercises;
     int mCurrentPage;
+    SessionProxy *mProxy;
 };
 
 #endif // SESSIONFRAME_H
