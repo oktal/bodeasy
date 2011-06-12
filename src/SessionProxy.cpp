@@ -118,7 +118,7 @@ bool SessionProxy::setRunning( bool running, SessionProxy::Type type, bool readO
 
 bool SessionProxy::stop()
 {
-	return setRunning( false, SessionProxy::Unknown, true );
+    return setRunning( false, SessionProxy::Unknown, true );
 }
 
 void SessionProxy::setUserId( qint64 id )
