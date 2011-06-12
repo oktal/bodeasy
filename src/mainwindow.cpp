@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     setCentralWidget(sessionProxy);
-    //sessionProxy->setEnabled(false);
+    sessionProxy->setEnabled(false);
     
     //sessionProxy->setWidget(new SessionFrame(sessionProxy));
     sessionProxy->setWidget(new SessionIconView(sessionProxy));
