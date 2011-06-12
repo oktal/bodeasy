@@ -27,10 +27,10 @@ public:
     Q_INVOKABLE void setObjective(const QString &objective);
 
 private slots:
-    void on_btnNext_clicked();
-    void on_btnPrevious_clicked();
-    void on_btnFirst_clicked();
-    void on_btnLast_clicked();
+    void btnNextClicked();
+    void btnPreviousClicked();
+    void btnFirstClicked();
+    void btnLastClicked();
 
 private:
     void paginate();

@@ -5,6 +5,7 @@
 #include "sql/exercise.h"
 #include "exercisewidgetdata.h"
 #include "SessionProxy.h"
+#include "widgets/sessioncontrolwidget.h"
 
 #include <QDebug>
 #include <QWidget>
@@ -24,7 +25,13 @@ SessionFrame::SessionFrame(SessionProxy *proxy) :
     ui->setupUi(this);
     ui->lblObjective->hide();
     ui->chkObjectiveDone->hide();
-    connect(ui->btnFinish, SIGNAL(clicked()), mProxy, SLOT(stop()));
+    connect(ui->controlWidget, SIGNAL(finishClicked()), mProxy, SLOT(stop()));
+
+    ui->controlWidget->setEnabled(false);
+    connect(ui->controlWidget, SIGNAL(firstClicked()), this, SLOT(btnFirstClicked()));
+    connect(ui->controlWidget, SIGNAL(lastClicked()), this, SLOT(btnLastClicked()));
+    connect(ui->controlWidget, SIGNAL(previousClicked()), this, SLOT(btnPreviousClicked()));
+    connect(ui->controlWidget, SIGNAL(nextClicked()), this, SLOT(btnNextClicked()));
 }
 
 SessionFrame::~SessionFrame()
@@ -65,7 +72,8 @@ void SessionFrame::setWidgetsData(const ExerciseWidgetDataList &data, bool readO
     start();
     if (readOnly)
     {
-        ui->btnFinish->setEnabled(false);
+      //  ui->btnFinish->setEnabled(false);
+        ui->controlWidget->setButtonEnabled(SessionControlWidget::FinishButton, false);
     }
 }
 
@@ -90,67 +98,93 @@ ExerciseWidgetDataList SessionFrame::widgetsData() const
 
 void SessionFrame::start()
 {
-    ui->btnFirst->setEnabled(false);
-    ui->btnPrevious->setEnabled(false);
-    ui->btnFinish->setEnabled(true);
+    ui->controlWidget->setEnabled(true);
+    ui->controlWidget->setButtonEnabled(SessionControlWidget::FirstButton, false);
+    ui->controlWidget->setButtonEnabled(SessionControlWidget::PreviousButton, false);
+    ui->controlWidget->setButtonEnabled(SessionControlWidget::FinishButton, true);
+    // ui->btnFirst->setEnabled(false);
+   // ui->btnPrevious->setEnabled(false);
+   // ui->btnFinish->setEnabled(true);
     /* Enable Last and Next buttons if there are more than one page */
     if (ui->stackedWidget->count() == 1)
     {
-        ui->btnLast->setEnabled(false);
-        ui->btnNext->setEnabled(false);
+     //   ui->btnLast->setEnabled(false);
+       // ui->btnNext->setEnabled(false);
+        ui->controlWidget->setButtonEnabled(SessionControlWidget::LastButton, false);
+        ui->controlWidget->setButtonEnabled(SessionControlWidget::NextButton, false);
     }
 }
 
 
-void SessionFrame::on_btnNext_clicked()
+void SessionFrame::btnNextClicked()
 {
     ++mCurrentPage;
     ui->stackedWidget->setCurrentIndex(mCurrentPage);
     if (mCurrentPage == ui->stackedWidget->count() - 1)
     {
-        ui->btnLast->setEnabled(false);
-        ui->btnNext->setEnabled(false);
+      //  ui->btnLast->setEnabled(false);
+       // ui->btnNext->setEnabled(false);
+        ui->controlWidget->setButtonEnabled(SessionControlWidget::LastButton, false);
+        ui->controlWidget->setButtonEnabled(SessionControlWidget::NextButton, false);
     }
 
-    ui->btnFirst->setEnabled(true);
-    ui->btnPrevious->setEnabled(true);
+   // ui->btnFirst->setEnabled(true);
+   // ui->btnPrevious->setEnabled(true);
+    ui->controlWidget->setButtonEnabled(SessionControlWidget::FirstButton, true);
+    ui->controlWidget->setButtonEnabled(SessionControlWidget::PreviousButton, true);
 }
 
-void SessionFrame::on_btnPrevious_clicked()
+void SessionFrame::btnPreviousClicked()
 {
     --mCurrentPage;
     ui->stackedWidget->setCurrentIndex(mCurrentPage);
     if (mCurrentPage == 0)
     {
-        ui->btnFirst->setEnabled(false);
-        ui->btnPrevious->setEnabled(false);
+       // ui->btnFirst->setEnabled(false);
+       // ui->btnPrevious->setEnabled(false);
+        ui->controlWidget->setButtonEnabled(SessionControlWidget::FirstButton, false);
+        ui->controlWidget->setButtonEnabled(SessionControlWidget::PreviousButton, false);
     }
 
-    ui->btnLast->setEnabled(true);
-    ui->btnNext->setEnabled(true);
+    // ui->btnLast->setEnabled(true);
+    // ui->btnNext->setEnabled(true);
+    ui->controlWidget->setButtonEnabled(SessionControlWidget::LastButton, true);
+    ui->controlWidget->setButtonEnabled(SessionControlWidget::NextButton, true);
 }
 
-void SessionFrame::on_btnFirst_clicked()
+void SessionFrame::btnFirstClicked()
 {
     mCurrentPage = 0;
     ui->stackedWidget->setCurrentIndex(mCurrentPage);
-    ui->btnFirst->setEnabled(false);
-    ui->btnPrevious->setEnabled(false);
+  //  ui->btnFirst->setEnabled(false);
+  //  ui->btnPrevious->setEnabled(false);
 
-    ui->btnLast->setEnabled(true);
-    ui->btnNext->setEnabled(true);
+    ui->controlWidget->setButtonEnabled(SessionControlWidget::FirstButton, false);
+    ui->controlWidget->setButtonEnabled(SessionControlWidget::PreviousButton, false);
+
+
+   // ui->btnLast->setEnabled(true);
+   // ui->btnNext->setEnabled(true);
+    ui->controlWidget->setButtonEnabled(SessionControlWidget::LastButton, true);
+    ui->controlWidget->setButtonEnabled(SessionControlWidget::NextButton, true);
 }
 
-void SessionFrame::on_btnLast_clicked()
+void SessionFrame::btnLastClicked()
 {
     mCurrentPage = ui->stackedWidget->count() - 1;
     ui->stackedWidget->setCurrentIndex(mCurrentPage);
 
-    ui->btnNext->setEnabled(false);
-    ui->btnLast->setEnabled(false);
+    //ui->btnNext->setEnabled(false);
+    //ui->btnLast->setEnabled(false);
 
-    ui->btnPrevious->setEnabled(true);
-    ui->btnFirst->setEnabled(true);
+    ui->controlWidget->setButtonEnabled(SessionControlWidget::LastButton, false);
+    ui->controlWidget->setButtonEnabled(SessionControlWidget::NextButton, false);
+
+   // ui->btnPrevious->setEnabled(true);
+   // ui->btnFirst->setEnabled(true);
+
+    ui->controlWidget->setButtonEnabled(SessionControlWidget::FirstButton, true);
+    ui->controlWidget->setButtonEnabled(SessionControlWidget::PreviousButton, true);
 }
 
 
