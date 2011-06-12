@@ -3,6 +3,7 @@
 
 #include <QListView>
 
+#include "widgets/sessioncontrolwidget.h"
 #include "exercisewidgetdata.h"
 
 class SessionProxy;
@@ -22,12 +23,21 @@ public:
 	virtual QSize sizeHint() const;
 	
 	Q_INVOKABLE ExerciseWidgetDataList widgetsData() const;
-	Q_INVOKABLE void setWidgetsData( const ExerciseWidgetDataList& data, bool readOnly );
+	Q_INVOKABLE bool objectiveDone() const;
+    Q_INVOKABLE void setWidgetsData( const ExerciseWidgetDataList& data, const QString& objective, bool objectiveDone, bool readOnly );
 	
 protected:
 	SessionProxy* mProxy;
 	SessionIconModel* mModel;
 	SessionIconDelegate* mDelegate;
+	QFrame* mSeparator;
+	SessionControlWidget* mControl;
+	
+	virtual bool eventFilter( QObject* o, QEvent* e );
+	virtual void selectionChanged( const QItemSelection& selected, const QItemSelection& deselected );
+
+protected slots:
+	void buttonClicked( SessionControlWidget::Button button );
 };
 
 #endif // SESSIONICONVIEW_H

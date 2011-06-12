@@ -24,7 +24,7 @@ public:
 
     Q_INVOKABLE ExerciseWidgetDataList widgetsData() const;
     Q_INVOKABLE bool objectiveDone() const;
-    Q_INVOKABLE void setWidgetsData(const ExerciseWidgetDataList& data, const QString &objective, bool objectiveDone, bool readOnly);
+    Q_INVOKABLE void setWidgetsData(const ExerciseWidgetDataList &data, const QString &objective, bool objectiveDone, bool readOnly);
 
 private slots:
     void btnNextClicked();
