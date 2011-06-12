@@ -23,8 +23,8 @@ public:
     virtual QSize sizeHint() const;
 
     Q_INVOKABLE ExerciseWidgetDataList widgetsData() const;
-    Q_INVOKABLE void setWidgetsData(const ExerciseWidgetDataList& data, bool readOnly);
-    Q_INVOKABLE void setObjective(const QString &objective);
+    Q_INVOKABLE bool objectiveDone() const;
+    Q_INVOKABLE void setWidgetsData(const ExerciseWidgetDataList& data, const QString &objective, bool objectiveDone, bool readOnly);
 
 private slots:
     void btnNextClicked();

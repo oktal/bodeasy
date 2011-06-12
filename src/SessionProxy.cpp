@@ -83,12 +83,16 @@ bool SessionProxy::setRunning( bool running, SessionProxy::Type type, bool readO
     if ( mRunning ) {
         if ( !mReadOnly ) {
 			ExerciseWidgetDataList data;
-			if ( QMetaObject::invokeMethod( mWidget, "widgetsData", Q_RETURN_ARG( ExerciseWidgetDataList, data ) ) ) {
+			bool objectiveDone;
+			bool ok = QMetaObject::invokeMethod( mWidget, "widgetsData", Q_RETURN_ARG( ExerciseWidgetDataList, data ) )
+				&& QMetaObject::invokeMethod( mWidget, "objectiveDone", Q_RETURN_ARG( bool, objectiveDone ) );
+			
+			if ( ok ) {
 				if ( isModified( data ) ) {
 					const QString text = trUtf8( "Voulez vous sauvegarder les modifications ?" );
 					
 					if ( QMessageBox::question( this, QString::null, text, QMessageBox::No, QMessageBox::Yes ) == QMessageBox::Yes ) {
-						if ( !commit( data ) ) {
+						if ( !commit( data, objectiveDone ) ) {
 							return false;
 						}
 					}
@@ -138,8 +142,11 @@ void SessionProxy::setSessionMadeId( qint64 id )
 
 void SessionProxy::updateModel()
 {
-	QMetaObject::invokeMethod( mWidget, "setWidgetsData", Q_ARG( ExerciseWidgetDataList, selectExercises() ), Q_ARG( bool, mReadOnly ) );
-    QMetaObject::invokeMethod( mWidget, "setObjective", Q_ARG( QString, selectObjective() ) );
+	QMetaObject::invokeMethod( mWidget, "setWidgetsData",
+		Q_ARG( ExerciseWidgetDataList, selectExercises() ),
+		Q_ARG( const QString&, selectObjective() ),
+		Q_ARG( bool, selectObjectiveDone() ),
+		Q_ARG( bool, mReadOnly ) );
 }
 
 bool SessionProxy::commit( const ExerciseWidgetDataList& data, bool objectiveAchieved )
@@ -301,14 +308,31 @@ ExerciseWidgetDataList SessionProxy::selectExercises() const
 QString SessionProxy::selectObjective() const
 {
     QSqlQuery query = SqlHelper::query();
+	
     query.prepare( "SELECT objective FROM session WHERE id_session=:sessionId" );
     query.bindValue( ":sessionId", mSessionId );
-    if ( query.exec() && query.next() )
-    {
+	
+    if ( query.exec() && query.next() ) {
         return query.value( 0 ).toString();
     }
 
-    return QString();
+    return QString::null;
+}
+
+bool SessionProxy::selectObjectiveDone() const
+{
+	if ( mReadOnly ) {
+		QSqlQuery query = SqlHelper::query();
+		
+		query.prepare( "SELECT objective_achieved FROM session_made WHERE id_session_made=:sessionMadeId" );
+		query.bindValue( ":sessionMadeId", mSessionMadeId );
+		
+		if ( query.exec() && query.next() ) {
+			return query.value( 0 ).toBool();
+		}
+	}
+
+    return false;
 }
 
 bool SessionProxy::isModified( const ExerciseWidgetDataList& data ) const

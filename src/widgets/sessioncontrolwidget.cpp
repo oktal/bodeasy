@@ -22,7 +22,7 @@ SessionControlWidget::SessionControlWidget(QWidget *parent) :
     }
 
     connect(mapper, SIGNAL(mapped(int)), this, SLOT(onButtonClicked(int)));
-
+    connect(ui->chkObjectiveDone, SIGNAL(clicked(bool)), this, SIGNAL(objectiveClicked(bool)));
 }
 
 SessionControlWidget::~SessionControlWidget()
@@ -48,6 +48,46 @@ bool SessionControlWidget::isButtonEnabled(SessionControlWidget::Button button) 
     }
 
     return false;
+}
+
+void SessionControlWidget::setObjectiveVisible(bool visible)
+{
+    ui->wObjective->setVisible(visible);
+}
+
+bool SessionControlWidget::isObjectiveVisible() const
+{
+    return ui->wObjective->isVisible();
+}
+
+void SessionControlWidget::setObjectiveText(const QString &text)
+{
+    ui->lblObjective->setText(text);
+}
+
+QString SessionControlWidget::objectiveText() const
+{
+    return ui->lblObjective->text();
+}
+
+void SessionControlWidget::setObjectiveReadOnly(bool readOnly)
+{
+    ui->chkObjectiveDone->setDisabled(readOnly);
+}
+
+bool SessionControlWidget::isObjectiveReadOnly() const
+{
+    return !ui->chkObjectiveDone->isEnabled();
+}
+
+void SessionControlWidget::setObjectiveChecked(bool checked)
+{
+    ui->chkObjectiveDone->setChecked(checked);
+}
+
+bool SessionControlWidget::isObjectiveChecked() const
+{
+    return ui->chkObjectiveDone->isChecked();
 }
 
 void SessionControlWidget::onButtonClicked(int id)

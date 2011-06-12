@@ -22,6 +22,18 @@ public:
 
     void setButtonEnabled(SessionControlWidget::Button button, bool enabled);
     bool isButtonEnabled(SessionControlWidget::Button button) const;
+    
+    void setObjectiveVisible(bool visible);
+    bool isObjectiveVisible() const;
+    
+    void setObjectiveText(const QString &text);
+    QString objectiveText() const;
+    
+    void setObjectiveReadOnly(bool readOnly);
+    bool isObjectiveReadOnly() const;
+    
+    void setObjectiveChecked(bool checked);
+    bool isObjectiveChecked() const;
 
 signals:
     void previousClicked();
@@ -30,6 +42,7 @@ signals:
     void lastClicked();
     void finishClicked();
     void buttonClicked(SessionControlWidget::Button button);
+    void objectiveClicked(bool checked);
 
 protected:
     void changeEvent(QEvent *e);
