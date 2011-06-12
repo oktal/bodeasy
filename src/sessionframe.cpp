@@ -23,15 +23,13 @@ SessionFrame::SessionFrame(SessionProxy *proxy) :
     mProxy(proxy)
 {
     ui->setupUi(this);
-    ui->lblObjective->hide();
-    ui->chkObjectiveDone->hide();
-    connect(ui->controlWidget, SIGNAL(finishClicked()), mProxy, SLOT(stop()));
-
+    //ui->controlWidget->setVisible(false);
     ui->controlWidget->setEnabled(false);
     connect(ui->controlWidget, SIGNAL(firstClicked()), this, SLOT(btnFirstClicked()));
     connect(ui->controlWidget, SIGNAL(lastClicked()), this, SLOT(btnLastClicked()));
     connect(ui->controlWidget, SIGNAL(previousClicked()), this, SLOT(btnPreviousClicked()));
     connect(ui->controlWidget, SIGNAL(nextClicked()), this, SLOT(btnNextClicked()));
+    connect(ui->controlWidget, SIGNAL(finishClicked()), mProxy, SLOT(stop()));
 }
 
 SessionFrame::~SessionFrame()
@@ -44,7 +42,7 @@ QSize SessionFrame::sizeHint() const
     return QSize(600, 500);
 }
 
-void SessionFrame::setWidgetsData(const ExerciseWidgetDataList &data, bool readOnly)
+void SessionFrame::setWidgetsData(const ExerciseWidgetDataList &data, const QString &objective, bool objectiveDone, bool readOnly)
 {
     mCurrentPage = 0;
 
@@ -70,20 +68,12 @@ void SessionFrame::setWidgetsData(const ExerciseWidgetDataList &data, bool readO
     ui->stackedWidget->setCurrentIndex(0);
 
     start();
-    if (readOnly)
-    {
-      //  ui->btnFinish->setEnabled(false);
-        ui->controlWidget->setButtonEnabled(SessionControlWidget::FinishButton, false);
-    }
-}
 
-void SessionFrame::setObjective(const QString &objective)
-{
-    ui->lblObjective->show();
-    ui->chkObjectiveDone->show();
-    ui->lblObjective->setText(objective);
+    ui->controlWidget->setObjectiveText(objective);
+    ui->controlWidget->setObjectiveChecked(objectiveDone);
+    ui->controlWidget->setObjectiveReadOnly(readOnly);
+    ui->controlWidget->setButtonEnabled(SessionControlWidget::FinishButton, !readOnly);
 }
-
 
 ExerciseWidgetDataList SessionFrame::widgetsData() const
 {
@@ -94,6 +84,11 @@ ExerciseWidgetDataList SessionFrame::widgetsData() const
     }
 
     return list;
+}
+
+bool SessionFrame::objectiveDone() const
+{
+    return ui->controlWidget->isObjectiveChecked();
 }
 
 void SessionFrame::start()
