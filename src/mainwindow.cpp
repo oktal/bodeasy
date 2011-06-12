@@ -252,8 +252,10 @@ void MainWindow::onSessionFinished()
 {
     sessionProxy->setEnabled(false);
     ui->btnStart->setEnabled(ui->cmbSessions->currentIndex() != -1);
+    const int currentSessionMadeIndex = ui->cmbSessionsMade->currentIndex();
     const QSqlQuery query = sessionsMadeModel->query();
     sessionsMadeModel->setQuery(query.executedQuery(), SqlHelper::database());
+    ui->cmbSessionsMade->setCurrentIndex( currentSessionMadeIndex );
     ui->lblLastSeanceDate->setText(QDate::currentDate().toString(Qt::SystemLocaleLongDate));
     ui->btnSee->setEnabled(ui->cmbSessionsMade->currentIndex() != -1);
 }
