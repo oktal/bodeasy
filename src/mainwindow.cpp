@@ -84,7 +84,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
-    /*if ( sessionProxy->isRunning() && !sessionProxy->isReadOnly() )
+    if ( sessionProxy->isModified() )
     {
         const QString text = trUtf8( "Une séance non enregistrée est en cours. Que "
                                      "souhaitez-vous faire ?" );
@@ -98,10 +98,12 @@ void MainWindow::closeEvent(QCloseEvent* event)
         QAbstractButton *clickedButton = box.clickedButton();
         if ( clickedButton == saveButton )
         {
-            sessionProxy->setRunning(false);
+            sessionProxy->stop(false);
+            event->accept();
         }
         else if ( clickedButton == closeButton )
         {
+            sessionProxy->rollback();
             event->accept();
         }
         else if ( clickedButton == cancelButton )
@@ -110,7 +112,7 @@ void MainWindow::closeEvent(QCloseEvent* event)
             return;
         }
     }
-    else*/
+    else
     {
         const QString text = trUtf8( "Êtes vous sûr de vouloir quitter '%1'?" ).arg(qApp->applicationName());
 

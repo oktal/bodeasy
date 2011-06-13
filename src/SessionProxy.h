@@ -29,10 +29,11 @@ public:
     bool isRunning() const;
 	SessionProxy::Type type() const;
 	bool isReadOnly() const;
+	bool isModified() const;
 
 public slots:
-	bool setRunning( bool running, SessionProxy::Type type, bool readOnly );
-	bool stop();
+	bool setRunning( bool running, SessionProxy::Type type, bool readOnly, bool askConfirmation = true );
+	bool stop( bool askConfirmation = true );
     void setUserId( qint64 id );
 	void setSessionId( qint64 id );
 	void setSessionMadeId( qint64 id );
