@@ -84,29 +84,29 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
-    if ( sessionProxy->isModified() )
+    if (sessionProxy->isModified())
     {
-        const QString text = trUtf8( "Une séance non enregistrée est en cours. Que "
-                                     "souhaitez-vous faire ?" );
-        QMessageBox box( this );
-        box.setText( text );
-        box.setIcon( QMessageBox::Warning );
-        QAbstractButton *saveButton = box.addButton( trUtf8( "Enregistrer et quitter" ), QMessageBox::RejectRole );
-        QAbstractButton *closeButton = box.addButton( trUtf8( "Quitter sans sauvegarder" ), QMessageBox::AcceptRole );
-        QAbstractButton *cancelButton = box.addButton( trUtf8( "Annuler" ), QMessageBox::ApplyRole );
+        const QString text = trUtf8("Une séance non enregistrée est en cours. Que "
+                                     "souhaitez-vous faire ?");
+        QMessageBox box(this);
+        box.setText(text);
+        box.setIcon(QMessageBox::Warning);
+        QAbstractButton *saveButton = box.addButton(trUtf8("Enregistrer et quitter"), QMessageBox::RejectRole);
+        QAbstractButton *closeButton = box.addButton(trUtf8("Quitter sans sauvegarder"), QMessageBox::AcceptRole);
+        QAbstractButton *cancelButton = box.addButton(trUtf8("Annuler"), QMessageBox::ApplyRole);
         box.exec();
         QAbstractButton *clickedButton = box.clickedButton();
-        if ( clickedButton == saveButton )
+        if (clickedButton == saveButton)
         {
             sessionProxy->stop(false);
             event->accept();
         }
-        else if ( clickedButton == closeButton )
+        else if (clickedButton == closeButton)
         {
             sessionProxy->rollback();
             event->accept();
         }
-        else if ( clickedButton == cancelButton )
+        else if (clickedButton == cancelButton)
         {
             event->ignore();
             return;
@@ -114,7 +114,7 @@ void MainWindow::closeEvent(QCloseEvent* event)
     }
     else
     {
-        const QString text = trUtf8( "Êtes vous sûr de vouloir quitter '%1'?" ).arg(qApp->applicationName());
+        const QString text = trUtf8("Êtes vous sûr de vouloir quitter '%1'?").arg(qApp->applicationName());
 
         if (QMessageBox::question(this, QString::null, text, QMessageBox::Yes, QMessageBox::No) == QMessageBox::No)
         {
