@@ -74,7 +74,14 @@ bool SessionProxy::isReadOnly() const
     return mReadOnly;
 }
 
-bool SessionProxy::setRunning( bool running, SessionProxy::Type type, bool readOnly )
+bool SessionProxy::isModified() const
+{
+	ExerciseWidgetDataList data;
+	QMetaObject::invokeMethod( mWidget, "widgetsData", Q_RETURN_ARG( ExerciseWidgetDataList, data ) );
+	return isModified( data );
+}
+
+bool SessionProxy::setRunning( bool running, SessionProxy::Type type, bool readOnly, bool askConfirmation )
 {
     if ( mRunning == running && mReadOnly == readOnly && mType == type ) {
         return true;
@@ -91,7 +98,9 @@ bool SessionProxy::setRunning( bool running, SessionProxy::Type type, bool readO
 				if ( isModified( data ) ) {
 					const QString text = trUtf8( "Voulez vous sauvegarder les modifications ?" );
 					
-					if ( QMessageBox::question( this, QString::null, text, QMessageBox::No, QMessageBox::Yes ) == QMessageBox::Yes ) {
+					if ( ( askConfirmation
+							&& QMessageBox::question( this, QString::null, text, QMessageBox::No, QMessageBox::Yes ) == QMessageBox::Yes )
+						|| !askConfirmation ) {
 						if ( !commit( data, objectiveDone ) ) {
 							return false;
 						}
@@ -120,9 +129,9 @@ bool SessionProxy::setRunning( bool running, SessionProxy::Type type, bool readO
 	return true;
 }
 
-bool SessionProxy::stop()
+bool SessionProxy::stop( bool askConfirmation )
 {
-    return setRunning( false, SessionProxy::Unknown, true );
+    return setRunning( false, SessionProxy::Unknown, true, askConfirmation );
 }
 
 void SessionProxy::setUserId( qint64 id )
