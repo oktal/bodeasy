@@ -14,14 +14,15 @@ TARGET	= bodeasy
 TEMPLATE	= app
 DESTDIR	= .
 BUILD_PATH	= build
+UNIX_RAM_DISK = /media/ramdisk
+unix:exists( $${UNIX_RAM_DISK} ):BUILD_PATH = $${UNIX_RAM_DISK}/$${TARGET}
 
 !win32:CONFIG	-= warn_on warn_off release debug debug_and_release
-CONFIG	+= qt release warn_on
+CONFIG	*= qt release warn_on
 
 QT	= core gui sql
 
-INCLUDEPATH	+= . src
-
+INCLUDEPATH	*= . src
 
 CONFIG( debug, debug|release ) {
 	message( "Debug build." )
@@ -40,7 +41,9 @@ CONFIG( debug, debug|release ) {
 
 include( src/sql/sql.pri )
 
-FORMS	+= src/usersdialog.ui \
+RESOURCES	*= src/ressources.qrc
+
+FORMS	*= src/usersdialog.ui \
 	src/exercisewidget.ui \
 	src/exercisesdialog.ui \
 	src/sessionsdialog.ui \
@@ -49,7 +52,7 @@ FORMS	+= src/usersdialog.ui \
 	src/sessionframe.ui \
     src/widgets/sessioncontrolwidget.ui
 
-HEADERS	+= src/usersdialog.h \
+HEADERS	*= src/usersdialog.h \
 	src/exercisewidget.h \
 	src/exercisesdialog.h \
 	src/sessionsdialog.h \
@@ -67,7 +70,7 @@ HEADERS	+= src/usersdialog.h \
     src/exercisewidgetdata.h \
     src/widgets/sessioncontrolwidget.h
 
-SOURCES	+= src/main.cpp \
+SOURCES	*= src/main.cpp \
 	src/usersdialog.cpp \
 	src/exercisewidget.cpp \
 	src/exercisesdialog.cpp \
@@ -84,5 +87,3 @@ SOURCES	+= src/main.cpp \
 	src/views/icon/SessionIconDelegate.cpp \
 	src/views/icon/SessionIconView.cpp \
     src/widgets/sessioncontrolwidget.cpp
-
-RESOURCES	+= src/ressources.qrc
