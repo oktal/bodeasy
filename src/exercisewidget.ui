@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>247</height>
+    <width>398</width>
+    <height>245</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -57,7 +57,7 @@ background-color: rgb(210, 210, 210);
 color: rgb(100, 100, 100);</string>
         </property>
         <property name="text">
-         <string>#N</string>
+         <string notr="true">#N</string>
         </property>
        </widget>
       </item>
@@ -87,7 +87,7 @@ color: rgb(100, 100, 100);</string>
          </font>
         </property>
         <property name="text">
-         <string>Exercise Name</string>
+         <string notr="true">Exercise Name</string>
         </property>
        </widget>
       </item>
@@ -141,8 +141,8 @@ color: rgb(100, 100, 100);</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>139</width>
-             <height>171</height>
+             <width>125</width>
+             <height>172</height>
             </rect>
            </property>
            <property name="styleSheet">
@@ -203,7 +203,7 @@ border-style: none;</string>
           <enum>QFrame::Plain</enum>
          </property>
          <property name="text">
-          <string>Type</string>
+          <string notr="true">Type</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -255,7 +255,7 @@ border-style: none;</string>
           <enum>QFrame::Plain</enum>
          </property>
          <property name="text">
-          <string>Difficulté</string>
+          <string notr="true">Difficulté</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -307,7 +307,7 @@ border-style: none;</string>
           <enum>QFrame::Plain</enum>
          </property>
          <property name="text">
-          <string>Répétitions</string>
+          <string notr="true">Répétitions</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -359,7 +359,7 @@ border-style: none;</string>
           <enum>QFrame::Plain</enum>
          </property>
          <property name="text">
-          <string>Repos</string>
+          <string notr="true">Repos</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
