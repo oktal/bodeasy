@@ -8,6 +8,83 @@
 #include <QDebug>
 #include <QTime>
 
+QStyleOptionFrameV3 makeStyleOptionFrame( const QStyleOptionViewItem& option, int frameStyle, int lineWidth = 1, int midLineWidth = 1, QStyleOptionFrameV3::FrameFeatures features = QStyleOptionFrameV2::None )
+{
+	const int frameShape  = frameStyle & QFrame::Shape_Mask;
+    const int frameShadow = frameStyle & QFrame::Shadow_Mask;
+	QStyleOptionFrameV3 opt;
+	
+	opt.QStyleOption::operator=( option );
+	opt.frameShape = QFrame::Shape( int( opt.frameShape ) | frameShape );
+	opt.features = features;
+	
+	switch ( frameShape ) {
+		case QFrame::Box:
+		case QFrame::HLine:
+		case QFrame::VLine:
+		case QFrame::StyledPanel:
+		case QFrame::Panel:
+			opt.lineWidth = lineWidth;
+			opt.midLineWidth = midLineWidth;
+			break;
+		default:
+			// most frame styles do not handle customized line and midline widths
+			// (see updateFrameWidth()).
+			//opt.lineWidth = d->frameWidth;
+			opt.lineWidth = lineWidth;
+			break;
+	}
+	
+	if ( frameShadow == QFrame::Sunken ) {
+		opt.state |= QStyle::State_Sunken;
+	}
+	else if ( frameShadow == QFrame::Raised ) {
+		opt.state |= QStyle::State_Raised;
+	}
+	
+	return opt;
+}
+
+QStyleOptionGroupBox makeStyleOptionGroupBox( const QStyleOptionViewItem& opt, const QString& title, Qt::Alignment align = Qt::AlignLeft | Qt::AlignVCenter, QStyleOptionFrameV3::FrameFeatures features = QStyleOptionFrameV2::None, QStyle* style = 0, QWidget* widget = 0 )
+{
+	if ( !style ) {
+		style = QApplication::style();
+	}
+	
+    QStyleOptionGroupBox option;
+	option.QStyleOption::operator=( opt );
+	
+    option.text = title;
+    option.lineWidth = 1;
+    option.midLineWidth = 0;
+    option.textAlignment = align;
+    option.activeSubControls = QStyle::SC_None;
+    option.subControls = QStyle::SC_GroupBoxFrame;
+
+    /*if ( d->hover )
+        option.state |= QStyle::State_MouseOver;
+    else*/
+        option.state &= ~QStyle::State_MouseOver;
+	
+	option.features = features;
+
+    /*if ( d->checkable ) {
+        option.subControls |= QStyle::SC_GroupBoxCheckBox;
+        option.state |= (d->checked ? QStyle::State_On : QStyle::State_Off);
+        if ((d->pressedControl == QStyle::SC_GroupBoxCheckBox
+            || d->pressedControl == QStyle::SC_GroupBoxLabel) && (d->hover || d->overCheckBox))
+            option.state |= QStyle::State_Sunken;
+    }*/
+
+    //if ( !option.palette.isBrushSet( isEnabled() ? QPalette::Active : QPalette::Disabled, QPalette::WindowText ) )
+        option.textColor = QColor( style->styleHint( QStyle::SH_GroupBox_TextLabelColor, &option, widget ) );
+
+    if ( !title.isEmpty() )
+        option.subControls |= QStyle::SC_GroupBoxLabel;
+	
+	return option;
+}
+
 SessionIconDelegate::SessionIconDelegate( QObject* parent )
 	: QStyledItemDelegate( parent )
 {
@@ -108,6 +185,15 @@ QString SessionIconDelegate::difficultyToString( Exercise::Difficulty difficulty
 	return QString::null;
 }
 
+void SessionIconDelegate::drawFakeGroupBox( QPainter* painter, const QStyleOptionGroupBox& option, QStyle* style, QWidget* widget ) const
+{
+	if ( !style ) {
+		style = QApplication::style();
+	}
+	
+	style->drawComplexControl( QStyle::CC_GroupBox, &option, painter, widget );
+}
+
 void SessionIconDelegate::drawFakeLabel( QPainter* painter, const QStyleOptionFrameV3& option, const QString& text, Qt::Alignment align, Qt::TextFormat format, QStyle* style, QWidget* widget ) const
 {
 	if ( !style ) {
@@ -121,6 +207,10 @@ void SessionIconDelegate::drawFakeLabel( QPainter* painter, const QStyleOptionFr
 	
 	style->drawControl( QStyle::CE_ShapedFrame, &option, painter, widget );
 	
+	if ( text.isEmpty() ) {
+		return;
+	}
+	
 	const QRect rect = option.rect.adjusted( option.lineWidth, option.lineWidth, -option.lineWidth, -option.lineWidth );
 	QTextOption textOption;
 	
@@ -133,14 +223,18 @@ void SessionIconDelegate::drawFakeLabel( QPainter* painter, const QStyleOptionFr
 	mDocument.setDocumentMargin( 0 );
 	mDocument.setDefaultTextOption( textOption );
 	
+	if ( format == Qt::AutoText ) {
+		format = Qt::PlainText;
+		
+		if ( Qt::mightBeRichText( text ) ) {
+			format = Qt::RichText;
+		}
+	}
+	
 	switch ( format ) {
 		case Qt::AutoText:
-			if ( Qt::mightBeRichText( text ) ) {
-				format = Qt::RichText;
-			}
-			else {
-				format = Qt::PlainText;
-			}
+			Q_ASSERT( 0 );
+			break;
 		case Qt::RichText:
 			mDocument.setHtml( text );
 			break;
@@ -195,43 +289,6 @@ void SessionIconDelegate::drawFakeLabel( QPainter* painter, const QStyleOptionFr
 	painter->translate( -r.topLeft() );
 }
 
-QStyleOptionFrameV3 makeStyleOptionFrame( const QStyleOptionViewItem& option, int frameStyle, int lineWidth = 1, int midLineWidth = 1, QStyleOptionFrameV3::FrameFeatures features = QStyleOptionFrameV2::None )
-{
-	const int frameShape  = frameStyle & QFrame::Shape_Mask;
-    const int frameShadow = frameStyle & QFrame::Shadow_Mask;
-	QStyleOptionFrameV3 opt;
-	
-	opt.QStyleOption::operator=( option );
-	opt.frameShape = QFrame::Shape( int( opt.frameShape ) | frameShape );
-	opt.features = features;
-	
-	switch ( frameShape ) {
-		case QFrame::Box:
-		case QFrame::HLine:
-		case QFrame::VLine:
-		case QFrame::StyledPanel:
-		case QFrame::Panel:
-			opt.lineWidth = lineWidth;
-			opt.midLineWidth = midLineWidth;
-			break;
-		default:
-			// most frame styles do not handle customized line and midline widths
-			// (see updateFrameWidth()).
-			//opt.lineWidth = d->frameWidth;
-			opt.lineWidth = lineWidth;
-			break;
-	}
-	
-	if ( frameShadow == QFrame::Sunken ) {
-		opt.state |= QStyle::State_Sunken;
-	}
-	else if ( frameShadow == QFrame::Raised ) {
-		opt.state |= QStyle::State_Raised;
-	}
-	
-	return opt;
-}
-
 void SessionIconDelegate::drawExercise( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const
 {
 	const ExerciseWidgetData data = index.data( SessionIconModel::ExerciseDataRole ).value<ExerciseWidgetData>();
@@ -239,6 +296,7 @@ void SessionIconDelegate::drawExercise( QPainter* painter, const QStyleOptionVie
 	const int spacing = 5;
 	const int headerHeight = 29;
 	const int descriptionTitleHeight = 19;
+	const int seriesTitleHeight = descriptionTitleHeight;
 	const QRect rect = option.rect.adjusted( margin, margin, -margin, -margin );
 	const int boxWidth = ( ( rect.width() /2 ) -( spacing *2 ) ) /2;
 	const int boxHeight = ( ( rect.height() /2 ) -headerHeight -( spacing *4 ) ) /3;
@@ -354,4 +412,63 @@ void SessionIconDelegate::drawExercise( QPainter* painter, const QStyleOptionVie
 	descriptionOption.rect = descriptionTitleOption.rect.adjusted( 0, descriptionTitleOption.rect.height() +spacing, 0, ( ( rect.height() -headerHeight -spacing ) /2 ) -spacing -descriptionTitleHeight -spacing -spacing -spacing );
 	descriptionOption.palette.setColor( QPalette::Window, QColor( 255, 255, 255 ) );
 	drawFakeLabel( painter, descriptionOption, data.description, Qt::AlignLeft | Qt::AlignTop );
+	
+	// draw series title
+	const QPoint seriesOrigin = QPoint( headerOption.rect.bottomLeft() +QPoint( 0, spacing ) );
+	const QRect seriesRect = QRect( seriesOrigin, QSize( rect.width() /2, rect.height() -headerHeight -spacing ) );
+	
+	//painter->drawRect( seriesRect );
+	
+	QStyleOptionGroupBox seriesTitleOption = makeStyleOptionGroupBox( option, exerciseWidgetTr( QString::fromUtf8( "Séries" ) ), Qt::AlignLeft | Qt::AlignVCenter, QStyleOptionFrameV2::None );
+	seriesTitleOption.rect = QRect( seriesOrigin, QSize( ( rect.width() /2 ) -spacing, seriesTitleHeight ) );
+	drawFakeGroupBox( painter, seriesTitleOption );
+	
+	//
+	int count = qMax( data.series, data.seriesData.count() );
+	count = qMin( count, ( seriesRect.height() -seriesTitleHeight -spacing -seriesTitleHeight ) /( seriesTitleHeight +spacing ) );
+	const QString resTxt = exerciseWidgetTr( QString::fromUtf8( "Rés." ) );
+	const QString chargeTxt = exerciseWidgetTr( QString::fromUtf8( "Charge" ) );
+	const QString serieTxt = exerciseWidgetTr( QString::fromUtf8( "Série %1" ) ).arg( count );
+	const int serieTxtWidth = painter->fontMetrics().width( serieTxt ) +4;
+	const int resTxtWidth = painter->fontMetrics().width( resTxt );
+	const int chargeTxtWidth = painter->fontMetrics().width( chargeTxt );
+	const int serieLeftBoxWidth = serieTxtWidth;
+	const int serieRightBoxWidth = ( seriesRect.width() -serieLeftBoxWidth -( spacing *6 ) -( margin *10 ) ) /2;
+	
+	for ( int y = 0; y <= count; y++ ) {
+		QPoint topLeft = seriesTitleOption.rect.bottomLeft()
+			+QPoint( margin *5 , 0 )
+			+QPoint( 0, y *( ( spacing *1.5 ) +seriesTitleHeight ) )
+			;
+		
+		QStyleOptionFrameV3 serieBoxOption = makeStyleOptionFrame( option, QFrame::NoFrame, 1, 0 );
+		serieBoxOption.palette.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ) );
+		
+		serieBoxOption.rect = QRect( topLeft, QSize( serieLeftBoxWidth, seriesTitleHeight ) );
+		
+		if ( y > 0 ) {
+			drawFakeLabel( painter, serieBoxOption, exerciseWidgetTr( QString::fromUtf8( "Série %1" ) ).arg( y ), Qt::AlignLeft | Qt::AlignVCenter );
+			
+			serieBoxOption.palette.setColor( QPalette::Window, QColor( 255, 255, 255 ) );
+			serieBoxOption.frameShape = QFrame::StyledPanel;
+			serieBoxOption.state |= QStyle::State_Sunken;
+		}
+		
+		topLeft += QPoint( serieLeftBoxWidth +( spacing *3 ), 0 );
+		serieBoxOption.rect = QRect( topLeft, QSize( serieRightBoxWidth, seriesTitleHeight ) );
+		drawFakeLabel( painter, serieBoxOption, y == 0 ? resTxt : QString::number( data.seriesData.value( y -1 ).first ), Qt::AlignCenter );
+		
+		if ( !data.weight ) {
+			/*serieBoxOption.state ^= QStyle::State_Enabled;
+			serieBoxOption.state &= ~QStyle::State_Enabled;*/
+			serieBoxOption.palette.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ) );
+			/*serieBoxOption.palette.setColor( QPalette::WindowText, Qt::red );
+			serieBoxOption.palette.setColor( QPalette::ButtonText, Qt::red );
+			serieBoxOption.palette.setColor( QPalette::Text, Qt::red );*/
+		}
+		
+		topLeft += QPoint( serieRightBoxWidth +( spacing *3 ), 0 );
+		serieBoxOption.rect = QRect( topLeft, QSize( serieRightBoxWidth, seriesTitleHeight ) );
+		drawFakeLabel( painter, serieBoxOption, y == 0 ? chargeTxt : QString::number( data.seriesData.value( y -1 ).second ), Qt::AlignCenter );
+	}
 }

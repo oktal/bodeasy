@@ -27,7 +27,8 @@ protected:
 	QString typeToString( Exercise::Type type ) const;
 	QString difficultyToString( Exercise::Difficulty difficulty ) const;
 	
-	void drawFakeLabel( QPainter* painter, const QStyleOptionFrameV3& option, const QString& text, Qt::Alignment align = Qt::AlignCenter, Qt::TextFormat format = Qt::AutoText, QStyle* style = 0, QWidget* widget = 0 ) const;
+	void drawFakeGroupBox( QPainter* painter, const QStyleOptionGroupBox& option, QStyle* style = 0, QWidget* widget = 0 ) const;
+	void drawFakeLabel( QPainter* painter, const QStyleOptionFrameV3& option, const QString& text = QString::null, Qt::Alignment align = Qt::AlignCenter, Qt::TextFormat format = Qt::AutoText, QStyle* style = 0, QWidget* widget = 0 ) const;
 	void drawExercise( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const;
 };
 
