@@ -1,5 +1,5 @@
 XUPProjectSettings {
-	OTHERS_PLATFORM_TARGET_RELEASE	= bodeasy
+	OTHERS_PLATFORM_TARGET_RELEASE	= /media/ramdisk/bodeasy/bodeasy
 	QT_VERSION	= Qt System (4.7.2)
 	MAC_PLATFORM_TARGET_RELEASE	= bodeasy.app
 }
@@ -14,8 +14,11 @@ TARGET	= bodeasy
 TEMPLATE	= app
 DESTDIR	= .
 BUILD_PATH	= build
-UNIX_RAM_DISK = /media/ramdisk
-unix:exists( $${UNIX_RAM_DISK} ):BUILD_PATH = $${UNIX_RAM_DISK}/$${TARGET}
+UNIX_RAM_DISK	= /media/ramdisk
+unix:exists( $${UNIX_RAM_DISK} ) {
+	BUILD_PATH	= $${UNIX_RAM_DISK}/$${TARGET}
+	DESTDIR = $${BUILD_PATH}
+}
 
 !win32:CONFIG	-= warn_on warn_off release debug debug_and_release
 CONFIG	*= qt release warn_on
@@ -50,7 +53,7 @@ FORMS	*= src/usersdialog.ui \
 	src/mensurationsdialog.ui \
 	src/mainwindow.ui \
 	src/sessionframe.ui \
-    src/widgets/sessioncontrolwidget.ui
+	src/widgets/sessioncontrolwidget.ui
 
 HEADERS	*= src/usersdialog.h \
 	src/exercisewidget.h \
@@ -67,8 +70,8 @@ HEADERS	*= src/usersdialog.h \
 	src/views/icon/SessionIconModel.h \
 	src/views/icon/SessionIconDelegate.h \
 	src/views/icon/SessionIconView.h \
-    src/exercisewidgetdata.h \
-    src/widgets/sessioncontrolwidget.h
+	src/exercisewidgetdata.h \
+	src/widgets/sessioncontrolwidget.h
 
 SOURCES	*= src/main.cpp \
 	src/usersdialog.cpp \
@@ -86,4 +89,4 @@ SOURCES	*= src/main.cpp \
 	src/views/icon/SessionIconModel.cpp \
 	src/views/icon/SessionIconDelegate.cpp \
 	src/views/icon/SessionIconView.cpp \
-    src/widgets/sessioncontrolwidget.cpp
+	src/widgets/sessioncontrolwidget.cpp
