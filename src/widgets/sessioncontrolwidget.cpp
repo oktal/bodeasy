@@ -1,7 +1,6 @@
 #include "sessioncontrolwidget.h"
 #include "ui_sessioncontrolwidget.h"
 
-#include <QPushButton>
 #include <QSignalMapper>
 
 SessionControlWidget::SessionControlWidget(QWidget *parent) :
@@ -16,7 +15,7 @@ SessionControlWidget::SessionControlWidget(QWidget *parent) :
     mapper->setMapping(ui->btnPrevious, PreviousButton);
     mapper->setMapping(ui->btnFinish, FinishButton);
 
-    foreach (QPushButton *button, this->findChildren<QPushButton *>())
+    foreach (QToolButton *button, this->findChildren<QToolButton *>())
     {
         connect(button, SIGNAL(clicked()), mapper, SLOT(map()));
     }
@@ -32,7 +31,7 @@ SessionControlWidget::~SessionControlWidget()
 
 void SessionControlWidget::setButtonEnabled(SessionControlWidget::Button button, bool enabled)
 {
-    QPushButton *b = qobject_cast<QPushButton *>(mapper->mapping(button));
+    QToolButton *b = qobject_cast<QToolButton *>(mapper->mapping(button));
     if (b)
     {
         b->setEnabled(enabled);
@@ -41,7 +40,7 @@ void SessionControlWidget::setButtonEnabled(SessionControlWidget::Button button,
 
 bool SessionControlWidget::isButtonEnabled(SessionControlWidget::Button button) const
 {
-    QPushButton *b = qobject_cast<QPushButton *>(mapper->mapping(button));
+    QToolButton *b = qobject_cast<QToolButton *>(mapper->mapping(button));
     if (b)
     {
         return b->isEnabled();
@@ -52,12 +51,13 @@ bool SessionControlWidget::isButtonEnabled(SessionControlWidget::Button button) 
 
 void SessionControlWidget::setObjectiveVisible(bool visible)
 {
-    ui->wObjective->setVisible(visible);
+    ui->lblObjective->setVisible(visible);
+    ui->chkObjectiveDone->setVisible(visible);
 }
 
 bool SessionControlWidget::isObjectiveVisible() const
 {
-    return ui->wObjective->isVisible();
+    return ui->lblObjective->isVisible() && ui->chkObjectiveDone->isVisible();
 }
 
 void SessionControlWidget::setObjectiveText(const QString &text)
@@ -126,5 +126,3 @@ void SessionControlWidget::changeEvent(QEvent *e)
         break;
     }
 }
-
-

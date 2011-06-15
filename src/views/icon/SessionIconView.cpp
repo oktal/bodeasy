@@ -30,7 +30,6 @@ SessionIconView::SessionIconView( SessionProxy* proxy )
 	setItemDelegate( mDelegate );
 	
 	mSeparator->setFrameStyle( QFrame::HLine | QFrame::Sunken );
-	mControl->setContentsMargins( 5, 5, 5, 5 );
 	
 	QVBoxLayout* vl = new QVBoxLayout( this );
 	vl->setContentsMargins( 0, 0, style()->pixelMetric( QStyle::PM_ScrollBarExtent ), 0 );
