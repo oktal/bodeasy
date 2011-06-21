@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Gestion des exercices</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="ressources.qrc">
+    <normaloff>:/images/exercise-icon.png</normaloff>:/images/exercise-icon.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout" rowstretch="40,40,10,10" columnstretch="40,60">
    <item row="0" column="0" rowspan="2">

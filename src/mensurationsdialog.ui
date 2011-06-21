@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Gestion des mensurations</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="ressources.qrc">
+    <normaloff>:/images/measure-icon.png</normaloff>:/images/measure-icon.png</iconset>
   </property>
   <widget class="QGraphicsView" name="graphicsView">
    <property name="geometry">

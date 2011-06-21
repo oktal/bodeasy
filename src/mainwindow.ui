@@ -48,8 +48,10 @@
    <addaction name="graphAction"/>
    <addaction name="separator"/>
    <addaction name="userAction"/>
-   <addaction name="exitAction"/>
+   <addaction name="settingsAction"/>
+   <addaction name="separator"/>
    <addaction name="helpAction"/>
+   <addaction name="exitAction"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget1">
    <property name="font">
@@ -434,6 +436,18 @@
    </property>
    <property name="toolTip">
     <string>Consulter l'aide</string>
+   </property>
+  </action>
+  <action name="settingsAction">
+   <property name="icon">
+    <iconset resource="ressources.qrc">
+     <normaloff>:/images/settings-icon.png</normaloff>:/images/settings-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Préférences</string>
+   </property>
+   <property name="toolTip">
+    <string>Préférences</string>
    </property>
   </action>
  </widget>

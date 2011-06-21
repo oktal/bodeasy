@@ -53,7 +53,8 @@ FORMS	*= src/usersdialog.ui \
 	src/mensurationsdialog.ui \
 	src/mainwindow.ui \
 	src/sessionframe.ui \
-	src/widgets/sessioncontrolwidget.ui
+	src/widgets/sessioncontrolwidget.ui \
+    src/settingsdialog.ui
 
 HEADERS	*= src/usersdialog.h \
 	src/exercisewidget.h \
@@ -71,7 +72,8 @@ HEADERS	*= src/usersdialog.h \
 	src/views/icon/SessionIconDelegate.h \
 	src/views/icon/SessionIconView.h \
 	src/exercisewidgetdata.h \
-	src/widgets/sessioncontrolwidget.h
+	src/widgets/sessioncontrolwidget.h \
+    src/settingsdialog.h
 
 SOURCES	*= src/main.cpp \
 	src/usersdialog.cpp \
@@ -89,4 +91,5 @@ SOURCES	*= src/main.cpp \
 	src/views/icon/SessionIconModel.cpp \
 	src/views/icon/SessionIconDelegate.cpp \
 	src/views/icon/SessionIconView.cpp \
-	src/widgets/sessioncontrolwidget.cpp
+	src/widgets/sessioncontrolwidget.cpp \
+    src/settingsdialog.cpp

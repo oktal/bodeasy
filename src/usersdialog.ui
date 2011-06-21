@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>282</width>
-    <height>132</height>
+    <height>136</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -15,6 +15,10 @@
   </property>
   <property name="windowTitle">
    <string>Bodeasy - Démarrage</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="ressources.qrc">
+    <normaloff>:/images/user-icon.png</normaloff>:/images/user-icon.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="sizeConstraint">

@@ -216,7 +216,7 @@ void SessionFrame::paginate()
     }
 
     /* Put spacers if the page is not full */
-    if (row != RowMaximumWidgets && column != ColumnMaximumWidgets)
+    if (row % RowMaximumWidgets != 0 || column % ColumnMaximumWidgets != 0)
     {
 
         for (int r = row; r < RowMaximumWidgets; ++r)
