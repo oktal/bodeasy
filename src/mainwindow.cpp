@@ -9,6 +9,7 @@
 #include "exercisesdialog.h"
 #include "sessionsdialog.h"
 #include "mensurationsdialog.h"
+#include "settingsdialog.h"
 #include "sql/SqlHelper.h"
 #include "sql/models/usersmodel.h"
 #include "sql/models/sessionsmodel.h"
@@ -40,8 +41,8 @@ MainWindow::MainWindow(QWidget *parent) :
     setCentralWidget(sessionProxy);
     sessionProxy->setEnabled(false);
     
-    //sessionProxy->setWidget(new SessionFrame(sessionProxy));
-    sessionProxy->setWidget(new SessionIconView(sessionProxy));
+    sessionProxy->setWidget(new SessionFrame(sessionProxy));
+    //sessionProxy->setWidget(new SessionIconView(sessionProxy));
 
     ui->cmbSessions->setModel(sessionsModel);
     ui->lstContent->setModel(contentModel);
@@ -159,6 +160,12 @@ void MainWindow::on_sessionsAction_triggered()
 void MainWindow::on_mensurationAction_triggered()
 {
     MensurationsDialog dialog(mUserId);
+    dialog.exec();
+}
+
+void MainWindow::on_settingsAction_triggered()
+{
+    SettingsDialog dialog;
     dialog.exec();
 }
 

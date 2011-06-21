@@ -32,6 +32,7 @@ private slots:
     void on_sessionsAction_triggered();
     void on_mensurationAction_triggered();
     void on_userAction_triggered();
+    void on_settingsAction_triggered();
     void on_cmbSessions_activated(int index);
     void on_btnStart_clicked();
     void on_btnSee_clicked();
