@@ -30,6 +30,9 @@
         <file>images/blocks-icon.png</file>
         <file>images/tools-icon.png</file>
         <file>images/settings-icon.png</file>
+        <file>images/palette-icon.png</file>
+        <file>images/english.png</file>
+        <file>images/french.png</file>
     </qresource>
     <qresource prefix="/sql">
         <file alias="script001.sql">../db/database.sql</file>

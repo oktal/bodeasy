@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>564</width>
-    <height>383</height>
+    <width>594</width>
+    <height>405</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -75,6 +75,15 @@
        </item>
        <item>
         <property name="text">
+         <string>Apparence</string>
+        </property>
+        <property name="icon">
+         <iconset resource="ressources.qrc">
+          <normaloff>:/images/palette-icon.png</normaloff>:/images/palette-icon.png</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Groupes musculaires</string>
         </property>
         <property name="toolTip">
@@ -93,13 +102,33 @@
         <number>0</number>
        </property>
        <widget class="QWidget" name="page">
-        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="10,30,30,20">
+        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,10,30,30,15">
          <property name="spacing">
           <number>10</number>
          </property>
          <property name="topMargin">
-          <number>15</number>
+          <number>0</number>
          </property>
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Comportement</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
          <item>
           <widget class="QCheckBox" name="checkBox">
            <property name="text">
@@ -143,6 +172,9 @@
               </item>
               <item>
                <widget class="QCheckBox" name="checkBox_3">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="text">
                  <string>Remettre le chronomètre à zéro</string>
                 </property>
@@ -163,38 +195,29 @@
          <item>
           <widget class="QGroupBox" name="groupBox_2">
            <property name="title">
-            <string>Disposition des exercices</string>
+            <string>Démarrage</string>
            </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <layout class="QVBoxLayout" name="verticalLayout_6">
             <item>
-             <widget class="QComboBox" name="comboBox">
+             <layout class="QHBoxLayout" name="horizontalLayout_2">
               <item>
-               <property name="text">
-                <string>Disposer par page</string>
-               </property>
+               <widget class="QCheckBox" name="checkBox_5">
+                <property name="text">
+                 <string>Démarrer automatiquement avec l'utilisateur</string>
+                </property>
+               </widget>
               </item>
               <item>
-               <property name="text">
-                <string>Disposer en liste</string>
-               </property>
+               <widget class="QComboBox" name="comboBox_4"/>
               </item>
-             </widget>
+             </layout>
             </item>
             <item>
-             <spacer name="horizontalSpacer_2">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+             <widget class="QCheckBox" name="checkBox_6">
+              <property name="text">
+               <string>Sélectionner le dernier utilisateur choisi</string>
               </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Preferred</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>163</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -218,7 +241,156 @@
         </layout>
        </widget>
        <widget class="QWidget" name="page_2">
-        <layout class="QVBoxLayout" name="verticalLayout_3">
+        <layout class="QVBoxLayout" name="verticalLayout_5" stretch="0,0,40,60">
+         <property name="spacing">
+          <number>10</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label_2">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Apparence</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="gridLayout">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_3">
+             <property name="text">
+              <string>Disposition des exercices :</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QComboBox" name="comboBox">
+             <item>
+              <property name="text">
+               <string>Disposer par page</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Disposer en liste</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_4">
+             <property name="text">
+              <string>Style de l'application :</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QComboBox" name="comboBox_2"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_5">
+             <property name="text">
+              <string>Langue :</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QComboBox" name="comboBox_3">
+             <item>
+              <property name="text">
+               <string>Français</string>
+              </property>
+              <property name="icon">
+               <iconset resource="ressources.qrc">
+                <normaloff>:/images/french.png</normaloff>:/images/french.png</iconset>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Anglais</string>
+              </property>
+              <property name="icon">
+               <iconset resource="ressources.qrc">
+                <normaloff>:/images/english.png</normaloff>:/images/english.png</iconset>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Minimum</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>178</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="page_3">
+        <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0,80,10,10">
+         <property name="spacing">
+          <number>10</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label_6">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Groupes musculaires</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line_3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
          <item>
           <widget class="QGroupBox" name="groupBox_3">
            <property name="title">
@@ -341,6 +513,22 @@
     <hint type="destinationlabel">
      <x>229</x>
      <y>13</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_2</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>checkBox_3</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>246</x>
+     <y>107</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>277</x>
+     <y>137</y>
     </hint>
    </hints>
   </connection>
