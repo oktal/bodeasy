@@ -130,7 +130,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox">
+          <widget class="QCheckBox" name="chkSaveWindowState">
            <property name="text">
             <string>Enregistrer et restorer l'état de la fenêtre principale</string>
            </property>
@@ -146,7 +146,7 @@
              <number>15</number>
             </property>
             <item>
-             <widget class="QCheckBox" name="checkBox_2">
+             <widget class="QCheckBox" name="chkStartChrono">
               <property name="text">
                <string>Démarrer le chronomètre au démarrage de la session</string>
               </property>
@@ -171,7 +171,7 @@
                </spacer>
               </item>
               <item>
-               <widget class="QCheckBox" name="checkBox_3">
+               <widget class="QCheckBox" name="chkResetChrono">
                 <property name="enabled">
                  <bool>false</bool>
                 </property>
@@ -183,7 +183,7 @@
              </layout>
             </item>
             <item>
-             <widget class="QCheckBox" name="checkBox_4">
+             <widget class="QCheckBox" name="chkStopChrono">
               <property name="text">
                <string>Arrêter le chronomètre à la fin de la session</string>
               </property>
@@ -201,19 +201,23 @@
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_2">
               <item>
-               <widget class="QCheckBox" name="checkBox_5">
+               <widget class="QCheckBox" name="chkAutoStart">
                 <property name="text">
                  <string>Démarrer automatiquement avec l'utilisateur</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QComboBox" name="comboBox_4"/>
+               <widget class="QComboBox" name="cmbUsers">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
             <item>
-             <widget class="QCheckBox" name="checkBox_6">
+             <widget class="QCheckBox" name="chkSelectLastUser">
               <property name="text">
                <string>Sélectionner le dernier utilisateur choisi</string>
               </property>
@@ -278,7 +282,7 @@
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QComboBox" name="comboBox">
+            <widget class="QComboBox" name="cmbExercisesView">
              <item>
               <property name="text">
                <string>Disposer par page</string>
@@ -299,7 +303,7 @@
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QComboBox" name="comboBox_2"/>
+            <widget class="QComboBox" name="cmbStyles"/>
            </item>
            <item row="2" column="0">
             <widget class="QLabel" name="label_5">
@@ -309,7 +313,7 @@
             </widget>
            </item>
            <item row="2" column="1">
-            <widget class="QComboBox" name="comboBox_3">
+            <widget class="QComboBox" name="cmbLanguage">
              <item>
               <property name="text">
                <string>Français</string>
@@ -411,7 +415,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QListView" name="listView"/>
+             <widget class="QListView" name="lstMuscleGroups"/>
             </item>
             <item>
              <spacer name="horizontalSpacer_4">
@@ -432,7 +436,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item>
-            <widget class="QPushButton" name="pushButton">
+            <widget class="QPushButton" name="btnAddMuscleGroup">
              <property name="text">
               <string>Ajouter</string>
              </property>
@@ -443,7 +447,10 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_2">
+            <widget class="QPushButton" name="btnDeleteMuscleGroup">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="text">
               <string>Supprimer</string>
              </property>
@@ -490,7 +497,10 @@
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="standardButtons">
-      <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok|QDialogButtonBox::RestoreDefaults</set>
+     </property>
+     <property name="centerButtons">
+      <bool>false</bool>
      </property>
     </widget>
    </item>
@@ -517,9 +527,9 @@
    </hints>
   </connection>
   <connection>
-   <sender>checkBox_2</sender>
+   <sender>chkStartChrono</sender>
    <signal>clicked(bool)</signal>
-   <receiver>checkBox_3</receiver>
+   <receiver>chkResetChrono</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -529,6 +539,22 @@
     <hint type="destinationlabel">
      <x>277</x>
      <y>137</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>chkAutoStart</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>cmbUsers</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>379</x>
+     <y>244</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>476</x>
+     <y>244</y>
     </hint>
    </hints>
   </connection>

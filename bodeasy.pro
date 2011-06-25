@@ -73,7 +73,8 @@ HEADERS	*= src/usersdialog.h \
 	src/views/icon/SessionIconView.h \
 	src/exercisewidgetdata.h \
 	src/widgets/sessioncontrolwidget.h \
-    src/settingsdialog.h
+    src/settingsdialog.h \
+    src/settings.h
 
 SOURCES	*= src/main.cpp \
 	src/usersdialog.cpp \

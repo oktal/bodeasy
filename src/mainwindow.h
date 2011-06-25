@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 #include "SessionProxy.h"
+#include "settingsdialog.h"
 
 namespace Ui
 {
@@ -19,6 +20,8 @@ class pChronometer;
 
 class MainWindow : public QMainWindow
 {
+
+friend class SettingsDialog;
     Q_OBJECT
 public:
     explicit MainWindow(QWidget *parent = 0);
@@ -46,6 +49,9 @@ private slots:
 
 private:
     void selectInformations();
+    void readSettings();
+    void writeSettings();
+    void reloadSettings();
 
     Ui::MainWindow *ui;
     qint64 mUserId;

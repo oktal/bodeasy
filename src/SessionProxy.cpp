@@ -41,6 +41,7 @@ void SessionProxy::setWidget( QWidget* widget )
     
     if ( mWidget ) {
         layout()->addWidget( mWidget );
+        setRunning( mRunning, mType, mReadOnly, false );
     }
 }
 
@@ -83,10 +84,12 @@ bool SessionProxy::isModified() const
 
 bool SessionProxy::setRunning( bool running, SessionProxy::Type type, bool readOnly, bool askConfirmation )
 {
+    /*
     if ( mRunning == running && mReadOnly == readOnly && mType == type ) {
         return true;
     }
-    
+    */
+
     if ( mRunning ) {
         if ( !mReadOnly ) {
 			ExerciseWidgetDataList data;

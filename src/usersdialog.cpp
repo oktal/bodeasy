@@ -1,6 +1,10 @@
 #include "usersdialog.h"
 #include "ui_usersdialog.h"
 
+#include "settings.h"
+
+#include <QSettings>
+
 #include "sql/models/usersmodel.h"
 #include "sql/user.h"
 
@@ -14,6 +18,15 @@ UsersDialog::UsersDialog(QWidget *parent) :
     ui->setupUi(this);
     ui->cmbUsers->setModel(m_model);
     ui->btnDelete->setEnabled(m_model->rowCount() > 0);
+
+    QSettings settings(qApp->organizationName(), qApp->applicationName());
+    const bool selectLastUser = settings.value(SETTING_LASTUSER_STARTUP, false).toBool();
+    if (selectLastUser)
+    {
+        const QString lastUser = settings.value(SETTING_LASTUSERNAME).toString();
+        ui->cmbUsers->setCurrentIndex(
+                    ui->cmbUsers->findText(lastUser));
+    }
 }
 
 UsersDialog::~UsersDialog()
