@@ -10,6 +10,7 @@
 #include "sessionsdialog.h"
 #include "mensurationsdialog.h"
 #include "settingsdialog.h"
+#include "settings.h"
 #include "sql/SqlHelper.h"
 #include "sql/models/usersmodel.h"
 #include "sql/models/sessionsmodel.h"
@@ -19,6 +20,7 @@
 #include <QSqlTableModel>
 
 #include <QTimer>
+#include <QSettings>
 
 #include <QDebug>
 #include <QSqlError>
@@ -41,8 +43,10 @@ MainWindow::MainWindow(QWidget *parent) :
     setCentralWidget(sessionProxy);
     sessionProxy->setEnabled(false);
     
+    /*
     sessionProxy->setWidget(new SessionFrame(sessionProxy));
-    //sessionProxy->setWidget(new SessionIconView(sessionProxy));
+    sessionProxy->setWidget(new SessionIconView(sessionProxy));
+    */
 
     ui->cmbSessions->setModel(sessionsModel);
     ui->lstContent->setModel(contentModel);
@@ -76,6 +80,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(sessionProxy, SIGNAL(sessionStarted(SessionProxy::Type,bool)), this, SLOT(onSessionStarted(SessionProxy::Type,bool)));
     //connect(sessionProxy, SIGNAL(sessionCommited(const ExerciseWidgetDataList&)), this, SLOT(onSessionCommited(const ExerciseWidgetDataList&)));
     connect(sessionProxy, SIGNAL(sessionFinished()), this, SLOT(onSessionFinished()));
+
+    readSettings();
 }
 
 MainWindow::~MainWindow()
@@ -123,6 +129,7 @@ void MainWindow::closeEvent(QCloseEvent* event)
             return;
         }
     }
+    writeSettings();
     QMainWindow::closeEvent(event);
 }
 
@@ -165,7 +172,7 @@ void MainWindow::on_mensurationAction_triggered()
 
 void MainWindow::on_settingsAction_triggered()
 {
-    SettingsDialog dialog;
+    SettingsDialog dialog(this);
     dialog.exec();
 }
 
@@ -296,4 +303,58 @@ void MainWindow::selectInformations()
     }
 
     ui->lblNextSeanceDate->setText(trUtf8("Aucune séance planifiée"));
+}
+
+void MainWindow::readSettings()
+{
+    QSettings settings(qApp->organizationName(), qApp->applicationName());
+    const bool restoreWindowState = settings.value(SETTING_WINDOW_SAVESTATE, true).toBool();
+    if (restoreWindowState)
+    {
+        const QByteArray geometry = settings.value(SETTING_WINDOW_GEOMETRY, QByteArray()).toByteArray();
+        const QByteArray state = settings.value(SETTING_WINDOW_STATE, QByteArray()).toByteArray();
+        if (!geometry.isEmpty())
+        {
+            restoreGeometry(geometry);
+        }
+        else
+        {
+            resize(800, 600);
+        }
+        if (!state.isEmpty())
+        {
+            restoreState(state);
+        }
+    }
+    else
+    {
+        resize(800, 600);
+    }
+    reloadSettings();
+}
+
+void MainWindow::writeSettings()
+{
+    QSettings settings(qApp->organizationName(), qApp->applicationName());
+    const bool restoreWindowState = settings.value(SETTING_WINDOW_SAVESTATE, true).toBool();
+    if (restoreWindowState)
+    {
+        settings.setValue(SETTING_WINDOW_GEOMETRY, saveGeometry());
+        settings.setValue(SETTING_WINDOW_STATE, saveState());
+    }
+}
+
+void MainWindow::reloadSettings()
+{
+    QSettings settings(qApp->organizationName(), qApp->applicationName());
+    ViewMode view = static_cast<ViewMode>(settings.value(SETTING_VIEW_MODE, List).toInt());
+    switch (view)
+    {
+    case List:
+        sessionProxy->setWidget(new SessionIconView(sessionProxy));
+        break;
+    case Page:
+        sessionProxy->setWidget(new SessionFrame(sessionProxy));
+        break;
+    }
 }
