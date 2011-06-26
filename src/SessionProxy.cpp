@@ -353,7 +353,7 @@ bool SessionProxy::selectObjectiveDone() const
 
 QString SessionProxy::selectComment() const
 {
-    if ( mReadOnly ) {
+    if ( mType == SessionMade ) {
         QSqlQuery query = SqlHelper::query();
         query.prepare( "SELECT comment FROM session_made WHERE id_session_made=:sessionMadeId" );
         query.bindValue( ":sessionMadeId", mSessionMadeId );
