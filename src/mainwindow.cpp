@@ -217,6 +217,7 @@ void MainWindow::on_btnStart_clicked()
     sessionProxy->setSessionId(sessionId);
     contentModel->setSessionId(sessionId);
     sessionProxy->setRunning(true,SessionProxy::Session,false);
+
 }
 
 void MainWindow::on_btnSee_clicked()
@@ -357,4 +358,8 @@ void MainWindow::reloadSettings()
         sessionProxy->setWidget(new SessionFrame(sessionProxy));
         break;
     }
+
+    mStartChrono = settings.value(SETTING_START_CHRONO, true).toBool();
+    mResetChrono = settings.value(SETTING_RESET_CHRONO, true).toBool();
+    mStopChrono = settings.value(SETTING_STOP_CHRONO, true).toBool();
 }

@@ -63,6 +63,10 @@ private:
     QLabel *dateTimeLabel;
     QTimer *timer;
 
+    bool mStartChrono;
+    bool mResetChrono;
+    bool mStopChrono;
+
 protected slots:
     virtual void closeEvent(QCloseEvent* event);
 };
