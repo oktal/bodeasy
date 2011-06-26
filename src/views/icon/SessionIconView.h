@@ -24,7 +24,9 @@ public:
 	
 	Q_INVOKABLE ExerciseWidgetDataList widgetsData() const;
 	Q_INVOKABLE bool objectiveDone() const;
-    Q_INVOKABLE void setWidgetsData( const ExerciseWidgetDataList& data, const QString& objective, bool objectiveDone, bool readOnly );
+    Q_INVOKABLE QString comment() const;
+    Q_INVOKABLE void setWidgetsData( const ExerciseWidgetDataList& data, const QString& objective, bool objectiveDone,
+                                     const QString &comment, bool readOnly );
 	
 protected:
 	SessionProxy* mProxy;

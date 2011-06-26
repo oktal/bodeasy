@@ -132,6 +132,7 @@ CREATE TABLE "session_made"(
   "id_session_made" INTEGER PRIMARY KEY NOT NULL CHECK("id_session_made">=0),
   "objective_achieved" BOOL NOT NULL,
   "date" DATETIME NOT NULL,
+  "comment" TEXT,
   "id_session" INTEGER NOT NULL CHECK("id_session">=0),
   "id_user" INTEGER NOT NULL CHECK("id_user">=0),
   CONSTRAINT "id_session_made_UNIQUE"

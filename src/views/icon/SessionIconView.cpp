@@ -71,7 +71,13 @@ bool SessionIconView::objectiveDone() const
     return mControl->isObjectiveChecked();
 }
 
-void SessionIconView::setWidgetsData( const ExerciseWidgetDataList& data, const QString& objective, bool objectiveDone, bool readOnly )
+QString SessionIconView::comment() const
+{
+    return mControl->comment();
+}
+
+void SessionIconView::setWidgetsData( const ExerciseWidgetDataList& data, const QString& objective, bool objectiveDone,
+                                      const QString &comment, bool readOnly )
 {
 	if ( readOnly ) {
 		setEditTriggers( QAbstractItemView::NoEditTriggers );
@@ -85,6 +91,8 @@ void SessionIconView::setWidgetsData( const ExerciseWidgetDataList& data, const 
 	mControl->setObjectiveText( objective );
     mControl->setObjectiveChecked( objectiveDone );
     mControl->setObjectiveReadOnly( readOnly );
+    mControl->setComment( comment );
+    mControl->setCommentReadOnly( readOnly );
     mControl->setButtonEnabled( SessionControlWidget::FinishButton, !readOnly );
 	
 	selectionChanged( QItemSelection(), QItemSelection() );

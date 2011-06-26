@@ -39,7 +39,7 @@ public slots:
 	void setSessionMadeId( qint64 id );
 	void updateModel();
 	
-    bool commit( const ExerciseWidgetDataList& data, bool objectiveAchieved );
+    bool commit( const ExerciseWidgetDataList& data, bool objectiveAchieved, const QString &comment );
 	void rollback();
 
 protected:
@@ -54,6 +54,7 @@ protected:
 	ExerciseWidgetDataList selectExercises() const;
     QString selectObjective() const;
 	bool selectObjectiveDone() const;
+    QString selectComment() const;
 	bool isModified( const ExerciseWidgetDataList& data ) const;
 	bool isCompleteExercise( const ExerciseWidgetData& data ) const;
 	bool saveExerciseSeries( qint64 resultId );

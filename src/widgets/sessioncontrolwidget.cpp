@@ -90,6 +90,26 @@ bool SessionControlWidget::isObjectiveChecked() const
     return ui->chkObjectiveDone->isChecked();
 }
 
+void SessionControlWidget::setComment(const QString &comment)
+{
+    ui->txtComment->setText(comment);
+}
+
+QString SessionControlWidget::comment() const
+{
+    return ui->txtComment->text();
+}
+
+void SessionControlWidget::setCommentReadOnly(bool readOnly)
+{
+    ui->txtComment->setReadOnly(readOnly);
+}
+
+bool SessionControlWidget::isCommentReadOnly() const
+{
+    return ui->txtComment->isReadOnly();
+}
+
 void SessionControlWidget::onButtonClicked(int id)
 {
     Button button = static_cast<Button>(id);

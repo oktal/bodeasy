@@ -35,6 +35,12 @@ public:
     void setObjectiveChecked(bool checked);
     bool isObjectiveChecked() const;
 
+    void setComment(const QString &comment);
+    QString comment() const;
+
+    void setCommentReadOnly(bool readOnly);
+    bool isCommentReadOnly() const;
+
 signals:
     void previousClicked();
     void nextClicked();
