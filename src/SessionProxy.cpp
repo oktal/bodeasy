@@ -94,8 +94,10 @@ bool SessionProxy::setRunning( bool running, SessionProxy::Type type, bool readO
         if ( !mReadOnly ) {
 			ExerciseWidgetDataList data;
 			bool objectiveDone;
+            QString comment;
 			bool ok = QMetaObject::invokeMethod( mWidget, "widgetsData", Q_RETURN_ARG( ExerciseWidgetDataList, data ) )
-				&& QMetaObject::invokeMethod( mWidget, "objectiveDone", Q_RETURN_ARG( bool, objectiveDone ) );
+                   && QMetaObject::invokeMethod( mWidget, "objectiveDone", Q_RETURN_ARG( bool, objectiveDone ) )
+                   && QMetaObject::invokeMethod( mWidget, "comment", Q_RETURN_ARG( QString, comment ) );
 			
 			if ( ok ) {
 				if ( isModified( data ) ) {
@@ -104,7 +106,7 @@ bool SessionProxy::setRunning( bool running, SessionProxy::Type type, bool readO
 					if ( ( askConfirmation
 							&& QMessageBox::question( this, QString::null, text, QMessageBox::No, QMessageBox::Yes ) == QMessageBox::Yes )
 						|| !askConfirmation ) {
-						if ( !commit( data, objectiveDone ) ) {
+                        if ( !commit( data, objectiveDone, comment ) ) {
 							return false;
 						}
 					}
@@ -158,10 +160,11 @@ void SessionProxy::updateModel()
 		Q_ARG( ExerciseWidgetDataList, selectExercises() ),
 		Q_ARG( const QString&, selectObjective() ),
 		Q_ARG( bool, selectObjectiveDone() ),
+        Q_ARG( QString, selectComment() ),
 		Q_ARG( bool, mReadOnly ) );
 }
 
-bool SessionProxy::commit( const ExerciseWidgetDataList& data, bool objectiveAchieved )
+bool SessionProxy::commit( const ExerciseWidgetDataList& data, bool objectiveAchieved, const QString &comment )
 {
 	bool isComplete = true;
 
@@ -190,12 +193,13 @@ bool SessionProxy::commit( const ExerciseWidgetDataList& data, bool objectiveAch
 	
 	QSqlQuery query = SqlHelper::query();
 
-    query.prepare( "INSERT INTO session_made(id_session, id_user, date, objective_achieved) "
-                   "VALUES(:id_session, :id_user, :date, :objectiveAchieved)" );
+    query.prepare( "INSERT INTO session_made(id_session, id_user, date, objective_achieved, comment) "
+                   "VALUES(:id_session, :id_user, :date, :objectiveAchieved, :comment)" );
 	query.bindValue( ":id_session", mSessionId );
 	query.bindValue( ":id_user", mUserId );
 	query.bindValue( ":date", QDateTime::currentDateTime() );
     query.bindValue( ":objectiveAchieved", objectiveAchieved );
+    query.bindValue( ":comment", comment );
 
 	ok = query.exec();
 	
@@ -345,6 +349,21 @@ bool SessionProxy::selectObjectiveDone() const
 	}
 
     return false;
+}
+
+QString SessionProxy::selectComment() const
+{
+    if ( mReadOnly ) {
+        QSqlQuery query = SqlHelper::query();
+        query.prepare( "SELECT comment FROM session_made WHERE id_session_made=:sessionMadeId" );
+        query.bindValue( ":sessionMadeId", mSessionMadeId );
+
+        if ( query.exec() && query.next() ) {
+            return query.value( 0 ).toString();
+        }
+    }
+
+    return QString();
 }
 
 bool SessionProxy::isModified( const ExerciseWidgetDataList& data ) const

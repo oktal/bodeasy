@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>398</width>
-    <height>60</height>
+    <width>611</width>
+    <height>66</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -17,13 +17,7 @@
    </sizepolicy>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <property name="margin">
-    <number>6</number>
-   </property>
-   <property name="spacing">
-    <number>6</number>
-   </property>
-   <item row="0" column="0" rowspan="2">
+   <item row="0" column="0">
     <widget class="QLabel" name="lblObjective">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -48,7 +42,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1" colspan="6">
+   <item row="0" column="1" colspan="4">
     <widget class="QCheckBox" name="chkObjectiveDone">
      <property name="text">
       <string>Objectif atteint</string>
@@ -59,8 +53,28 @@
      </property>
     </widget>
    </item>
+   <item row="1" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Commentaire :</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="txtComment"/>
+     </item>
+    </layout>
+   </item>
    <item row="1" column="1">
     <widget class="QToolButton" name="btnFirst">
+     <property name="minimumSize">
+      <size>
+       <width>25</width>
+       <height>25</height>
+      </size>
+     </property>
      <property name="toolTip">
       <string>Première page</string>
      </property>
@@ -72,6 +86,12 @@
    </item>
    <item row="1" column="2">
     <widget class="QToolButton" name="btnPrevious">
+     <property name="minimumSize">
+      <size>
+       <width>25</width>
+       <height>25</height>
+      </size>
+     </property>
      <property name="toolTip">
       <string>Page précédente</string>
      </property>
@@ -83,6 +103,12 @@
    </item>
    <item row="1" column="3">
     <widget class="QToolButton" name="btnNext">
+     <property name="minimumSize">
+      <size>
+       <width>25</width>
+       <height>25</height>
+      </size>
+     </property>
      <property name="toolTip">
       <string>Page suivante</string>
      </property>
@@ -94,6 +120,12 @@
    </item>
    <item row="1" column="4">
     <widget class="QToolButton" name="btnLast">
+     <property name="minimumSize">
+      <size>
+       <width>25</width>
+       <height>25</height>
+      </size>
+     </property>
      <property name="toolTip">
       <string>Dernière page</string>
      </property>
@@ -121,6 +153,12 @@
    </item>
    <item row="1" column="6">
     <widget class="QToolButton" name="btnFinish">
+     <property name="minimumSize">
+      <size>
+       <width>25</width>
+       <height>25</height>
+      </size>
+     </property>
      <property name="toolTip">
       <string>Terminer la séance</string>
      </property>

@@ -42,7 +42,8 @@ QSize SessionFrame::sizeHint() const
     return QSize(600, 500);
 }
 
-void SessionFrame::setWidgetsData(const ExerciseWidgetDataList &data, const QString &objective, bool objectiveDone, bool readOnly)
+void SessionFrame::setWidgetsData(const ExerciseWidgetDataList &data, const QString &objective, bool objectiveDone,
+                                  const QString &comment, bool readOnly)
 {
     mCurrentPage = 0;
 
@@ -72,6 +73,8 @@ void SessionFrame::setWidgetsData(const ExerciseWidgetDataList &data, const QStr
     ui->controlWidget->setObjectiveText(objective);
     ui->controlWidget->setObjectiveChecked(objectiveDone);
     ui->controlWidget->setObjectiveReadOnly(readOnly);
+    ui->controlWidget->setComment(comment);
+    ui->controlWidget->setCommentReadOnly(readOnly);
     ui->controlWidget->setButtonEnabled(SessionControlWidget::FinishButton, !readOnly);
 }
 
@@ -89,6 +92,11 @@ ExerciseWidgetDataList SessionFrame::widgetsData() const
 bool SessionFrame::objectiveDone() const
 {
     return ui->controlWidget->isObjectiveChecked();
+}
+
+QString SessionFrame::comment() const
+{
+    return ui->controlWidget->comment();
 }
 
 void SessionFrame::start()
