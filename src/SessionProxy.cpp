@@ -1,6 +1,9 @@
 #include "SessionProxy.h"
 #include "sql/SqlHelper.h"
 
+#include "views/icon/SessionIconView.h"
+#include "sessionframe.h"
+
 #include <QVBoxLayout>
 #include <QVariant>
 #include <QDate>
@@ -15,11 +18,37 @@ SessionProxy::SessionProxy( QWidget* parent )
 		mReadOnly( true ),
 		mUserId( -1 ),
 		mSessionId( -1 ),
-		mSessionMadeId( -1 )
+        mSessionMadeId( -1 ),
+        mViewMode( None )
 {
     QVBoxLayout* vl = new QVBoxLayout( this );
     vl->setMargin( 0 );
     vl->setSpacing( 0 );
+}
+
+SessionProxy::ViewMode SessionProxy::viewMode() const
+{
+    return mViewMode;
+}
+
+void SessionProxy::setViewMode( SessionProxy::ViewMode mode )
+{
+    if ( mode != mViewMode )
+    {
+        mViewMode = mode;
+        switch ( mViewMode )
+        {
+        case List:
+            setWidget( new SessionIconView( this ) );
+            break;
+        case Page:
+            setWidget( new SessionFrame( this ) );
+            break;
+        case None:
+            setWidget( 0 );
+            break;
+        }
+    }
 }
 
 QWidget* SessionProxy::widget() const

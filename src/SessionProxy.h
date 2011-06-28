@@ -16,11 +16,17 @@ public:
 		Session,
 		SessionMade
 	};
+
+    enum ViewMode {
+        None,
+        List,
+        Page
+    };
 	
 	SessionProxy( QWidget* parent = 0 );
-	
-	QWidget* widget() const;
-	void setWidget( QWidget* widget );
+
+    ViewMode viewMode() const;
+    void setViewMode(ViewMode mode);
 
 	qint64 userId() const;
 	qint64 sessionId() const;
@@ -50,6 +56,7 @@ protected:
 	qint64 mUserId;
 	qint64 mSessionId;
 	qint64 mSessionMadeId;
+    ViewMode mViewMode;
 	
 	ExerciseWidgetDataList selectExercises() const;
     QString selectObjective() const;
@@ -59,6 +66,9 @@ protected:
 	bool isCompleteExercise( const ExerciseWidgetData& data ) const;
 	bool saveExerciseSeries( qint64 resultId );
 	bool saveExercise( const ExerciseWidgetData& data );
+
+    QWidget* widget() const;
+    void setWidget( QWidget* widget );
 
 signals:
 	void error( const QString& error );
