@@ -348,15 +348,16 @@ void MainWindow::writeSettings()
 void MainWindow::reloadSettings()
 {
     QSettings settings(qApp->organizationName(), qApp->applicationName());
-    ViewMode view = static_cast<ViewMode>(settings.value(SETTING_VIEW_MODE, List).toInt());
-    switch (view)
+    SessionProxy::ViewMode view = static_cast<SessionProxy::ViewMode>(
+                settings.value(SETTING_VIEW_MODE, SessionProxy::List).toInt());
+
+    if (sessionProxy->viewMode() == SessionProxy::None)
     {
-    case List:
-        sessionProxy->setWidget(new SessionIconView(sessionProxy));
-        break;
-    case Page:
-        sessionProxy->setWidget(new SessionFrame(sessionProxy));
-        break;
+        sessionProxy->setViewMode(view);
+    }
+    else if (view != sessionProxy->viewMode())
+    {
+        sessionProxy->setViewMode(view);
     }
 
     mStartChrono = settings.value(SETTING_START_CHRONO, true).toBool();

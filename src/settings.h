@@ -3,8 +3,6 @@
 
 #include <QString>
 
-enum ViewMode { List, Page };
-
 #define SETTING_WINDOW_SAVESTATE "saveWindowState"
 #define SETTING_WINDOW_GEOMETRY "window/geometry"
 #define SETTING_WINDOW_STATE "window/state"

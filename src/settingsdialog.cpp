@@ -14,6 +14,7 @@
 #include "sql/models/usersmodel.h"
 #include "sql/SqlHelper.h"
 #include "mainwindow.h"
+#include "SessionProxy.h"
 
 SettingsDialog::SettingsDialog(MainWindow *window) :
     QDialog(window),
@@ -24,8 +25,8 @@ SettingsDialog::SettingsDialog(MainWindow *window) :
     ui->setupUi(this);
 
     ui->cmbStyles->addItems(QStyleFactory::keys());
-    ui->cmbExercisesView->setItemData(0, Page);
-    ui->cmbExercisesView->setItemData(1, List);
+    ui->cmbExercisesView->setItemData(0, SessionProxy::Page);
+    ui->cmbExercisesView->setItemData(1, SessionProxy::List);
     ui->cmbLanguage->setItemData(0, "fr_FR");
     ui->cmbLanguage->setItemData(1, "en_EN");
 
@@ -138,7 +139,8 @@ void SettingsDialog::readSettings()
     const bool lastUserStartup = settings.value(SETTING_LASTUSER_STARTUP, false).toBool();
 
     const QString style = settings.value(SETTING_VIEW_STYLE, qApp->style()->objectName()).toString();
-    ViewMode mode = static_cast<ViewMode>(settings.value(SETTING_VIEW_MODE, Page).toInt());
+    SessionProxy::ViewMode mode = static_cast<SessionProxy::ViewMode>(
+                settings.value(SETTING_VIEW_MODE, SessionProxy::List).toInt());
     const QString locale = settings.value(SETTING_VIEW_LANGUAGE, "fr_FR").toString();
 
     ui->chkSaveWindowState->setChecked(saveWindowState);
