@@ -58,14 +58,9 @@ static size_t colorIndex = 0;
   * \brief Create the curve according to the values with the \a year title
   * \return the created curve
 */
-static QwtPlotCurve *makeCurve(const double *values, const QString &year)
+static QwtPlotCurve *makeCurve(const QVector<QPointF>& points, const QString &year)
 {
     QwtPlotCurve *curve = new QwtPlotCurve(year);
-    QVector<QPointF> points;
-    for (int i = 0; i < 12; ++i)
-    {
-        points << QPointF(static_cast<double>(i), values[i]);
-    }
     curve->setData(new QwtPointSeriesData(points));
 
     QPen curvePen;
@@ -126,33 +121,33 @@ ActivityPlot::ActivityPlot(QWidget *parent) :
 
 void ActivityPlot::retrieveDatas()
 {
+    const QString sql = "SELECT strftime('%Y', date) AS year, strftime('%m', date) AS month, COUNT( date ) AS count FROM session_made GROUP BY strftime('%Y%m', date)";
     QSqlQuery query = SqlHelper::query();
-    if (query.exec("SELECT strftime('%Y', date) FROM session_made "
-                   "GROUP BY strftime('%Y', date)"))
+    if (query.exec(sql))
     {
+        QMap<int, QVector<QPointF> > values; // year, month/count
         while (query.next())
         {
-            const QString year = query.value(0).toString();
-            double values[12] = { 0.0 };
-            QSqlQuery datasQuery = SqlHelper::query();
-            datasQuery.prepare("SELECT date FROM session_made "
-                               "WHERE strftime('%Y', date)=:year");
-            datasQuery.bindValue(":year", year);
-            if (datasQuery.exec())
+            const int year = query.value(0).toInt();
+            const int month = query.value(1).toInt();
+            const int count = query.value(2).toInt();
+            QVector<QPointF>& vector = values[year];
+            if ( vector.isEmpty() )
             {
-                while (datasQuery.next())
+                vector.resize(12);
+                for (int i = 0; i < vector.count(); i++)
                 {
-                    const int month = datasQuery.value(0).toDateTime().date().month();
-                    values[month]++;
+                    vector[i] = QPointF(i, 0);
                 }
             }
-            else
-            {
-                qDebug() << Q_FUNC_INFO << datasQuery.lastError();
-            }
-            QwtPlotCurve *curve = makeCurve(values, year);
+            
+            vector[month -1].setY(count);
+        }
+        
+        foreach (const int& year, values.keys())
+        {
+            QwtPlotCurve *curve = makeCurve(values.value(year), QString::number(year));
             curve->attach(this);
-
             mCurves.append(curve);
         }
     }
