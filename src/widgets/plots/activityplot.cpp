@@ -121,7 +121,7 @@ ActivityPlot::ActivityPlot(QWidget *parent) :
 
 void ActivityPlot::retrieveDatas()
 {
-    const QString sql = "SELECT strftime('%Y', date) AS year, strftime('%m', date) AS month, COUNT( date ) AS count FROM session_made GROUP BY strftime('%Y%m', date)";
+    const QString sql = "SELECT strftime('%Y', date) AS year, strftime('%m', date) AS month, COUNT(date) AS count FROM session_made GROUP BY strftime('%Y%m', date)";
     QSqlQuery query = SqlHelper::query();
     if (query.exec(sql))
     {
