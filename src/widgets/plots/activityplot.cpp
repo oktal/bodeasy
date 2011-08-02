@@ -30,12 +30,13 @@ public:
         const QLocale locale;
         if (m >= 0 && m <= 11)
         {
-            return locale.monthName(m +1, QLocale::ShortFormat);
+            QString text = locale.monthName(m +1, QLocale::ShortFormat);
+            text[0] = text[0].toTitleCase();
+            return text;
         }
 
         return QwtText(" ");
     }
-
 };
 
 
