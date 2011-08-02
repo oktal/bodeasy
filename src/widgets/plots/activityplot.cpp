@@ -27,9 +27,10 @@ public:
     virtual QwtText label(double value) const
     {
         const int m = static_cast<int>(value);
+        const QLocale locale;
         if (m >= 0 && m <= 11)
         {
-            return QDate(2000, m + 1, 1).toString("MMM");
+            return locale.monthName(m +1, QLocale::ShortFormat);
         }
 
         return QwtText(" ");
@@ -93,7 +94,7 @@ ActivityPlot::ActivityPlot(QWidget *parent) :
 {
     setTitle(QwtText(trUtf8("Activité annuelle")));
     setAxisScale(QwtPlot::xBottom, 0.0, 11.0, 1.0);
-    setAxisTitle(QwtPlot::yLeft, QwtText(trUtf8("Séances affectuées")));
+    setAxisTitle(QwtPlot::yLeft, QwtText(trUtf8("Séances effectuées")));
     setAxisScaleDraw(QwtPlot::xBottom, new MonthScaleDraw);
     setAxisLabelAlignment(QwtPlot::xBottom, Qt::AlignHCenter | Qt::AlignBottom);
     setAxisMaxMinor(QwtPlot::xBottom, 0);
@@ -119,7 +120,8 @@ ActivityPlot::ActivityPlot(QWidget *parent) :
     colorIndex = 0;
 
     retrieveDatas();
-
+    updateAxes(); // force axis update to get correct max value
+    setAxisScale(QwtPlot::yLeft, 0.0, axisInterval( QwtPlot::yLeft ).maxValue(), 1.0);
 }
 
 void ActivityPlot::retrieveDatas()
