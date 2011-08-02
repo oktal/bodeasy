@@ -17,6 +17,7 @@
 #define SETTING_VIEW_LANGUAGE "view/language"
 #define SETTING_LASTUSERNAME "lastUsername"
 #define SETTING_LASTUSERID "lastUserId"
+#define SETTING_FIRSTLAUNCH "firstLaunch"
 
 
 #endif // SETTINGS_H

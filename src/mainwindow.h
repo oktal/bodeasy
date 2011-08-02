@@ -46,6 +46,7 @@ private slots:
     void onSessionFinished();
 
     void onTimerTimeout();
+    void checkFirstLaunch();
 
 private:
     void selectInformations();

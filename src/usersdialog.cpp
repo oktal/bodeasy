@@ -64,7 +64,7 @@ void UsersDialog::on_btnDelete_clicked()
 {
     int r = QMessageBox::question(this,
                                   tr("Suppression d'utilisateur"),
-                                  tr("Supprimer dÃ©finitivement l'utilisateur %1 ?")
+                                  tr("Supprimer définitivement l'utilisateur %1 ?")
                                   .arg(ui->cmbUsers->currentText()),
                                   QMessageBox::Yes, QMessageBox::Cancel);
 

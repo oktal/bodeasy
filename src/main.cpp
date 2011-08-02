@@ -8,6 +8,7 @@
 #include "sql/SqlHelper.h"
 #include "usersdialog.h"
 #include "mainwindow.h"
+#include "graphicsdialog.h"
 
 #define EXIT_SQL_OPEN_ERROR 1
 #define EXIT_LOGIN_ERROR 2
@@ -21,6 +22,10 @@ int main( int argc, char* argv[] )
     if ( !SqlHelper::openDatabase() ) {
         return EXIT_SQL_OPEN_ERROR;
     }
+
+    GraphicsDialog graphics;
+    graphics.show();
+
 
     QSettings settings( app.organizationName(), app.applicationName() );
     const QString styleName = settings.value( SETTING_VIEW_STYLE, QString() ).toString();
@@ -49,6 +54,8 @@ int main( int argc, char* argv[] )
     mw.setUserId( userId );
     //mw.resize( 800, 600 );
     mw.show();
+
+
 
     const int result = app.exec();
     SqlHelper::closeDatabase();
