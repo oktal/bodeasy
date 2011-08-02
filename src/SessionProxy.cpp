@@ -58,11 +58,21 @@ QWidget* SessionProxy::widget() const
 
 void SessionProxy::setWidget( QWidget* widget )
 {
+    ExerciseWidgetDataList data;
+    bool objectiveDone;
+    QString comment;
+    bool ok = false;
+
     if ( mWidget ) {
         if ( mWidget == widget ) {
             return;
         }
         
+        /* Save all datas */
+        ok = QMetaObject::invokeMethod( mWidget, "widgetsData", Q_RETURN_ARG( ExerciseWidgetDataList, data ) )
+          && QMetaObject::invokeMethod( mWidget, "objectiveDone", Q_RETURN_ARG( bool, objectiveDone ) )
+          && QMetaObject::invokeMethod( mWidget, "comment", Q_RETURN_ARG( QString, comment ) );
+
         delete mWidget;
     }
     
@@ -70,7 +80,15 @@ void SessionProxy::setWidget( QWidget* widget )
     
     if ( mWidget ) {
         layout()->addWidget( mWidget );
-        setRunning( mRunning, mType, mReadOnly, false );
+        /* Restore datas */
+        if ( ok ) {
+            QMetaObject::invokeMethod( mWidget, "setWidgetsData",
+                Q_ARG( ExerciseWidgetDataList, data ),
+                Q_ARG( const QString&, selectObjective() ),
+                Q_ARG( bool, objectiveDone ),
+                Q_ARG( QString, comment),
+                Q_ARG( bool, mReadOnly ) );
+        }
     }
 }
 
@@ -113,11 +131,9 @@ bool SessionProxy::isModified() const
 
 bool SessionProxy::setRunning( bool running, SessionProxy::Type type, bool readOnly, bool askConfirmation )
 {
-    /*
     if ( mRunning == running && mReadOnly == readOnly && mType == type ) {
         return true;
     }
-    */
 
     if ( mRunning ) {
         if ( !mReadOnly ) {

@@ -82,6 +82,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(sessionProxy, SIGNAL(sessionFinished()), this, SLOT(onSessionFinished()));
 
     readSettings();
+    QTimer::singleShot(0, this, SLOT(checkFirstLaunch()));
 }
 
 MainWindow::~MainWindow()
@@ -331,7 +332,31 @@ void MainWindow::readSettings()
     {
         resize(800, 600);
     }
+
+
+
+
     reloadSettings();
+}
+
+void MainWindow::checkFirstLaunch()
+{
+    QSettings settings(qApp->organizationName(), qApp->applicationName());
+    const bool firstLaunch = settings.value(SETTING_FIRSTLAUNCH, true).toBool();
+    if (firstLaunch)
+    {
+        /* Show Mensurations Dialog */
+        int const ret = QMessageBox::information(this, tr("Information"),
+                                 trUtf8("Vous venez de lancer '%1' pour la première fois. Voulez-vous "
+                                        "commencer par saisir vos mensurations ?").arg(qApp->applicationName()),
+                                 QMessageBox::Yes, QMessageBox::No);
+        if (ret == QMessageBox::Yes)
+        {
+            MensurationsDialog dialog(mUserId);
+            dialog.exec();
+        }
+        settings.setValue(SETTING_FIRSTLAUNCH, false);
+    }
 }
 
 void MainWindow::writeSettings()

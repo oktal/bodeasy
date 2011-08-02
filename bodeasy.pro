@@ -46,6 +46,15 @@ include( src/sql/sql.pri )
 
 RESOURCES	*= src/ressources.qrc
 
+win32 {
+    INCLUDEPATH *= C:/Qwt-6.0.0/include
+    LIBS += -LC:/Qwt-6.0.0/lib -lqwt
+}
+
+unix {
+    LIBS += -lqwt
+}
+
 FORMS	*= src/usersdialog.ui \
 	src/exercisewidget.ui \
 	src/exercisesdialog.ui \
@@ -74,7 +83,10 @@ HEADERS	*= src/usersdialog.h \
 	src/exercisewidgetdata.h \
 	src/widgets/sessioncontrolwidget.h \
     src/settingsdialog.h \
-    src/settings.h
+    src/settings.h \
+    src/graphicsdialog.h \
+    src/widgets/plots/activityplot.h \
+    src/widgets/plots/weightplot.h
 
 SOURCES	*= src/main.cpp \
 	src/usersdialog.cpp \
@@ -93,4 +105,7 @@ SOURCES	*= src/main.cpp \
 	src/views/icon/SessionIconDelegate.cpp \
 	src/views/icon/SessionIconView.cpp \
 	src/widgets/sessioncontrolwidget.cpp \
-    src/settingsdialog.cpp
+    src/settingsdialog.cpp \
+    src/graphicsdialog.cpp \
+    src/widgets/plots/activityplot.cpp \
+    src/widgets/plots/weightplot.cpp
