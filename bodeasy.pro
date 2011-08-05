@@ -21,7 +21,7 @@ unix:exists( $${UNIX_RAM_DISK} ) {
 }
 
 !win32:CONFIG	-= warn_on warn_off release debug debug_and_release
-CONFIG	*= qt release warn_on
+CONFIG	*= qt debug warn_on
 
 QT	= core gui sql
 
@@ -49,12 +49,12 @@ RESOURCES	*= src/ressources.qrc
 
 win32 {
 	INCLUDEPATH *= C:/Qwt-6.0.0/include
-    LIBS += -LC:/Qwt-6.0.0/lib -lqwt
+	LIBS += -LC:/Qwt-6.0.0/lib -lqwt
 }
 
 unix {
 	INCLUDEPATH	*= /usr/local/qwt-6.0.1/include
-    LIBS += -L/usr/local/qwt-6.0.1/lib -lqwt
+	LIBS += -L/usr/local/qwt-6.0.1/lib -lqwt
 }
 
 FORMS	*= src/usersdialog.ui \
