@@ -59,7 +59,7 @@ static size_t colorIndex = 0;
   * \brief Create the curve according to the values with the \a year title
   * \return the created curve
 */
-static QwtPlotCurve *makeCurve(const QVector<QPointF>& points, const QString &year)
+static QwtPlotCurve *makeCurve(const QVector<QPointF> &points, const QString &year)
 {
     QwtPlotCurve *curve = new QwtPlotCurve(year);
     curve->setData(new QwtPointSeriesData(points));
@@ -145,7 +145,7 @@ void ActivityPlot::retrieveDatas()
             vector[month -1].setY(count);
         }
         
-        foreach (const int& year, values.keys())
+        foreach (const int &year, values.keys())
         {
             QwtPlotCurve *curve = makeCurve(values.value(year), QString::number(year));
             curve->attach(this);
