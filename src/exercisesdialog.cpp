@@ -2,6 +2,7 @@
 #include "ui_exercisesdialog.h"
 #include "sql/models/exercisesmodel.h"
 #include "sql/models/musclegroupsmodel.h"
+#include "utils/modeltest/modeltest.h"
 
 #include <QWidget>
 #include <QDialog>
@@ -17,6 +18,9 @@ ExercisesDialog::ExercisesDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->verticalLayout_3->setAlignment(Qt::AlignCenter);
+
+    new ModelTest(exercisesModel, this);
+    new ModelTest(groupsModel, this);
     
     ui->lstExercises->setModel( exercisesModel );
     

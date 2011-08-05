@@ -3,6 +3,8 @@
 #include <QStyleFactory>
 #include <QSettings>
 
+#include <QErrorMessage>
+
 #include "settings.h"
 
 #include "sql/SqlHelper.h"
