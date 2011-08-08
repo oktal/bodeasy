@@ -6,9 +6,9 @@
 
 
 GraphicsDialog::GraphicsDialog(QWidget *parent) :
-    QDialog(parent),
-    mPlot(new ActivityPlot)
+    QDialog(parent)
 {
+    mPlot = new ActivityPlot(this);
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(mPlot);
     setLayout(layout);

@@ -48,8 +48,8 @@ include( src/utils/modeltest/modeltest.pri )
 RESOURCES	*= src/ressources.qrc
 
 win32 {
-	INCLUDEPATH *= C:/Qwt-6.0.0/include
-	LIBS += -LC:/Qwt-6.0.0/lib -lqwt
+    INCLUDEPATH *= C:/Qwt-6.0.1/include
+    LIBS += -LC:/Qwt-6.0.1/lib -lqwt
 }
 
 unix {

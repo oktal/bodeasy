@@ -1,5 +1,5 @@
 #include "sessionexercisesmodel.h"
-#include "../SqlHelper.h"
+#include "sql/SqlHelper.h"
 
 #include <QDebug>
 #include <QList>

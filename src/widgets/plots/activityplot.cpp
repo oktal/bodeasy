@@ -88,7 +88,7 @@ static QwtPlotCurve *makeCurve(const QVector<QPointF> &points, const QString &ye
 ActivityPlot::ActivityPlot(QWidget *parent) :
     QwtPlot(parent)
 {
-    setTitle(QwtText(trUtf8("Activité annuelle")));
+        setTitle(QwtText(trUtf8("Activité annuelle")));
     setAxisScale(QwtPlot::xBottom, 0.0, 11.0, 1.0);
     setAxisTitle(QwtPlot::yLeft, QwtText(trUtf8("Séances effectuées")));
     setAxisScaleDraw(QwtPlot::xBottom, new MonthScaleDraw);

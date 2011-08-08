@@ -1,5 +1,5 @@
 #include "sessionsmodel.h"
-#include "../managers/sessionsmanager.h"
+#include "sql/managers/sessionsmanager.h"
 
 #include <QAbstractTableModel>
 #include <QStringList>

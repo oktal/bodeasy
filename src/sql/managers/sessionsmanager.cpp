@@ -1,6 +1,6 @@
 #include "sessionsmanager.h"
-#include "../session.h"
-#include "../SqlHelper.h"
+#include "sql/session.h"
+#include "sql/SqlHelper.h"
 
 #include <QSqlQuery>
 #include <QVariant>

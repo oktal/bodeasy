@@ -1,5 +1,5 @@
 #include "sessioncontentmodel.h"
-#include "../SqlHelper.h"
+#include "sql/SqlHelper.h"
 
 #include <QDebug>
 #include <QSqlError>

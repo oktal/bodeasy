@@ -1,5 +1,5 @@
 #include "usersmodel.h"
-#include "../managers/usersmanager.h"
+#include "sql/managers/usersmanager.h"
 
 #include <QAbstractListModel>
 #include <QDebug>
