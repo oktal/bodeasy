@@ -1,6 +1,6 @@
 #include "exercisesmanager.h"
-#include "../exercise.h"
-#include "../SqlHelper.h"
+#include "sql/exercise.h"
+#include "sql/SqlHelper.h"
 
 #include <QtCore>
 #include <QtSql>

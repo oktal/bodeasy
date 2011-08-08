@@ -1,6 +1,6 @@
 #include "usersmanager.h"
-#include "../SqlHelper.h"
-#include "../user.h"
+#include "sql/SqlHelper.h"
+#include "sql/user.h"
 
 #include <QVariant>
 

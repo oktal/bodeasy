@@ -250,6 +250,7 @@ void ExerciseWidget::changeEvent(QEvent *event)
 
             if (serieNumber >= mData.series)
             {
+
                 addRow();
                 const QString labelName = QString("lblTitle_%1").arg(serieNumber);
                 QLabel *lblSerie = ui->scrollAreaWidgetContents->findChild<QLabel *>(labelName);

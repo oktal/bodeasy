@@ -1,5 +1,5 @@
 #include "exercisesmodel.h"
-#include "../managers/exercisesmanager.h"
+#include "sql/managers/exercisesmanager.h"
 
 #include <QDebug>
 

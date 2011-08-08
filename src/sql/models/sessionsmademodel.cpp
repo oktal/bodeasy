@@ -1,5 +1,5 @@
 #include "sessionsmademodel.h"
-#include "../SqlHelper.h"
+#include "sql/SqlHelper.h"
 
 #include <QSqlRecord>
 #include <QDate>

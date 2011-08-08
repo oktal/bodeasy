@@ -1,5 +1,5 @@
 #include "musclegroupsmodel.h"
-#include "../managers/musclegroupsmanager.h"
+#include "sql/managers/musclegroupsmanager.h"
 
 #include <QAbstractListModel>
 #include <QSqlQuery>
