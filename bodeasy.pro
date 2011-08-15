@@ -47,14 +47,36 @@ include( src/utils/modeltest/modeltest.pri )
 
 RESOURCES	*= src/ressources.qrc
 
+QWT_DIR=
 win32 {
-    INCLUDEPATH *= C:/Qwt-6.0.1/include
-    LIBS += -LC:/Qwt-6.0.1/lib -lqwt
+    QWT_DIR = $$system( "findqwt.bat \"$$[QT_INSTALL_DIR]\"" )
 }
 
 unix {
-	INCLUDEPATH	*= /usr/local/qwt-6.0.1/include
-	LIBS += -L/usr/local/qwt-6.0.1/lib -lqwt
+}
+
+!isEmpty( QWT_DIR ) {
+
+#    INCLUDEPATH *= $$QWT_DIR/include
+#    LIBS *= -L$$QWT_DIR/lib -lqwt
+
+    include( $$QWT_DIR/features/qwt.prf )
+
+    CONFIG *= qwt
+
+    HEADERS *= src/graphicsdialog.h \
+    src/widgets/plots/activityplot.h \
+    src/widgets/plots/weightplot.h
+
+    SOURCES *= src/graphicsdialog.cpp \
+    src/widgets/plots/activityplot.cpp \
+    src/widgets/plots/weightplot.cpp
+
+    DEFINES *= BODEASY_QWT
+
+    message( "Found qwt at: $$QWT_DIR" )
+} else {
+    message( "Didn't find qwt" )
 }
 
 FORMS	*= src/usersdialog.ui \
@@ -85,10 +107,7 @@ HEADERS	*= src/usersdialog.h \
 	src/exercisewidgetdata.h \
 	src/widgets/sessioncontrolwidget.h \
 	src/settingsdialog.h \
-	src/settings.h \
-	src/graphicsdialog.h \
-	src/widgets/plots/activityplot.h \
-	src/widgets/plots/weightplot.h
+    src/settings.h
 
 SOURCES	*= src/main.cpp \
 	src/usersdialog.cpp \
@@ -107,7 +126,4 @@ SOURCES	*= src/main.cpp \
 	src/views/icon/SessionIconDelegate.cpp \
 	src/views/icon/SessionIconView.cpp \
 	src/widgets/sessioncontrolwidget.cpp \
-	src/settingsdialog.cpp \
-	src/graphicsdialog.cpp \
-	src/widgets/plots/activityplot.cpp \
-	src/widgets/plots/weightplot.cpp
+    src/settingsdialog.cpp
