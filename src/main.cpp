@@ -25,9 +25,6 @@ int main( int argc, char* argv[] )
         return EXIT_SQL_OPEN_ERROR;
     }
 
-    GraphicsDialog graphics;
-    graphics.show();
-
 
     QSettings settings( app.organizationName(), app.applicationName() );
     const QString styleName = settings.value( SETTING_VIEW_STYLE, QString() ).toString();

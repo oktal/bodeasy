@@ -40,6 +40,11 @@ MainWindow::MainWindow(QWidget *parent) :
     dateTimeLabel(new QLabel(this))
 {
     ui->setupUi(this);
+
+#ifndef BODEASY_QWT
+    ui->toolBar->removeAction(ui->graphAction);
+#endif
+
     setCentralWidget(sessionProxy);
     sessionProxy->setEnabled(false);
     
