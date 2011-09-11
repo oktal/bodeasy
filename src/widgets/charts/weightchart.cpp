@@ -14,6 +14,7 @@
 #include <KDChart/KDChartMarkerAttributes>
 #include <KDChart/KDChartCartesianCoordinatePlane>
 #include <KDChart/KDChartGridAttributes>
+#include <KDChart/KDChartLegend>
 
 using namespace KDChart;
 
@@ -39,15 +40,17 @@ WeightChart::WeightChart(QWidget *parent) :
 
     addLegend(Position::East);
 
-
-    DataValueAttributes dva(lineDiagram()->dataValueAttributes(0));
-    MarkerAttributes markers(dva.markerAttributes());
-    markers.setMarkerStyle(MarkerAttributes::MarkerDiamond);
-    markers.setMarkerSize(QSizeF(7, 7));
-    markers.setVisible(true);
-    dva.setMarkerAttributes(markers);
-    dva.setVisible(true);
-    lineDiagram()->setDataValueAttributes(0, dva);
+    if (lineDiagram()->model()->columnCount() > 0)
+    {
+        DataValueAttributes dva(lineDiagram()->dataValueAttributes(0));
+        MarkerAttributes markers(dva.markerAttributes());
+        markers.setMarkerStyle(MarkerAttributes::MarkerDiamond);
+        markers.setMarkerSize(QSizeF(7, 7));
+        markers.setVisible(true);
+        dva.setMarkerAttributes(markers);
+        dva.setVisible(true);
+        lineDiagram()->setDataValueAttributes(0, dva);
+    }
 
     setGlobalLeading( 20, 20, 20, 20 );
 
@@ -104,7 +107,10 @@ void WeightChart::retrieveDatas()
             values << weight;
         }
 
-        setDataset(0, values, tr("Masse (Kg)"));
+        if (!values.isEmpty())
+        {
+            setDataset(0, values, tr("Masse (Kg)"));
+        }
         xAxis->setLabels(axisLabels);
         xAxis->setShortLabels(shortAxisLabels);
 

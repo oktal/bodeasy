@@ -17,7 +17,7 @@ void LegendModel::setLegend(KDChart::Legend *legend)
     mLegend = legend;
     /* By default, all items are checked */
     mCheckedDatasets.clear();
-    for (int i = 0; i < mLegend->datasetCount(); ++i)
+    for (uint i = 0; i < mLegend->datasetCount(); ++i)
     {
         mCheckedDatasets.append(i);
     }
@@ -28,6 +28,12 @@ Qt::ItemFlags LegendModel::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags flags = QAbstractListModel::flags(index);
     flags |= Qt::ItemIsUserCheckable;
+    const QAbstractItemModel *diagramModel = mLegend->diagram()->model();
+    /* We disable if there is no data associated to the legend */
+    if (!diagramModel->data(diagramModel->index(0, index.row())).isValid())
+    {
+        flags ^= Qt::ItemIsEnabled;
+    }
     return flags;
 }
 

@@ -25,6 +25,11 @@ private slots:
     void onActivityModelChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
     void onMensuratonsModelChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
+    void on_activityButtonGroup_buttonClicked(int id);
+
+
+    void on_chk3D_clicked(bool checked);
+
 private:
     Ui::GraphicsDialog *ui;
     LegendModel *mActivityModel;

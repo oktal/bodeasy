@@ -5,22 +5,35 @@
 #include <KDChart/KDChartGridAttributes>
 #include <KDChart/KDChartCartesianCoordinatePlane>
 #include <KDChart/KDChartLineDiagram>
+#include <KDChart/KDChartLegend>
+
+#include <QAbstractItemModel>
 
 #include <QSqlError>
 
 #include "sql/SqlHelper.h"
 
+
 using namespace KDChart;
 
-static const QColor curvesColor[] =
-{
-    QColor(237, 28, 38, 180),
-    QColor(128, 128, 255, 180),
-    QColor(157, 79, 0, 180),
-    QColor(132, 0, 132, 180),
-    QColor(128, 128, 64, 180),
-    QColor(128, 0, 0, 180)
+
+/* colors for different curves */
+static const QColor colors[] = {
+    QColor(65, 111, 166),
+    QColor(168, 66, 63),
+    QColor(134, 164, 74),
+    QColor(110, 84, 141),
+    QColor(61, 150, 174),
+    QColor(218, 129, 55),
+    QColor(142, 165, 203),
+    QColor(206, 142, 141),
+    QColor(181, 202, 146),
+    QColor(165, 151, 185)
 };
+
+const size_t colorsCount = sizeof colors / sizeof *colors;
+
+static size_t colorIndex = 0;
 
 MensurationsChart::MensurationsChart(QWidget *parent) :
     Widget(parent)
@@ -58,6 +71,24 @@ MensurationsChart::MensurationsChart(QWidget *parent) :
     attributes.setSubGridVisible( true );
     plane->setGridAttributes(Qt::Vertical, attributes);
 
+    colorIndex = 0;
+
+    const QAbstractItemModel *model = lineDiagram()->model();
+    for (int i = 0; i < 10; ++i)
+    {
+        if (model->data(model->index(0, i)).isValid())
+        {
+            DataValueAttributes dva(lineDiagram()->dataValueAttributes(i));
+            MarkerAttributes markers(dva.markerAttributes());
+            markers.setMarkerStyle(MarkerAttributes::MarkerDiamond);
+            markers.setMarkerSize(QSizeF(7, 7));
+            markers.setVisible(true);
+            dva.setMarkerAttributes(markers);
+            dva.setVisible(true);
+            lineDiagram()->setDataValueAttributes(i, dva);
+        }
+    }
+
 }
 
 void MensurationsChart::retrieveDatas()
@@ -71,7 +102,6 @@ void MensurationsChart::retrieveDatas()
     query.bindValue(":endDate", mEndDate);
     if (query.exec())
     {
-        size_t colorIndex = 0;
         QVector<double> neckValues;
         QVector<double> shoulderValues;
         QVector<double> chestValues;
