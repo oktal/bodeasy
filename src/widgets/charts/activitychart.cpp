@@ -8,6 +8,7 @@
 #include <KDChart/KDChartBackgroundAttributes>
 #include <KDChart/KDChartGridAttributes>
 #include <KDChart/KDChartCartesianCoordinatePlane>
+#include <KDChart/KDChartThreeDLineAttributes>
 #include <QPen>
 #include <QColor>
 #include <QVector>
@@ -25,17 +26,20 @@
 using namespace KDChart;
 
 /* colors for different curves */
-static const QColor curvesColor[] =
-{
-    QColor(237, 28, 38, 180),
-    QColor(128, 128, 255, 180),
-    QColor(157, 79, 0, 180),
-    QColor(132, 0, 132, 180),
-    QColor(128, 128, 64, 180),
-    QColor(128, 0, 0, 180)
+static const QColor colors[] = {
+    QColor(65, 111, 166),
+    QColor(168, 66, 63),
+    QColor(134, 164, 74),
+    QColor(110, 84, 141),
+    QColor(61, 150, 174),
+    QColor(218, 129, 55),
+    QColor(142, 165, 203),
+    QColor(206, 142, 141),
+    QColor(181, 202, 146),
+    QColor(165, 151, 185)
 };
 
-const size_t colorsCount = sizeof curvesColor / sizeof *curvesColor;
+const size_t colorsCount = sizeof colors / sizeof *colors;
 
 static size_t colorIndex = 0;
 
@@ -91,6 +95,8 @@ ActivityChart::ActivityChart(QWidget *parent) :
     attributes.setSubGridVisible( true );
     plane->setGridAttributes(Qt::Vertical, attributes);
 
+    resetColors();
+
 }
 
 void ActivityChart::retrieveDatas()
@@ -100,13 +106,13 @@ void ActivityChart::retrieveDatas()
     int curveNumber = 0;
     if (query.exec(sql))
     {
-        QMap<int, QVector<double> > values; // year, count
+        mValues.clear();
         while (query.next())
         {
             const int year = query.value(0).toInt();
             const int month = query.value(1).toInt();
             const int count = query.value(2).toInt();
-            QVector<double>& vector = values[year];
+            QVector<double>& vector = mValues[year];
             if ( vector.isEmpty() )
             {
                 vector.resize(12);
@@ -116,38 +122,64 @@ void ActivityChart::retrieveDatas()
             vector[month - 1] = count;
         }
 
-        if (values.isEmpty())
+        if (mValues.isEmpty())
         {
             const int year = QDate::currentDate().year();
             const QVector<double> emptyVector(12, 0.0);
-            values[year] = emptyVector;
+            mValues[year] = emptyVector;
+        }
+
+        foreach (int year, mValues.keys())
+        {
+            setDataset(curveNumber++, mValues[year], QString::number(year));
         }
         
-        foreach (int year, values.keys())
+    }
+}
+
+void ActivityChart::resetColors()
+{
+    colorIndex = 0;
+
+    for (int i = 0; i < mValues.size(); ++i)
+    {
+        const QColor color = colors[colorIndex++];
+        diagram()->setBrush(i, color);
+
+        QPen pen(diagram()->pen(i));
+        if (type() == Widget::Bar)
         {
-            setDataset(curveNumber, values[year], QString::number(year));
-            QPen pen(lineDiagram()->pen());
-            const QColor color = curvesColor[colorIndex++];
-            pen.setWidth(2);
-            pen.setColor(color);
-            lineDiagram()->setPen(curveNumber, pen);
-            lineDiagram()->setBrush(curveNumber, color);
-
-            DataValueAttributes dva(lineDiagram()->dataValueAttributes(curveNumber));
-            MarkerAttributes markers(dva.markerAttributes());
-            markers.setMarkerStyle(MarkerAttributes::MarkerDiamond);
-            markers.setMarkerSize(QSizeF(7, 7));
-            markers.setVisible(true);
-            dva.setMarkerAttributes(markers);
-            dva.setVisible(true);
-            lineDiagram()->setDataValueAttributes(curveNumber, dva);
-            ++curveNumber;
-
-
-            if (colorIndex == colorsCount)
+            pen.setWidthF(1);
+            pen.setColor(Qt::black);
+        }
+        else if (type() == Widget::Line)
+        {
+            ThreeDLineAttributes tda(lineDiagram()->threeDLineAttributes());
+            pen.setWidthF(tda.isEnabled() ? 0.5 : 2.0);
+            pen.setColor(tda.isEnabled() ? Qt::black : color);
+            if (tda.isEnabled())
             {
-                colorIndex = 0;
+                QColor c(color);
+                c.setAlpha(200);
+                diagram()->setBrush(i, QBrush(c));
             }
+        }
+
+        diagram()->setPen(i, pen);
+
+        DataValueAttributes dva(diagram()->dataValueAttributes(i));
+        MarkerAttributes markers(dva.markerAttributes());
+        markers.setMarkerStyle(MarkerAttributes::MarkerDiamond);
+        markers.setMarkerSize(QSizeF(7, 7));
+        markers.setVisible(true);
+        dva.setMarkerAttributes(markers);
+        dva.setVisible(true);
+        diagram()->setDataValueAttributes(i, dva);
+
+
+        if (colorIndex == colorsCount)
+        {
+            colorIndex = 0;
         }
     }
 }
