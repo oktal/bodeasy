@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-class ActivityPlot;
+class ActivityChart;
 
 class GraphicsDialog : public QDialog
 {
@@ -12,7 +12,7 @@ public:
     explicit GraphicsDialog(QWidget *parent = 0);
 
 private:
-    ActivityPlot *mPlot;
+    ActivityChart *mPlot;
 
 };
 
