@@ -9,6 +9,7 @@
 #include "exercisesdialog.h"
 #include "sessionsdialog.h"
 #include "mensurationsdialog.h"
+#include "graphicsdialog.h"
 #include "settingsdialog.h"
 #include "settings.h"
 #include "sql/SqlHelper.h"
@@ -41,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-#ifndef BODEASY_QWT
+#ifndef HAVE_KDCHART
     ui->toolBar->removeAction(ui->graphAction);
 #endif
 
@@ -393,4 +394,10 @@ void MainWindow::reloadSettings()
     mStartChrono = settings.value(SETTING_START_CHRONO, true).toBool();
     mResetChrono = settings.value(SETTING_RESET_CHRONO, true).toBool();
     mStopChrono = settings.value(SETTING_STOP_CHRONO, true).toBool();
+}
+
+void MainWindow::on_graphAction_triggered()
+{
+    GraphicsDialog dialog;
+    dialog.exec();
 }

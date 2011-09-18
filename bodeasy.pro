@@ -47,36 +47,28 @@ include( src/utils/modeltest/modeltest.pri )
 
 RESOURCES	*= src/ressources.qrc
 
-QWT_DIR=
+KDCHART_DIR=
 win32 {
-    QWT_DIR = $$system( "findqwt.bat \"$$[QT_INSTALL_DIR]\"" )
+    KDCHART_DIR=C:/KDAB/KDChart-2.4.2
 }
 
-unix {
-}
+!isEmpty( KDCHART_DIR ) {
 
-!isEmpty( QWT_DIR ) {
-
-#    INCLUDEPATH *= $$QWT_DIR/include
-#    LIBS *= -L$$QWT_DIR/lib -lqwt
-
-    include( $$QWT_DIR/features/qwt.prf )
-
-    CONFIG *= qwt
+    DEFINES += KDCHART_STATICLIB HAVE_KDCHART
+    INCLUDEPATH *= $${KDCHART_DIR}/include
+    LIBS *= -L$${KDCHART_DIR}/lib -lkdchartd -ltesttools
 
     HEADERS *= src/graphicsdialog.h \
-    src/widgets/plots/activityplot.h \
-    src/widgets/plots/weightplot.h
+    src/widgets/charts/activitychart.h \
+#    src/widgets/charts/weightplot.h
 
     SOURCES *= src/graphicsdialog.cpp \
-    src/widgets/plots/activityplot.cpp \
-    src/widgets/plots/weightplot.cpp
+    src/widgets/charts/activitychart.cpp
+#    src/widgets/charts/weightplot.cpp
 
-    DEFINES *= BODEASY_QWT
-
-    message( "Found qwt at: $$QWT_DIR" )
+    message( "Using KDChart at: $$KDCHART_DIR" )
 } else {
-    message( "Didn't find qwt" )
+    message( "KDChart path wasn't defined, graphics won't be enabled" )
 }
 
 FORMS	*= src/usersdialog.ui \
@@ -107,7 +99,7 @@ HEADERS	*= src/usersdialog.h \
 	src/exercisewidgetdata.h \
 	src/widgets/sessioncontrolwidget.h \
 	src/settingsdialog.h \
-    src/settings.h
+        src/settings.h \
 
 SOURCES	*= src/main.cpp \
 	src/usersdialog.cpp \
@@ -126,4 +118,4 @@ SOURCES	*= src/main.cpp \
 	src/views/icon/SessionIconDelegate.cpp \
 	src/views/icon/SessionIconView.cpp \
 	src/widgets/sessioncontrolwidget.cpp \
-    src/settingsdialog.cpp
+        src/settingsdialog.cpp \

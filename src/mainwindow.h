@@ -48,6 +48,8 @@ private slots:
     void onTimerTimeout();
     void checkFirstLaunch();
 
+    void on_graphAction_triggered();
+
 private:
     void selectInformations();
     void readSettings();
