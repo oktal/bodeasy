@@ -22,11 +22,13 @@ public:
     ~GraphicsDialog();
 
 private slots:
-    void onModelChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void onActivityModelChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void onMensuratonsModelChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
 private:
     Ui::GraphicsDialog *ui;
-    LegendModel *mModel;
+    LegendModel *mActivityModel;
+    LegendModel *mMensurationsModel;
 
 };
 

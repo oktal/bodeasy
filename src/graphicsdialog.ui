@@ -25,7 +25,7 @@
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout" stretch="20,80">
        <item>
-        <widget class="QTreeView" name="legendTree"/>
+        <widget class="QTreeView" name="legendActivityTree"/>
        </item>
        <item>
         <widget class="ActivityChart" name="activityChart" native="true"/>
@@ -112,6 +112,19 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="mensurationsTab">
+      <attribute name="title">
+       <string>Mensurations</string>
+      </attribute>
+      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="20,80">
+       <item>
+        <widget class="QTreeView" name="legendMensurationsTree"/>
+       </item>
+       <item>
+        <widget class="MensurationsChart" name="mensurationsChart" native="true"/>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
    <item>
@@ -137,6 +150,12 @@
    <class>WeightChart</class>
    <extends>QWidget</extends>
    <header>widgets/charts/weightchart.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MensurationsChart</class>
+   <extends>QWidget</extends>
+   <header>widgets/charts/mensurationschart.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
