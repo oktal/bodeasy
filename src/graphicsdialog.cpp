@@ -17,15 +17,22 @@
 GraphicsDialog::GraphicsDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::GraphicsDialog),
-    mModel(new LegendModel(this))
+    mActivityModel(new LegendModel(this)),
+    mMensurationsModel(new LegendModel(this))
 {
     ui->setupUi(this);
 
-    mModel->setLegend(ui->activityChart->legend());
-    ui->legendTree->setModel(mModel);
+    mActivityModel->setLegend(ui->activityChart->legend());
+    ui->legendActivityTree->setModel(mActivityModel);
 
-    connect(mModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this,
-            SLOT(onModelChanged(QModelIndex,QModelIndex)));
+    mMensurationsModel->setLegend(ui->mensurationsChart->legend());
+    ui->legendMensurationsTree->setModel(mMensurationsModel);
+
+    connect(mActivityModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this,
+            SLOT(onActivityModelChanged(QModelIndex,QModelIndex)));
+
+    connect(mMensurationsModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this,
+            SLOT(onMensuratonsModelChanged(QModelIndex,QModelIndex)));
 }
 
 GraphicsDialog::~GraphicsDialog()
@@ -33,7 +40,7 @@ GraphicsDialog::~GraphicsDialog()
     delete ui;
 }
 
-void GraphicsDialog::onModelChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+void GraphicsDialog::onActivityModelChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
 {
     Q_ASSERT(topLeft == bottomRight);
 
@@ -41,5 +48,15 @@ void GraphicsDialog::onModelChanged(const QModelIndex &topLeft, const QModelInde
 
     const Qt::CheckState checkState = static_cast<Qt::CheckState>(checkValue);
     ui->activityChart->diagram()->setHidden(topLeft.row(), checkState == Qt::Unchecked);
+}
+
+void GraphicsDialog::onMensuratonsModelChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+{
+    Q_ASSERT(topLeft == bottomRight);
+
+    const int checkValue = topLeft.data(Qt::CheckStateRole).toInt();
+
+    const Qt::CheckState checkState = static_cast<Qt::CheckState>(checkValue);
+    ui->mensurationsChart->diagram()->setHidden(topLeft.row(), checkState == Qt::Unchecked);
 }
 
