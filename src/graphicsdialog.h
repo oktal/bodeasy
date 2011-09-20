@@ -4,6 +4,7 @@
 #include <QDialog>
 
 class ActivityChart;
+class WeightChart;
 class QTreeView;
 class QModelIndex;
 class LegendModel;
@@ -20,7 +21,7 @@ private slots:
 private:
     LegendModel *mModel;
     QTreeView *mTree;
-    ActivityChart *mPlot;
+    WeightChart *mPlot;
 
 };
 
