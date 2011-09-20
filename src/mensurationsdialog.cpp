@@ -396,7 +396,7 @@ void MensurationsDialog::onBtnAddClicked()
         model->insertRow(model->rowCount());
         mapper->toLast();
         model->setData(model->index(mapper->currentIndex(), model->fieldIndex("date")),
-                       QDate::currentDate());
+                       QDateTime::currentDateTime());
         model->setData(model->index(mapper->currentIndex(), model->fieldIndex("id_user")),
                        mUserId);
         cmbDates->setCurrentIndex(model->rowCount() - 1);
