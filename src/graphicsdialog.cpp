@@ -3,6 +3,8 @@
 #include "widgets/charts/weightchart.h"
 #include "legendmodel.h"
 
+#include "ui_graphicsdialog.h"
+
 #include <QDate>
 #include <QHBoxLayout>
 #include <QTreeView>
@@ -14,22 +16,21 @@
 
 GraphicsDialog::GraphicsDialog(QWidget *parent) :
     QDialog(parent),
+    ui(new Ui::GraphicsDialog),
     mModel(new LegendModel(this))
 {
-    mPlot = new WeightChart;
-    mTree = new QTreeView;
-    QHBoxLayout *layout = new QHBoxLayout;
-    layout->addWidget(mTree);
-    layout->addWidget(mPlot);
-    setLayout(layout);
+    ui->setupUi(this);
 
-    mModel->setLegend(mPlot->legend());
-    mTree->setModel(mModel);
-    mTree->setMinimumWidth(150);
+    mModel->setLegend(ui->activityChart->legend());
+    ui->legendTree->setModel(mModel);
 
     connect(mModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this,
             SLOT(onModelChanged(QModelIndex,QModelIndex)));
+}
 
+GraphicsDialog::~GraphicsDialog()
+{
+    delete ui;
 }
 
 void GraphicsDialog::onModelChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
@@ -39,6 +40,6 @@ void GraphicsDialog::onModelChanged(const QModelIndex &topLeft, const QModelInde
     const int checkValue = topLeft.data(Qt::CheckStateRole).toInt();
 
     const Qt::CheckState checkState = static_cast<Qt::CheckState>(checkValue);
-    mPlot->diagram()->setHidden(topLeft.row(), checkState == Qt::Unchecked);
+    ui->activityChart->diagram()->setHidden(topLeft.row(), checkState == Qt::Unchecked);
 }
 

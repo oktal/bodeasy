@@ -9,19 +9,24 @@ class QTreeView;
 class QModelIndex;
 class LegendModel;
 
+namespace Ui
+{
+class GraphicsDialog;
+}
+
 class GraphicsDialog : public QDialog
 {
     Q_OBJECT
 public:
     explicit GraphicsDialog(QWidget *parent = 0);
+    ~GraphicsDialog();
 
 private slots:
     void onModelChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
 private:
+    Ui::GraphicsDialog *ui;
     LegendModel *mModel;
-    QTreeView *mTree;
-    WeightChart *mPlot;
 
 };
 
