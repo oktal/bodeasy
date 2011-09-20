@@ -42,8 +42,6 @@ static size_t colorIndex = 0;
 ActivityChart::ActivityChart(QWidget *parent) :
     Widget(parent)
 {
-
-
     retrieveDatas();
 
     addLegend(Position::East);
@@ -77,9 +75,9 @@ ActivityChart::ActivityChart(QWidget *parent) :
 
 
     // show data values
-//    DataValueAttributes a(lineDiagram()->dataValueAttributes());
-//    a.setVisible(true);
-//    lineDiagram()->setDataValueAttributes(a);
+    DataValueAttributes a(lineDiagram()->dataValueAttributes());
+    a.setVisible(true);
+    lineDiagram()->setDataValueAttributes(a);
 
 
     setGlobalLeading( 20, 20, 20, 20 );
@@ -88,7 +86,11 @@ ActivityChart::ActivityChart(QWidget *parent) :
             (lineDiagram()->coordinatePlane());
     GridAttributes attributes(plane->gridAttributes(Qt::Vertical));
     attributes.setGridStepWidth(1.0);
+    attributes.setGridSubStepWidth( 0.5 );
+    attributes.setGridVisible(  true );
+    attributes.setSubGridVisible( true );
     plane->setGridAttributes(Qt::Vertical, attributes);
+
 }
 
 void ActivityChart::retrieveDatas()
@@ -133,8 +135,7 @@ void ActivityChart::retrieveDatas()
 
             DataValueAttributes dva(lineDiagram()->dataValueAttributes(curveNumber));
             MarkerAttributes markers(dva.markerAttributes());
-            qDebug() << markers.isVisible();
-            markers.setMarkerStyle(MarkerAttributes::MarkerCross);
+            markers.setMarkerStyle(MarkerAttributes::MarkerDiamond);
             markers.setMarkerSize(QSizeF(7, 7));
             markers.setVisible(true);
             dva.setMarkerAttributes(markers);

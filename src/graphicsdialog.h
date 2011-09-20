@@ -4,6 +4,9 @@
 #include <QDialog>
 
 class ActivityChart;
+class QTreeView;
+class QModelIndex;
+class LegendModel;
 
 class GraphicsDialog : public QDialog
 {
@@ -11,7 +14,12 @@ class GraphicsDialog : public QDialog
 public:
     explicit GraphicsDialog(QWidget *parent = 0);
 
+private slots:
+    void onModelChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+
 private:
+    LegendModel *mModel;
+    QTreeView *mTree;
     ActivityChart *mPlot;
 
 };
