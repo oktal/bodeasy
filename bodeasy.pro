@@ -81,7 +81,8 @@ FORMS	*= src/usersdialog.ui \
 	src/mainwindow.ui \
 	src/sessionframe.ui \
 	src/widgets/sessioncontrolwidget.ui \
-	src/settingsdialog.ui
+	src/settingsdialog.ui \
+    src/graphicsdialog.ui
 
 HEADERS	*= src/usersdialog.h \
 	src/exercisewidget.h \
@@ -121,3 +122,4 @@ SOURCES	*= src/main.cpp \
 	src/views/icon/SessionIconView.cpp \
 	src/widgets/sessioncontrolwidget.cpp \
         src/settingsdialog.cpp \
+
