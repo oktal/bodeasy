@@ -60,11 +60,13 @@ win32 {
 
     HEADERS *= src/graphicsdialog.h \
     src/widgets/charts/activitychart.h \
-#    src/widgets/charts/weightplot.h
+    src/widgets/charts/weightchart.h \
+    src/legendmodel.h
 
     SOURCES *= src/graphicsdialog.cpp \
-    src/widgets/charts/activitychart.cpp
-#    src/widgets/charts/weightplot.cpp
+    src/widgets/charts/activitychart.cpp \
+    src/widgets/charts/weightchart.cpp \
+    src/legendmodel.cpp
 
     message( "Using KDChart at: $$KDCHART_DIR" )
 } else {
@@ -100,7 +102,6 @@ HEADERS	*= src/usersdialog.h \
 	src/widgets/sessioncontrolwidget.h \
 	src/settingsdialog.h \
         src/settings.h \
-    src/legendmodel.h
 
 SOURCES	*= src/main.cpp \
 	src/usersdialog.cpp \
@@ -120,6 +121,3 @@ SOURCES	*= src/main.cpp \
 	src/views/icon/SessionIconView.cpp \
 	src/widgets/sessioncontrolwidget.cpp \
         src/settingsdialog.cpp \
-    src/legendmodel.cpp
-
-

@@ -1,5 +1,6 @@
 #include "graphicsdialog.h"
 #include "widgets/charts/activitychart.h"
+#include "widgets/charts/weightchart.h"
 #include "legendmodel.h"
 
 #include <QDate>
@@ -15,7 +16,7 @@ GraphicsDialog::GraphicsDialog(QWidget *parent) :
     QDialog(parent),
     mModel(new LegendModel(this))
 {
-    mPlot = new ActivityChart;
+    mPlot = new WeightChart;
     mTree = new QTreeView;
     QHBoxLayout *layout = new QHBoxLayout;
     layout->addWidget(mTree);
