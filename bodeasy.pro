@@ -100,6 +100,7 @@ HEADERS	*= src/usersdialog.h \
 	src/widgets/sessioncontrolwidget.h \
 	src/settingsdialog.h \
         src/settings.h \
+    src/legendmodel.h
 
 SOURCES	*= src/main.cpp \
 	src/usersdialog.cpp \
@@ -119,3 +120,6 @@ SOURCES	*= src/main.cpp \
 	src/views/icon/SessionIconView.cpp \
 	src/widgets/sessioncontrolwidget.cpp \
         src/settingsdialog.cpp \
+    src/legendmodel.cpp
+
+
