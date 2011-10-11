@@ -9,7 +9,9 @@
 #include "exercisesdialog.h"
 #include "sessionsdialog.h"
 #include "mensurationsdialog.h"
+#ifdef HAVE_KDCHART
 #include "graphicsdialog.h"
+#endif
 #include "settingsdialog.h"
 #include "settings.h"
 #include "sql/SqlHelper.h"
@@ -43,7 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
 #ifndef HAVE_KDCHART
-    ui->toolBar->removeAction(ui->graphAction);
+    ui->graphAction->setVisible( false );
 #endif
 
     setCentralWidget(sessionProxy);
@@ -396,8 +398,10 @@ void MainWindow::reloadSettings()
     mStopChrono = settings.value(SETTING_STOP_CHRONO, true).toBool();
 }
 
+#ifdef HAVE_KDCHART
 void MainWindow::on_graphAction_triggered()
 {
     GraphicsDialog dialog;
     dialog.exec();
 }
+#endif
