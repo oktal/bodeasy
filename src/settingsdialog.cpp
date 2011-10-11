@@ -118,6 +118,7 @@ void SettingsDialog::writeSettings()
     settings.setValue(SETTING_STOP_CHRONO, ui->chkStopChrono->isChecked());
     settings.setValue(SETTING_AUTO_STARTUP, ui->chkAutoStart->isChecked());
     settings.setValue(SETTING_USER_STARTUP, ui->cmbUsers->currentText());
+    settings.setValue(SETTING_LASTUSERID, ui->cmbUsers->itemData(ui->cmbUsers->currentIndex()));
     settings.setValue(SETTING_LASTUSER_STARTUP, ui->chkSelectLastUser->isChecked());
 
     settings.setValue(SETTING_VIEW_STYLE, ui->cmbStyles->currentText());
@@ -149,6 +150,7 @@ void SettingsDialog::readSettings()
     ui->chkResetChrono->setEnabled(startChrono);
     ui->chkStopChrono->setChecked(stopChrono);
     ui->chkAutoStart->setChecked(autoStartup);
+    ui->cmbUsers->setEnabled(autoStartup);
     ui->cmbUsers->setCurrentIndex(
                 ui->cmbUsers->findText(autoStartupUser));
     ui->chkSelectLastUser->setChecked(lastUserStartup);
