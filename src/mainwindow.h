@@ -47,8 +47,9 @@ private slots:
 
     void onTimerTimeout();
     void checkFirstLaunch();
-
+#ifdef HAVE_KDCHART
     void on_graphAction_triggered();
+#endif
 
 private:
     void selectInformations();
