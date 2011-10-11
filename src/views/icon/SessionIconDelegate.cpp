@@ -78,6 +78,14 @@ QSize SessionIconDelegate::sizeHint( const QStyleOptionViewItem& option, const Q
 	//return index.isValid() ? QSize( 450, 300 ) : QStyledItemDelegate::sizeHint( option, index );
 }
 
+void SessionIconDelegate::clearCachedEditors( QAbstractItemModel* model ) const
+{
+	for ( int i = 0; i < model->rowCount(); i++ ) {
+		const QModelIndex index = model->index( i, 0 );
+		invalidateCachedEditor( index );
+	}
+}
+
 QString SessionIconDelegate::cachedEditorKey( const QModelIndex& index, const QStyleOptionViewItem& option ) const
 {
 	if ( !index.isValid() ) {
