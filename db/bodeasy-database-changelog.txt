@@ -1,0 +1,79 @@
+v.2011.06.26
+	* [CHANGES] [Mathieu Stefani] <mathieu.stefani at supinfo dot com>
+	
+	    added `session_made.comment` column
+
+v.2011.06.07
+	* [CHANGES] [Mathieu Stefani] <mathieu.stefani at supinfo dot com>
+	
+	    added `session_made.objective_achieved` column
+
+v.2011.06.04
+	* [CHANGES] [Mathieu Stefani] <mathieu.stefani at supinfo dot com>
+	   
+	   added `exercise_result.id_session_exercise` foreign key column
+
+v.2011.06.03
+	* [FIX] [Mathieu Stefani] <mathieu.stefani at supinfo dot com>
+	
+	   renamed `exercise_result.id_exercice` to `exercise_result.id_exercise`
+	
+	* [CHANGES] [Mathieu Stefani] <mathieu.stefani at supinfo dot com>
+	   
+	   added `session_made_result` table
+	   added `session_made_result_view` view
+	
+
+v.2011.04.26
+
+    * [FIX] [Mathieu Stefani] <mathieu.stefani at supinfo dot com>
+	        [Romain Beylerian] <beylerian.romain at gmail dot com>
+
+		removed `load` and `duration` columns from `session_exercise` table
+		and added `rest` column
+		
+    * [CHANGES]
+	    
+		added `session.objective` column
+
+v.2011.04.25
+
+    * [FIX] [Mathieu Stefani] <mathieu.stefani at supinfo dot com>
+	
+	    removed UNIQUE constraint on `exercise_muscle_group.id_exercise` 
+		and `exercise_muscle_group.id_muscle_group` columns
+
+v.2011.04.23
+
+    * [FIX] [Mathieu Stefani] <mathieu.stefani at supinfo dot com>
+	
+        renamed `exercise.id_exercice` column `exercise.id_exercise`
+
+v.2011.04.20
+
+    * [CHANGES] [Mathieu Stefani] <mathieu.stefani at supinfo dot com>
+                [Romain Beylerian] <beylerian.romain at gmail dot com>
+			   
+        changed `exercise.load` column name to `weight`
+		changed `exercise.weight`, `exercise.difficulty` columns types to INT
+
+v.2011.03.24
+
+    * [FIX] [Mathieu Stefani] <mathieu.stefani at supinfo dot com>
+            [Romain Beylerian] <beylerian.romain at gmail dot com>
+
+        added a missing column in table exercise_result : serie_number
+		and a not null statement for the load column of exercise 
+		table. load could be 1 or 0 meaning true or false.
+		
+v.2011.03.22
+
+    * [FIX] [Mathieu Stefani] <mathieu.stefani at supinfo dot com>
+            [Romain Beylerian] <beylerian.romain at gmail dot com>
+
+        added three missing columns in table session_exercise : series,
+        repetitions, load and duration.
+
+v.1
+
+    * initial databasebase
