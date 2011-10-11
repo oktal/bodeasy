@@ -25,7 +25,7 @@ public:
 protected:
 	ExerciseWidget* mEditor;
 	
-	QString cachedEditorKey( const QModelIndex& index ) const;
+	QString cachedEditorKey( const QModelIndex& index, const QStyleOptionViewItem& option ) const;
 	QPixmap cachedEditor( const QModelIndex& index, const QStyleOptionViewItem& option ) const;
 	void invalidateCachedEditor( const QModelIndex& index ) const;
 };
