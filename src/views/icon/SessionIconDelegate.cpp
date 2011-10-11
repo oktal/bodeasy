@@ -5,93 +5,17 @@
 
 #include <QPainter>
 #include <QApplication>
+#include <QPixmapCache>
 #include <QDebug>
-#include <QTime>
-
-QStyleOptionFrameV3 makeStyleOptionFrame( const QStyleOptionViewItem& option, int frameStyle, int lineWidth = 1, int midLineWidth = 1, QStyleOptionFrameV3::FrameFeatures features = QStyleOptionFrameV2::None )
-{
-	const int frameShape  = frameStyle & QFrame::Shape_Mask;
-    const int frameShadow = frameStyle & QFrame::Shadow_Mask;
-	QStyleOptionFrameV3 opt;
-	
-	opt.QStyleOption::operator=( option );
-	opt.frameShape = QFrame::Shape( int( opt.frameShape ) | frameShape );
-	opt.features = features;
-	
-	switch ( frameShape ) {
-		case QFrame::Box:
-		case QFrame::HLine:
-		case QFrame::VLine:
-		case QFrame::StyledPanel:
-		case QFrame::Panel:
-			opt.lineWidth = lineWidth;
-			opt.midLineWidth = midLineWidth;
-			break;
-		default:
-			// most frame styles do not handle customized line and midline widths
-			// (see updateFrameWidth()).
-			//opt.lineWidth = d->frameWidth;
-			opt.lineWidth = lineWidth;
-			break;
-	}
-	
-	if ( frameShadow == QFrame::Sunken ) {
-		opt.state |= QStyle::State_Sunken;
-	}
-	else if ( frameShadow == QFrame::Raised ) {
-		opt.state |= QStyle::State_Raised;
-	}
-	
-	return opt;
-}
-
-QStyleOptionGroupBox makeStyleOptionGroupBox( const QStyleOptionViewItem& opt, const QString& title, Qt::Alignment align = Qt::AlignLeft | Qt::AlignVCenter, QStyleOptionFrameV3::FrameFeatures features = QStyleOptionFrameV2::None, QStyle* style = 0, QWidget* widget = 0 )
-{
-	if ( !style ) {
-		style = QApplication::style();
-	}
-	
-    QStyleOptionGroupBox option;
-	option.QStyleOption::operator=( opt );
-	
-    option.text = title;
-    option.lineWidth = 1;
-    option.midLineWidth = 0;
-    option.textAlignment = align;
-    option.activeSubControls = QStyle::SC_None;
-    option.subControls = QStyle::SC_GroupBoxFrame;
-
-    /*if ( d->hover )
-        option.state |= QStyle::State_MouseOver;
-    else*/
-        option.state &= ~QStyle::State_MouseOver;
-	
-	option.features = features;
-
-    /*if ( d->checkable ) {
-        option.subControls |= QStyle::SC_GroupBoxCheckBox;
-        option.state |= (d->checked ? QStyle::State_On : QStyle::State_Off);
-        if ((d->pressedControl == QStyle::SC_GroupBoxCheckBox
-            || d->pressedControl == QStyle::SC_GroupBoxLabel) && (d->hover || d->overCheckBox))
-            option.state |= QStyle::State_Sunken;
-    }*/
-
-    //if ( !option.palette.isBrushSet( isEnabled() ? QPalette::Active : QPalette::Disabled, QPalette::WindowText ) )
-        option.textColor = QColor( style->styleHint( QStyle::SH_GroupBox_TextLabelColor, &option, widget ) );
-
-    if ( !title.isEmpty() )
-        option.subControls |= QStyle::SC_GroupBoxLabel;
-	
-	return option;
-}
 
 SessionIconDelegate::SessionIconDelegate( QObject* parent )
-	: QStyledItemDelegate( parent )
+	: QStyledItemDelegate( parent ), mEditor( new ExerciseWidget )
 {
 }
 
 SessionIconDelegate::~SessionIconDelegate()
 {
+	delete mEditor;
 }
 
 QWidget* SessionIconDelegate::createEditor( QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index ) const
@@ -111,14 +35,11 @@ QWidget* SessionIconDelegate::createEditor( QWidget* parent, const QStyleOptionV
 
 void SessionIconDelegate::paint( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const
 {
-	if ( index.isValid() ) {
-		if ( !( option.state & QStyle::State_Editing ) ) {
-			drawExercise( painter, option, index );
-			return;
-		}
+	if ( !index.isValid() || ( option.state & QStyle::State_Editing ) ) {
+		return;
 	}
 	
-	QStyledItemDelegate::paint( painter, option, index );
+	painter->drawPixmap( option.rect.topLeft(), cachedEditor( index, option ) );
 }
 
 void SessionIconDelegate::setEditorData( QWidget* editor, const QModelIndex& index ) const
@@ -139,7 +60,10 @@ void SessionIconDelegate::setModelData( QWidget* editor, QAbstractItemModel* mod
 	ExerciseWidget* ed = qobject_cast<ExerciseWidget*>( editor );
 	
 	if ( ed ) {
-		model->setData( index, QVariant::fromValue( ed->data() ), Qt::EditRole );
+		if ( model->setData( index, QVariant::fromValue( ed->data() ), Qt::EditRole ) ) {
+			invalidateCachedEditor( index );
+		}
+		
 		return;
 	}
 	
@@ -154,321 +78,38 @@ QSize SessionIconDelegate::sizeHint( const QStyleOptionViewItem& option, const Q
 	//return index.isValid() ? QSize( 450, 300 ) : QStyledItemDelegate::sizeHint( option, index );
 }
 
-QString SessionIconDelegate::exerciseWidgetTr( const QString& string ) const
-{
-	return QApplication::translate( "ExerciseWidget", string.toLatin1().constData() );
-}
-
-QString SessionIconDelegate::typeToString( Exercise::Type type ) const
-{
-	switch ( type ) {
-		case Exercise::Repetition:
-			return exerciseWidgetTr( QString::fromUtf8( "Répétition" ) );
-		case Exercise::Duration:
-			return exerciseWidgetTr( QString::fromUtf8( "Durée" ) );
-    }
-	
-	return QString::null;
-}
-
-QString SessionIconDelegate::difficultyToString( Exercise::Difficulty difficulty ) const
-{
-	switch ( difficulty ) {
-		case Exercise::Easy:
-			return exerciseWidgetTr( QString::fromUtf8( "Facile" ) );
-		case Exercise::Medium:
-			return exerciseWidgetTr( QString::fromUtf8( "Moyen" ) );
-		case Exercise::Hard:
-			return exerciseWidgetTr( QString::fromUtf8( "Difficile" ) );
-    }
-	
-	return QString::null;
-}
-
-void SessionIconDelegate::drawFakeGroupBox( QPainter* painter, const QStyleOptionGroupBox& option, QStyle* style, QWidget* widget ) const
-{
-	if ( !style ) {
-		style = QApplication::style();
-	}
-	
-	style->drawComplexControl( QStyle::CC_GroupBox, &option, painter, widget );
-}
-
-void SessionIconDelegate::drawFakeLabel( QPainter* painter, const QStyleOptionFrameV3& option, const QString& text, Qt::Alignment align, Qt::TextFormat format, QStyle* style, QWidget* widget ) const
-{
-	if ( !style ) {
-		style = QApplication::style();
-	}
-	
-	// fucking hack for background painting ???
-	painter->setPen( Qt::NoPen );
-	painter->setBrush( option.palette.color( QPalette::Window ) );
-	painter->drawRect( option.rect );
-	
-	style->drawControl( QStyle::CE_ShapedFrame, &option, painter, widget );
-	
-	if ( text.isEmpty() ) {
-		return;
-	}
-	
-	const QRect rect = option.rect.adjusted( option.lineWidth, option.lineWidth, -option.lineWidth, -option.lineWidth );
-	QTextOption textOption;
-	
-	textOption.setAlignment( align );
-	textOption.setTabStop( 40 );
-	textOption.setAlignment( align );
-	textOption.setWrapMode( QTextOption::WrapAtWordBoundaryOrAnywhere );
-	
-	mDocument.setDefaultFont( painter->font() );
-	mDocument.setDocumentMargin( 0 );
-	mDocument.setDefaultTextOption( textOption );
-	
-	if ( format == Qt::AutoText ) {
-		format = Qt::PlainText;
-		
-		if ( Qt::mightBeRichText( text ) ) {
-			format = Qt::RichText;
-		}
-	}
-	
-	switch ( format ) {
-		case Qt::AutoText:
-			Q_ASSERT( 0 );
-			break;
-		case Qt::RichText:
-			mDocument.setHtml( text );
-			break;
-		case Qt::PlainText:
-		case Qt::LogText:
-			mDocument.setPlainText( text );
-			break;
-	}
-	
-	if ( mDocument.size().width() > rect.width() ) {
-		mDocument.setTextWidth( rect.width() );
-	}
-	
-	QRect r = QRect( rect.topLeft(), mDocument.size().toSize() );
-	
-	// horizontal
-	if ( align & Qt::AlignLeft ) {
-		// nothing to do
-	}
-	else if ( align & Qt::AlignRight ) {
-		r.moveRight( rect.right() );
-	}
-	else if ( align & Qt::AlignHCenter ) {
-		r.moveCenter( QPoint( rect.center().x(), r.center().y() ) );
-	}
-	else if ( align & Qt::AlignJustify ) {
-		r.moveCenter( QPoint( rect.center().x(), r.center().y() ) );
-	}
-	
-	// vertical
-	if ( align & Qt::AlignTop ) {
-		r.moveTop( rect.top() );
-	}
-	else if ( align & Qt::AlignBottom ) {
-		if ( r.height() <= rect.height() ) {
-			r.moveBottom( rect.bottom() );
-		}
-	}
-	else if ( align & Qt::AlignVCenter ) {
-		if ( r.height() <= rect.height() ) {
-			r.moveCenter( QPoint( r.center().x(), rect.center().y() ) );
-		}
-	}
-	
-	// absolute
-	if ( align & Qt::AlignAbsolute ) {
-		// nothing to do
-	}
-	
-	painter->translate( r.topLeft() );
-	mDocument.drawContents( painter, QRect( QPoint(), QSize( r.size().width(), rect.height() ) ) );
-	painter->translate( -r.topLeft() );
-}
-
-void SessionIconDelegate::drawExercise( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const
+QString SessionIconDelegate::cachedEditorKey( const QModelIndex& index ) const
 {
 	const ExerciseWidgetData data = index.data( SessionIconModel::ExerciseDataRole ).value<ExerciseWidgetData>();
-	const int margin = 5;
-	const int spacing = 5;
-	const int headerHeight = 29;
-	const int descriptionTitleHeight = 19;
-	const int seriesTitleHeight = descriptionTitleHeight;
-	const QRect rect = option.rect.adjusted( margin, margin, -margin, -margin );
-	const int boxWidth = ( ( rect.width() /2 ) -( spacing *2 ) ) /2;
-	const int boxHeight = ( ( rect.height() /2 ) -headerHeight -( spacing *4 ) ) /3;
-	
-	painter->setRenderHint( QPainter::Antialiasing, true );
-	
-	// fill background
-	painter->setPen( Qt::NoPen );
-	painter->setBrush( option.palette.brush( QPalette::Window ) );
-	painter->drawRoundedRect( option.rect, margin, margin );
-	
-	// draw selection / hover
-	if ( option.state & QStyle::State_Enabled && ( option.state & QStyle::State_Selected || option.state & QStyle::State_MouseOver ) ) {
-		const QColor highlight = option.palette.brush( QPalette::Highlight ).color();
-		const QColor lighter = highlight.lighter( 150 );
-		const QColor darker = highlight.darker( 140 );
-		const int radius = 5;
-		QLinearGradient gradient( option.rect.topLeft(), option.rect.bottomLeft() );
-		gradient.setColorAt( 0, lighter );
-		gradient.setColorAt( 1, option.state & QStyle::State_Selected ? highlight : darker );
-		
-		painter->setPen( QPen( darker, 1 ) );
-        painter->setBrush( gradient );
-        painter->drawRoundedRect( option.rect.adjusted( 1, 1, darker != Qt::NoPen ? -1 : 0, darker != Qt::NoPen ? -1 : 0 ), radius, radius );
-	}
-	
-	// header
-	QStyleOptionFrameV3 headerOption = makeStyleOptionFrame( option, QFrame::StyledPanel | QFrame::Sunken );
-	headerOption.rect = QRect( rect.topLeft(), QSize( rect.width(), headerHeight ) );
-	headerOption.palette.setColor( QPalette::Window, QColor( 232, 232, 232 ) );
-	headerOption.palette.setColor( QPalette::Dark, QColor( 117, 117, 117 ) );
-	drawFakeLabel( painter, headerOption, QString( "<b>%1</b>" ).arg( data.name ) );
-	
-	// draw type, difficulty, repetition, rest
-	const QPoint boxOrigin = headerOption.rect.bottomLeft() +QPoint( ( rect.width() /2 ) +spacing, spacing );
-	QStyleOptionFrameV3 boxOption = makeStyleOptionFrame( option, QFrame::NoFrame );
-	boxOption.rect = QRect( rect.topLeft(), QSize( boxWidth, boxHeight ) );
-	boxOption.palette.setColor( QPalette::Window, QColor( 232, 232, 232 ) );
-	boxOption.palette.setColor( QPalette::WindowText, QColor( 0, 0, 0 ) );
-	
-	for ( int x = 0; x < 2; x++ ) {
-		for ( int y = 0; y < 4; y++ ) {
-			const int xx = ( x *spacing ) +( x *boxWidth );
-			const int yy = ( y *spacing ) +( y *boxHeight );
-			bool bold = false;
-			QString text;
-			
-			boxOption.rect.moveTopLeft( boxOrigin +QPoint( xx, yy ) );
-			
-			switch ( y ) {
-				case 0: {
-					if ( x == 0 ) {
-						bold = true;
-						text = exerciseWidgetTr( QString::fromUtf8( "Type" ) );
-					}
-					else {
-						text = typeToString( data.type );
-					}
-					
-					break;
-				}
-				case 1: {
-					if ( x == 0 ) {
-						bold = true;
-						text = exerciseWidgetTr( QString::fromUtf8( "Difficulté" ) );
-					}
-					else {
-						text = difficultyToString( data.difficulty );
-					}
-					
-					break;
-				}
-				case 2: {
-					if ( x == 0 ) {
-						bold = true;
-						text = exerciseWidgetTr( QString::fromUtf8( "Répétitions" ) );
-					}
-					else {
-						text = QString::number( data.repetitions );
-					}
-					
-					break;
-				}
-				case 3: {
-					if ( x == 0 ) {
-						bold = true;
-						text = exerciseWidgetTr( QString::fromUtf8( "Repos" ) );
-					}
-					else {
-						text = exerciseWidgetTr( QString::fromUtf8( "%1 secs." ) ).arg( data.rest );
-					}
-					
-					break;
-				}
-			}
-			
-			if ( bold ) {
-				text = QString( "<b>%1</b>" ).arg( text );
-			}
-			
-			drawFakeLabel( painter, boxOption, text );
-		}
-	}
-	
-	// draw description title
-	QStyleOptionFrameV3 descriptionTitleOption = makeStyleOptionFrame( option, QFrame::NoFrame );
-	descriptionTitleOption.rect = QRect( boxOption.rect.topLeft() +QPoint( -( spacing +boxWidth ), boxHeight +spacing ), QSize( ( rect.width() /2 ) -spacing, descriptionTitleHeight ) );
-	descriptionTitleOption.palette.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ) );
-	drawFakeLabel( painter, descriptionTitleOption, exerciseWidgetTr( QString::fromUtf8( "Description" ) ), Qt::AlignLeft | Qt::AlignVCenter );
-	
-	// draw description
-	QStyleOptionFrameV3 descriptionOption = makeStyleOptionFrame( option, QFrame::StyledPanel | QFrame::Sunken, 1, 0 );
-	descriptionOption.rect = descriptionTitleOption.rect.adjusted( 0, descriptionTitleOption.rect.height() +spacing, 0, ( ( rect.height() -headerHeight -spacing ) /2 ) -spacing -descriptionTitleHeight -spacing -spacing -spacing );
-	descriptionOption.palette.setColor( QPalette::Window, QColor( 255, 255, 255 ) );
-	drawFakeLabel( painter, descriptionOption, data.description, Qt::AlignLeft | Qt::AlignTop );
-	
-	// draw series title
-	const QPoint seriesOrigin = QPoint( headerOption.rect.bottomLeft() +QPoint( 0, spacing ) );
-	const QRect seriesRect = QRect( seriesOrigin, QSize( rect.width() /2, rect.height() -headerHeight -spacing ) );
-	
-	//painter->drawRect( seriesRect );
-	
-	QStyleOptionGroupBox seriesTitleOption = makeStyleOptionGroupBox( option, exerciseWidgetTr( QString::fromUtf8( "Séries" ) ), Qt::AlignLeft | Qt::AlignVCenter, QStyleOptionFrameV2::None );
-	seriesTitleOption.rect = QRect( seriesOrigin, QSize( ( rect.width() /2 ) -spacing, seriesTitleHeight ) );
-	drawFakeGroupBox( painter, seriesTitleOption );
-	
-	//
-	int count = qMax( data.series, data.seriesData.count() );
-	count = qMin( count, ( seriesRect.height() -seriesTitleHeight -spacing -seriesTitleHeight ) /( seriesTitleHeight +spacing ) );
-	const QString resTxt = exerciseWidgetTr( QString::fromUtf8( "Rés." ) );
-	const QString chargeTxt = exerciseWidgetTr( QString::fromUtf8( "Charge" ) );
-	const QString serieTxt = exerciseWidgetTr( QString::fromUtf8( "Série %1" ) ).arg( count );
-	const int serieTxtWidth = painter->fontMetrics().width( serieTxt ) +4;
-	const int resTxtWidth = painter->fontMetrics().width( resTxt );
-	const int chargeTxtWidth = painter->fontMetrics().width( chargeTxt );
-	const int serieLeftBoxWidth = serieTxtWidth;
-	const int serieRightBoxWidth = ( seriesRect.width() -serieLeftBoxWidth -( spacing *6 ) -( margin *10 ) ) /2;
-	
-	for ( int y = 0; y <= count; y++ ) {
-		QPoint topLeft = seriesTitleOption.rect.bottomLeft()
-			+QPoint( margin *5 , 0 )
-			+QPoint( 0, y *( ( spacing *1.5 ) +seriesTitleHeight ) )
-			;
-		
-		QStyleOptionFrameV3 serieBoxOption = makeStyleOptionFrame( option, QFrame::NoFrame, 1, 0 );
-		serieBoxOption.palette.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ) );
-		
-		serieBoxOption.rect = QRect( topLeft, QSize( serieLeftBoxWidth, seriesTitleHeight ) );
-		
-		if ( y > 0 ) {
-			drawFakeLabel( painter, serieBoxOption, exerciseWidgetTr( QString::fromUtf8( "Série %1" ) ).arg( y ), Qt::AlignLeft | Qt::AlignVCenter );
-			
-			serieBoxOption.palette.setColor( QPalette::Window, QColor( 255, 255, 255 ) );
-			serieBoxOption.frameShape = QFrame::StyledPanel;
-			serieBoxOption.state |= QStyle::State_Sunken;
-		}
-		
-		topLeft += QPoint( serieLeftBoxWidth +( spacing *3 ), 0 );
-		serieBoxOption.rect = QRect( topLeft, QSize( serieRightBoxWidth, seriesTitleHeight ) );
-		drawFakeLabel( painter, serieBoxOption, y == 0 ? resTxt : QString::number( data.seriesData.value( y -1 ).first ), Qt::AlignCenter );
-		
-		if ( !data.weight ) {
-			/*serieBoxOption.state ^= QStyle::State_Enabled;
-			serieBoxOption.state &= ~QStyle::State_Enabled;*/
-			serieBoxOption.palette.setColor( QPalette::Window, QColor( 0, 0, 0, 0 ) );
-			/*serieBoxOption.palette.setColor( QPalette::WindowText, Qt::red );
-			serieBoxOption.palette.setColor( QPalette::ButtonText, Qt::red );
-			serieBoxOption.palette.setColor( QPalette::Text, Qt::red );*/
-		}
-		
-		topLeft += QPoint( serieRightBoxWidth +( spacing *3 ), 0 );
-		serieBoxOption.rect = QRect( topLeft, QSize( serieRightBoxWidth, seriesTitleHeight ) );
-		drawFakeLabel( painter, serieBoxOption, y == 0 ? chargeTxt : QString::number( data.seriesData.value( y -1 ).second ), Qt::AlignCenter );
-	}
+	return index.isValid() ? QString( "%1::SessionIconDelegate::Cache" ).arg( data.number ) : QString::null;
 }
+
+QPixmap SessionIconDelegate::cachedEditor( const QModelIndex& index, const QStyleOptionViewItem& option ) const
+{
+	const QString key = cachedEditorKey( index );
+	QPixmap pixmap;
+	
+	if ( !QPixmapCache::find( key, pixmap ) ) {
+		setEditorData( mEditor, index );
+		mEditor->resize( option.rect.size() );
+		mEditor->ensurePolished();
+		
+		pixmap = QPixmap( mEditor->size() );
+		pixmap.fill( QColor( Qt::transparent ) );
+		
+		QPainter painter( &pixmap );
+		mEditor->render( &painter );
+		
+		if ( !QPixmapCache::insert( key, pixmap ) ) {
+			qWarning() << Q_FUNC_INFO << "Can't cache editor" << index.data( Qt::DisplayRole ).toString();
+		}
+	}
+	
+	return pixmap;
+}
+
+void SessionIconDelegate::invalidateCachedEditor( const QModelIndex& index ) const
+{
+	QPixmapCache::remove( cachedEditorKey( index ) );
+}
+
