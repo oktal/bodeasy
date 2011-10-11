@@ -86,6 +86,7 @@ void SessionIconView::setWidgetsData( const ExerciseWidgetDataList& data, const 
 		setEditTriggers( QAbstractItemView::DoubleClicked | QAbstractItemView::SelectedClicked );
 	}
 	
+	mDelegate->clearCachedEditors( mModel );
 	mModel->setWidgetsData( data );
 	
 	mControl->setObjectiveText( objective );
