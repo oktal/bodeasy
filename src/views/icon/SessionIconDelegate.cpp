@@ -25,7 +25,7 @@ QWidget* SessionIconDelegate::createEditor( QWidget* parent, const QStyleOptionV
 		editor->setFocusPolicy( Qt::StrongFocus );
 		editor->setAutoFillBackground( true );
 		QPalette pal = QApplication::palette();
-		pal.setColor( editor->backgroundRole(), pal.color( QPalette::Window ) );
+		pal.setColor( editor->backgroundRole(), pal.color( QPalette::Mid ) );
 		editor->setPalette( pal );
 		return editor;
 	}
@@ -78,19 +78,47 @@ QSize SessionIconDelegate::sizeHint( const QStyleOptionViewItem& option, const Q
 	//return index.isValid() ? QSize( 450, 300 ) : QStyledItemDelegate::sizeHint( option, index );
 }
 
-QString SessionIconDelegate::cachedEditorKey( const QModelIndex& index ) const
+QString SessionIconDelegate::cachedEditorKey( const QModelIndex& index, const QStyleOptionViewItem& option ) const
 {
+	if ( !index.isValid() ) {
+		return QString::null;
+	}
+	
 	const ExerciseWidgetData data = index.data( SessionIconModel::ExerciseDataRole ).value<ExerciseWidgetData>();
-	return index.isValid() ? QString( "%1::SessionIconDelegate::Cache" ).arg( data.number ) : QString::null;
+	QStringList parts;
+	
+	parts << QString::number( data.number );
+	
+	if ( option.state & QStyle::State_Selected ) {
+		parts << "Selected";
+	}
+	else if ( option.state & QStyle::State_MouseOver ) {
+		parts << "Hover";
+	}
+	
+	parts << "SessionIconDelegate";
+	
+	
+	return parts.join( ":" );
 }
 
 QPixmap SessionIconDelegate::cachedEditor( const QModelIndex& index, const QStyleOptionViewItem& option ) const
 {
-	const QString key = cachedEditorKey( index );
+	const QString key = cachedEditorKey( index, option );
 	QPixmap pixmap;
 	
 	if ( !QPixmapCache::find( key, pixmap ) ) {
+		QPalette pal = QApplication::palette();
+		
+		if ( option.state & QStyle::State_Selected ) {
+			pal.setColor( mEditor->backgroundRole(), pal.color( QPalette::Highlight ) );
+		}
+		else if ( option.state & QStyle::State_MouseOver ) {
+			pal.setColor( mEditor->backgroundRole(), pal.color( QPalette::Highlight ).lighter() );
+		}
+		
 		setEditorData( mEditor, index );
+		mEditor->setPalette( pal );
 		mEditor->resize( option.rect.size() );
 		mEditor->ensurePolished();
 		
@@ -110,6 +138,11 @@ QPixmap SessionIconDelegate::cachedEditor( const QModelIndex& index, const QStyl
 
 void SessionIconDelegate::invalidateCachedEditor( const QModelIndex& index ) const
 {
-	QPixmapCache::remove( cachedEditorKey( index ) );
+	QStringList parts = cachedEditorKey( index, QStyleOptionViewItem() ).split( ":" );
+	QPixmapCache::remove( parts.join( ":" ) );
+	parts.insert( 1, "Selected" );
+	QPixmapCache::remove( parts.join( ":" ) );
+	parts.replace( 1, "Hover" );
+	QPixmapCache::remove( parts.join( ":" ) );
 }
 
