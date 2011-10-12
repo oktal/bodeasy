@@ -25,7 +25,7 @@ QWidget* SessionIconDelegate::createEditor( QWidget* parent, const QStyleOptionV
 		ExerciseWidget* editor = new ExerciseWidget( parent );
 		editor->setFocusPolicy( Qt::StrongFocus );
 		editor->setAutoFillBackground( true );
-        QPalette pal = editor->palette();
+        QPalette pal = QApplication::palette();
 		pal.setColor( editor->backgroundRole(), pal.color( QPalette::Window ) );
 		editor->setPalette( pal );
 		return editor;
