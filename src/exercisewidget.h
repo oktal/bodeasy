@@ -1,7 +1,7 @@
 #ifndef EXERCISEWIDGET_H
 #define EXERCISEWIDGET_H
 
-#include <QWidget>
+#include <QFrame>
 #include <QList>
 #include <QPair>
 
@@ -16,7 +16,7 @@ namespace Ui
 class QSpinBox;
 class QGridLayout;
 
-class ExerciseWidget : public QWidget
+class ExerciseWidget : public QFrame
 {
     Q_OBJECT
 public:
