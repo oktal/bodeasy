@@ -11,6 +11,7 @@
 SessionIconDelegate::SessionIconDelegate( QObject* parent )
 	: QStyledItemDelegate( parent ), mEditor( new ExerciseWidget )
 {
+    mEditor->setReadOnly( true );
 }
 
 SessionIconDelegate::~SessionIconDelegate()
@@ -24,8 +25,8 @@ QWidget* SessionIconDelegate::createEditor( QWidget* parent, const QStyleOptionV
 		ExerciseWidget* editor = new ExerciseWidget( parent );
 		editor->setFocusPolicy( Qt::StrongFocus );
 		editor->setAutoFillBackground( true );
-		QPalette pal = QApplication::palette();
-		pal.setColor( editor->backgroundRole(), pal.color( QPalette::Mid ) );
+        QPalette pal = editor->palette();
+		pal.setColor( editor->backgroundRole(), pal.color( QPalette::Window ) );
 		editor->setPalette( pal );
 		return editor;
 	}

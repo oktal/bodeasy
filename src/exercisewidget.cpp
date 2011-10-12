@@ -16,12 +16,17 @@
 #include <limits>
 
 ExerciseWidget::ExerciseWidget(QWidget *parent) :
-    QWidget(parent),
+    QFrame(parent),
     ui(new Ui::ExerciseWidget),
     scrollAreaLayout(0),
     mReadOnly(false)
 {
     ui->setupUi(this);
+    
+    foreach (QWidget* widget, findChildren<QWidget*>())
+    {
+        widget->setAttribute(Qt::WA_MacSmallSize);
+    }
 }
 
 ExerciseWidget::~ExerciseWidget()
@@ -37,7 +42,7 @@ void ExerciseWidget::setReadOnly(bool readOnly)
         pair.second->setReadOnly(readOnly);
     }
 
-    ui->btnAddSerie->setEnabled(!readOnly);
+    ui->wMore->setVisible(!readOnly);
 
     mReadOnly = readOnly;
 }
@@ -56,6 +61,7 @@ void ExerciseWidget::on_btnAddSerie_clicked()
 
 void ExerciseWidget::on_btnDeleteSerie_clicked()
 {
+    // do not use -1 because there is top labels in row 0
     const int rowCount = mPairs.count();
     for (int c = 0; c < scrollAreaLayout->columnCount(); ++c)
     {
@@ -154,6 +160,10 @@ ExerciseWidget::PairSpinBox ExerciseWidget::addRow()
     txtLoad->setMaximum(std::numeric_limits<int>::max());
     txtLoad->setFixedWidth(40);
     txtLoad->setEnabled(mData.weight);
+    
+    lblTitle->setAttribute(Qt::WA_MacSmallSize);
+    txtResult->setAttribute(Qt::WA_MacSmallSize);
+    txtLoad->setAttribute(Qt::WA_MacSmallSize);
 
     mPairs.append(qMakePair(txtResult, txtLoad));
     scrollAreaLayout->addWidget(lblTitle, rowCount, 0);
@@ -184,12 +194,16 @@ void ExerciseWidget::createLayout()
 
     /* Rebuild the layout */
 
-    scrollAreaLayout = new QGridLayout;
+    QLabel *lblRes = new QLabel(trUtf8("Rés."));
+    QLabel *lblCharge = new QLabel(trUtf8("Charge"));
+    scrollAreaLayout = new QGridLayout(ui->scrollAreaWidgetContents);
     scrollAreaLayout->setContentsMargins(QMargins(0, 0, 0, 0));
-    scrollAreaLayout->setSizeConstraint(QLayout::SetFixedSize);
     scrollAreaLayout->setHorizontalSpacing(10);
-    scrollAreaLayout->addWidget(new QLabel(trUtf8("Rés.")), 0, 1);
-    scrollAreaLayout->addWidget(new QLabel(trUtf8("Charge")), 0, 2);
+    scrollAreaLayout->addWidget(lblRes, 0, 1);
+    scrollAreaLayout->addWidget(lblCharge, 0, 2);
+    
+    lblRes->setAttribute(Qt::WA_MacSmallSize);
+    lblCharge->setAttribute(Qt::WA_MacSmallSize);
     
     const int count = qMax(mData.series, mData.seriesData.count());
     
@@ -211,10 +225,7 @@ void ExerciseWidget::createLayout()
                        QString("<img src=\":/images/plus-icon.png\" width=12 height=12 />%1").arg(text));
             }
         }
-
     }
-
-    ui->scrollAreaWidgetContents->setLayout(scrollAreaLayout);
 }
 
 void ExerciseWidget::changeEvent(QEvent *event)
@@ -231,72 +242,3 @@ void ExerciseWidget::changeEvent(QEvent *event)
         //ui->btnDeleteSerie->setEnabled(mPairs.count() > mData.series);
     }
 }
-
-/*void ExerciseWidget::selectResults(qint64 sessionMadeId)
-{
-    QSqlQuery query = SqlHelper::query();
-    query.prepare("SELECT result, load, serie_number FROM session_made_result_view "
-                  "WHERE id_session_made=:sessionMadeId AND id_session_exercise=:sessionExerciseId "
-                  "ORDER BY serie_number");
-    query.bindValue(":sessionMadeId", sessionMadeId);
-    query.bindValue(":sessionExerciseId", mData.sessionExerciseId);
-
-    if (query.exec())
-    {
-        while (query.next())
-        {
-            const int serieNumber = query.value(2).toInt();
-            const int result = query.value(0).toInt();
-
-            if (serieNumber >= mData.series)
-            {
-
-                addRow();
-                const QString labelName = QString("lblTitle_%1").arg(serieNumber);
-                QLabel *lblSerie = ui->scrollAreaWidgetContents->findChild<QLabel *>(labelName);
-                if (lblSerie)
-                {
-                    const QString text = lblSerie->text();
-                    lblSerie->setText(
-                           QString("<img src=\":/images/plus-icon.png\" width=12 height=12 />%1").arg(text));
-                }
-            }
-
-            const QString resultBoxName = QString("txtResult_%1").arg(serieNumber);
-            QSpinBox *resultBox = ui->scrollAreaWidgetContents->findChild<QSpinBox *>(resultBoxName);
-            if (resultBox)
-            {
-                resultBox->setValue(result);
-                resultBox->setReadOnly(true);
-                mData.seriesData[serieNumber].first = result;
-            }
-            else
-            {
-                qWarning() << Q_FUNC_INFO << " Couldn't find SpinBox " << resultBoxName;
-            }
-
-            if (mData.weight)
-            {
-                const int load = query.value(1).toInt();
-                const QString loadBoxName = QString("txtLoad_%1").arg(serieNumber);
-                QSpinBox *loadBox = ui->scrollAreaWidgetContents->findChild<QSpinBox *>(loadBoxName);
-                if (loadBox)
-                {
-                    loadBox->setValue(load);
-                    loadBox->setReadOnly(true);
-                    mData.seriesData[serieNumber].second = load;
-                }
-                else
-                {
-                    qWarning() << Q_FUNC_INFO << " Couldn't find SpinBox " << loadBoxName;
-                }
-            }
-
-        }
-        ui->btnAddSerie->setEnabled(false);
-    }
-    else
-    {
-        qWarning() << Q_FUNC_INFO << " SQL Error: " << query.lastError();
-    }
-}*/
