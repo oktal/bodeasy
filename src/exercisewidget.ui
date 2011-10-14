@@ -20,6 +20,10 @@
 QLabel[gridLabel=&quot;true&quot;] {
 	background-color: rgb(232, 232, 232);
 	border-style: none;
+}
+
+#scrollArea, #scrollAreaWidgetContents {
+	background-color: transparent;
 }</string>
   </property>
   <property name="frameShape">
