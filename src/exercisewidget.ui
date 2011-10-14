@@ -31,6 +31,13 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="styleSheet">
+      <string notr="true">QFrame#headerFrame {
+    border: 1px outset gray;
+    background-color: rgb(232, 232, 232);
+    border-color: rgb(117, 117, 117);
+}</string>
+     </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -121,8 +128,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>164</width>
-           <height>158</height>
+           <width>166</width>
+           <height>161</height>
           </rect>
          </property>
         </widget>
@@ -173,6 +180,10 @@
           <bold>true</bold>
          </font>
         </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(232, 232, 232);
+border-style: none;</string>
+        </property>
         <property name="text">
          <string>Type</string>
         </property>
@@ -194,6 +205,10 @@
           <weight>50</weight>
           <bold>false</bold>
          </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(232, 232, 232);
+border-style: none;</string>
         </property>
         <property name="text">
          <string notr="true">Type</string>
@@ -217,6 +232,10 @@
           <bold>true</bold>
          </font>
         </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(232, 232, 232);
+border-style: none;</string>
+        </property>
         <property name="text">
          <string>Difficulté</string>
         </property>
@@ -238,6 +257,10 @@
           <weight>50</weight>
           <bold>false</bold>
          </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(232, 232, 232);
+border-style: none;</string>
         </property>
         <property name="text">
          <string notr="true">Difficulté</string>
@@ -261,6 +284,10 @@
           <bold>true</bold>
          </font>
         </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(232, 232, 232);
+border-style: none;</string>
+        </property>
         <property name="text">
          <string>Répétitions</string>
         </property>
@@ -282,6 +309,10 @@
           <weight>50</weight>
           <bold>false</bold>
          </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(232, 232, 232);
+border-style: none;</string>
         </property>
         <property name="text">
          <string notr="true">Répétitions</string>
@@ -305,6 +336,10 @@
           <bold>true</bold>
          </font>
         </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(232, 232, 232);
+border-style: none;</string>
+        </property>
         <property name="text">
          <string>Repos</string>
         </property>
@@ -326,6 +361,10 @@
           <weight>50</weight>
           <bold>false</bold>
          </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(232, 232, 232);
+border-style: none;</string>
         </property>
         <property name="text">
          <string notr="true">Repos</string>
