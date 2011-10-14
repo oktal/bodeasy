@@ -10,6 +10,18 @@
     <height>397</height>
    </rect>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QFrame#headerFrame {
+    border: 1px outset gray;
+    background-color: rgb(232, 232, 232);
+    border-color: rgb(117, 117, 117);
+}
+
+QLabel[gridLabel=&quot;true&quot;] {
+	background-color: rgb(232, 232, 232);
+	border-style: none;
+}</string>
+  </property>
   <property name="frameShape">
    <enum>QFrame::StyledPanel</enum>
   </property>
@@ -30,13 +42,6 @@
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QFrame#headerFrame {
-    border: 1px outset gray;
-    background-color: rgb(232, 232, 232);
-    border-color: rgb(117, 117, 117);
-}</string>
      </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
@@ -123,30 +128,20 @@
         <property name="widgetResizable">
          <bool>true</bool>
         </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+        </property>
         <widget class="QWidget" name="scrollAreaWidgetContents">
          <property name="geometry">
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>166</width>
-           <height>161</height>
+           <width>164</width>
+           <height>323</height>
           </rect>
          </property>
         </widget>
        </widget>
-      </item>
-      <item>
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>8</width>
-          <height>0</height>
-         </size>
-        </property>
-       </spacer>
       </item>
      </layout>
     </widget>
@@ -180,15 +175,14 @@
           <bold>true</bold>
          </font>
         </property>
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(232, 232, 232);
-border-style: none;</string>
-        </property>
         <property name="text">
          <string>Type</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+        <property name="gridLabel" stdset="0">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -206,15 +200,14 @@ border-style: none;</string>
           <bold>false</bold>
          </font>
         </property>
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(232, 232, 232);
-border-style: none;</string>
-        </property>
         <property name="text">
          <string notr="true">Type</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+        <property name="gridLabel" stdset="0">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -232,15 +225,14 @@ border-style: none;</string>
           <bold>true</bold>
          </font>
         </property>
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(232, 232, 232);
-border-style: none;</string>
-        </property>
         <property name="text">
          <string>Difficulté</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+        <property name="gridLabel" stdset="0">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -258,15 +250,14 @@ border-style: none;</string>
           <bold>false</bold>
          </font>
         </property>
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(232, 232, 232);
-border-style: none;</string>
-        </property>
         <property name="text">
          <string notr="true">Difficulté</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+        <property name="gridLabel" stdset="0">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -284,15 +275,14 @@ border-style: none;</string>
           <bold>true</bold>
          </font>
         </property>
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(232, 232, 232);
-border-style: none;</string>
-        </property>
         <property name="text">
          <string>Répétitions</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+        <property name="gridLabel" stdset="0">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -310,15 +300,14 @@ border-style: none;</string>
           <bold>false</bold>
          </font>
         </property>
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(232, 232, 232);
-border-style: none;</string>
-        </property>
         <property name="text">
          <string notr="true">Répétitions</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+        <property name="gridLabel" stdset="0">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -336,15 +325,14 @@ border-style: none;</string>
           <bold>true</bold>
          </font>
         </property>
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(232, 232, 232);
-border-style: none;</string>
-        </property>
         <property name="text">
          <string>Repos</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+        <property name="gridLabel" stdset="0">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -362,15 +350,14 @@ border-style: none;</string>
           <bold>false</bold>
          </font>
         </property>
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(232, 232, 232);
-border-style: none;</string>
-        </property>
         <property name="text">
          <string notr="true">Repos</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+        <property name="gridLabel" stdset="0">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -456,8 +443,8 @@ border-style: none;</string>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
-             <width>60</width>
-             <height>19</height>
+             <width>8</width>
+             <height>8</height>
             </size>
            </property>
           </spacer>

@@ -149,15 +149,18 @@ ExerciseWidget::PairSpinBox ExerciseWidget::addRow()
     
     QLabel *lblTitle = new QLabel(trUtf8("Série %1").arg(rowCount));
     lblTitle->setObjectName(QString("lblTitle_%1").arg(rowCount-1));
+    //lblTitle->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
     QSpinBox *txtResult = new QSpinBox;
     txtResult->setObjectName(QString("txtResult_%1").arg(rowCount-1));
     txtResult->setMinimum(0);
     txtResult->setMaximum(std::numeric_limits<int>::max());
+    //txtResult->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     txtResult->setFixedWidth(40);
     QSpinBox *txtLoad = new QSpinBox;
     txtLoad->setObjectName(QString("txtLoad_%1").arg(rowCount-1));
     txtLoad->setMinimum(0);
     txtLoad->setMaximum(std::numeric_limits<int>::max());
+    //txtLoad->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     txtLoad->setFixedWidth(40);
     txtLoad->setEnabled(mData.weight);
     
@@ -185,25 +188,30 @@ ExerciseWidget::PairSpinBox ExerciseWidget::addRow()
 void ExerciseWidget::createLayout()
 {
     delete scrollAreaLayout;
-    qDeleteAll( ui->scrollAreaWidgetContents->findChildren<QLabel*>( QRegExp( "lblTitle_*" ) ) );
-    foreach ( const ExerciseWidget::PairSpinBox& pair, mPairs ) {
+    qDeleteAll(ui->scrollAreaWidgetContents->findChildren<QLabel *>(QRegExp("lblTitle_*")));
+    foreach (const ExerciseWidget::PairSpinBox &pair, mPairs)
+    {
         delete pair.first;
         delete pair.second;
     }
     mPairs.clear();
+    // delete dangling widgets (red, charge...)
+    qDeleteAll(ui->scrollAreaWidgetContents->findChildren<QLabel *>());
 
     /* Rebuild the layout */
-
     QLabel *lblRes = new QLabel(trUtf8("Rés."));
-    QLabel *lblCharge = new QLabel(trUtf8("Charge"));
-    scrollAreaLayout = new QGridLayout(ui->scrollAreaWidgetContents);
-    scrollAreaLayout->setContentsMargins(QMargins(0, 0, 0, 0));
-    scrollAreaLayout->setHorizontalSpacing(10);
-    scrollAreaLayout->addWidget(lblRes, 0, 1);
-    scrollAreaLayout->addWidget(lblCharge, 0, 2);
-    
     lblRes->setAttribute(Qt::WA_MacSmallSize);
+    lblRes->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+    QLabel *lblCharge = new QLabel(trUtf8("Charge"));
     lblCharge->setAttribute(Qt::WA_MacSmallSize);
+    lblCharge->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+    scrollAreaLayout = new QGridLayout(ui->scrollAreaWidgetContents);
+    scrollAreaLayout->setContentsMargins(QMargins(0, 0, 10, 0)); // 10 for right to avoid widgets to near of the vertical scrollbar
+    scrollAreaLayout->setHorizontalSpacing(10);
+    scrollAreaLayout->addWidget(lblRes, 0, 1, Qt::AlignCenter);
+    scrollAreaLayout->addWidget(lblCharge, 0, 2, Qt::AlignCenter);
+    QSpacerItem *item = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Expanding);
+    scrollAreaLayout->addItem(item, 10000, 0, 1, 3, Qt::AlignCenter);
     
     const int count = qMax(mData.series, mData.seriesData.count());
     
