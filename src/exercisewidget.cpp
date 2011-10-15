@@ -150,18 +150,16 @@ ExerciseWidget::PairSpinBox ExerciseWidget::addRow()
     
     QLabel *lblTitle = new QLabel(trUtf8("Série %1").arg(rowCount));
     lblTitle->setObjectName(QString("lblTitle_%1").arg(rowCount-1));
-    //lblTitle->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
+    lblTitle->setToolTip(lblTitle->text());
     QSpinBox *txtResult = new QSpinBox;
     txtResult->setObjectName(QString("txtResult_%1").arg(rowCount-1));
     txtResult->setMinimum(0);
     txtResult->setMaximum(std::numeric_limits<int>::max());
-    //txtResult->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     txtResult->setFixedWidth(40);
     QSpinBox *txtLoad = new QSpinBox;
     txtLoad->setObjectName(QString("txtLoad_%1").arg(rowCount-1));
     txtLoad->setMinimum(0);
     txtLoad->setMaximum(std::numeric_limits<int>::max());
-    //txtLoad->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     txtLoad->setFixedWidth(40);
     txtLoad->setEnabled(mData.weight);
     
@@ -179,6 +177,13 @@ ExerciseWidget::PairSpinBox ExerciseWidget::addRow()
         mData.seriesData << qMakePair(txtResult->value(), txtLoad->value());
     }
 
+    if (rowCount-1 >= mData.series)
+    {
+        QPalette pal = lblTitle->palette();
+        pal.setColor(lblTitle->foregroundRole(), QColor(0, 170, 0));
+        lblTitle->setPalette(pal);
+        lblTitle->setToolTip(QString("<img src=\":/images/plus-icon.png\" width=12 height=12 />%1").arg(lblTitle->text()));
+    }
     
     connect(txtResult ,SIGNAL(valueChanged(int)), this, SLOT(spinBox_valueChanged(int)));
     connect(txtLoad ,SIGNAL(valueChanged(int)), this, SLOT(spinBox_valueChanged(int)));
@@ -196,7 +201,7 @@ void ExerciseWidget::createLayout()
         delete pair.second;
     }
     mPairs.clear();
-    // delete dangling widgets (red, charge...)
+    // delete dangling widgets (res, charge...)
     qDeleteAll(ui->scrollAreaWidgetContents->findChildren<QLabel *>());
 
     /* Rebuild the layout */
@@ -222,18 +227,6 @@ void ExerciseWidget::createLayout()
         ExerciseWidget::PairSpinBox pair = addRow();
         pair.first->setValue(values.first);
         pair.second->setValue(values.second);
-
-        if (i >= mData.series)
-        {
-            const QString labelName = QString("lblTitle_%1").arg(i);
-            QLabel *lblSerie = ui->scrollAreaWidgetContents->findChild<QLabel *>(labelName);
-            if (lblSerie)
-            {
-                const QString text = lblSerie->text();
-                lblSerie->setText(
-                       QString("<img src=\":/images/plus-icon.png\" width=12 height=12 />%1").arg(text));
-            }
-        }
     }
 }
 
