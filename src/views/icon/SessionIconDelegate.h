@@ -6,6 +6,7 @@
 
 #include "sql/exercise.h"
 
+class QAbstractItemView;
 class ExerciseWidget;
 
 class SessionIconDelegate : public QStyledItemDelegate
@@ -13,7 +14,7 @@ class SessionIconDelegate : public QStyledItemDelegate
 	Q_OBJECT
 	
 public:
-	SessionIconDelegate( QObject* parent = 0 );
+	SessionIconDelegate( QAbstractItemView* parent );
 	virtual ~SessionIconDelegate();
 	
 	virtual QWidget* createEditor( QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index ) const;
@@ -25,11 +26,15 @@ public:
 	void clearCachedEditors( QAbstractItemModel* model ) const;
 
 protected:
+	QAbstractItemView* mView;
 	ExerciseWidget* mEditor;
 	
 	QString cachedEditorKey( const QModelIndex& index, const QStyleOptionViewItem& option ) const;
 	QPixmap cachedEditor( const QModelIndex& index, const QStyleOptionViewItem& option ) const;
 	void invalidateCachedEditor( const QModelIndex& index ) const;
+
+protected slots:
+	void application_focusChanged( QWidget* old, QWidget* now );
 };
 
 #endif // SESSIONICONDELEGATE_H
