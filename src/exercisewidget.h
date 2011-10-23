@@ -27,6 +27,8 @@ public:
 
     void setReadOnly(bool readOnly);
     bool isReadOnly() const;
+    
+    void setVerticalScrollBarPolicy(Qt::ScrollBarPolicy policy);
 
 protected:
     void changeEvent(QEvent *);
