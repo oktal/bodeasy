@@ -7,6 +7,7 @@
 #include <QWidget>
 #include <QDialog>
 #include <QMessageBox>
+#include <QItemSelectionModel>
 
 #include <QDebug>
 
@@ -17,7 +18,6 @@ ExercisesDialog::ExercisesDialog(QWidget *parent) :
     groupsModel( new MuscleGroupsModel( this ) )
 {
     ui->setupUi(this);
-    ui->verticalLayout_3->setAlignment(Qt::AlignCenter);
 
 //    new ModelTest(exercisesModel, this);
 //    new ModelTest(groupsModel, this);
@@ -34,6 +34,8 @@ ExercisesDialog::ExercisesDialog(QWidget *parent) :
     ui->cbGroup1->setModel( groupsModel );
     ui->cbGroup2->setModel( groupsModel );
     ui->cbGroup3->setModel( groupsModel );
+    
+    connect( ui->lstExercises->selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ), this, SLOT( lstExercises_selectionModel_selectionChanged() ) );
 }
 
 ExercisesDialog::~ExercisesDialog()
@@ -41,75 +43,14 @@ ExercisesDialog::~ExercisesDialog()
     delete ui;
 }
 
-void ExercisesDialog::on_leName_textEdited( const QString &text )
+void ExercisesDialog::lstExercises_selectionModel_selectionChanged()
 {
-    ui->btnAdd->setEnabled( !text.isEmpty() );
-    ui->btnModify->setEnabled( !text.isEmpty() && ui->lstExercises->selectionModel()->hasSelection() );
-}
-
-void ExercisesDialog::on_chkGroup2_clicked( bool checked )
-{
-    if ( !checked )
-    {
-        ui->cbGroup2->setCurrentIndex( 0 );
-        ui->chkGroup3->setChecked( false );
-        ui->cbGroup3->setCurrentIndex( 0 );
-        ui->cbGroup3->setEnabled( false );
-    }
-}
-
-void ExercisesDialog::on_chkGroup3_clicked( bool checked )
-{
-    if ( !checked )
-    {
-        ui->cbGroup3->setCurrentIndex( 0 );
-    }
-}
-
-void ExercisesDialog::on_btnAdd_clicked()
-{
-    Exercise e( ui->leName->text(),
-    Exercise::Type( ui->bgType->checkedId() ),
-    Exercise::Difficulty( ui->cbDifficulty->itemData( ui->cbDifficulty->currentIndex() ).toInt() ),
-    groups(),
-    ui->cbUseWeight->isChecked(),
-    ui->pteDescription->toPlainText() );
-
-    if ( exercisesModel->index(e).isValid() ) {
-        QMessageBox::critical(this, trUtf8( "Erreur" ),
-                              trUtf8( "L'exercice que vous voulez ajouter existe déjà" ) );
+    const QModelIndex index = ui->lstExercises->selectionModel()->selectedIndexes().value( 0 );
+    
+    if ( !index.isValid() ) {
         return;
     }
-
-    if ( exercisesModel->addExercise( e ) ) {
-        const QModelIndex index = exercisesModel->index( e );
-        ui->lstExercises->setCurrentIndex( index );
-    }
-    else {
-        qWarning() << Q_FUNC_INFO << "Error";
-    }
-}
-
-void ExercisesDialog::on_btnModify_clicked()
-{
-    Exercise e( ui->leName->text(),
-    Exercise::Type( ui->bgType->checkedId() ),
-    Exercise::Difficulty( ui->cbDifficulty->itemData( ui->cbDifficulty->currentIndex() ).toInt() ),
-    groups(),
-    ui->cbUseWeight->isChecked(),
-    ui->pteDescription->toPlainText());
-
-    e.id = mCurrentId;
-    exercisesModel->updateExercise( e );
-}
-
-void ExercisesDialog::on_btnDelete_clicked()
-{
-    exercisesModel->removeRow( ui->lstExercises->currentIndex().row() );
-}
-
-void ExercisesDialog::on_lstExercises_clicked( const QModelIndex &index )
-{
+    
     ui->btnDelete->setEnabled( true );
     ui->btnModify->setEnabled( true );
     const Exercise &e = exercisesModel->exercise( index );
@@ -154,6 +95,75 @@ void ExercisesDialog::on_lstExercises_clicked( const QModelIndex &index )
     }
     ui->pteDescription->setPlainText( e.description );
     mCurrentId = e.id;
+}
+
+void ExercisesDialog::on_leName_textEdited( const QString &text )
+{
+    ui->btnAdd->setEnabled( !text.isEmpty() );
+    ui->btnModify->setEnabled( !text.isEmpty() && ui->lstExercises->selectionModel()->hasSelection() );
+}
+
+void ExercisesDialog::on_chkGroup2_clicked( bool checked )
+{
+    if ( !checked )
+    {
+        ui->cbGroup2->setCurrentIndex( 0 );
+        ui->chkGroup3->setChecked( false );
+        ui->cbGroup3->setCurrentIndex( 0 );
+        ui->cbGroup3->setEnabled( false );
+    }
+}
+
+void ExercisesDialog::on_chkGroup3_clicked( bool checked )
+{
+    if ( !checked )
+    {
+        ui->cbGroup3->setCurrentIndex( 0 );
+    }
+}
+
+void ExercisesDialog::on_btnAdd_clicked()
+{
+    Exercise e( ui->leName->text(),
+    Exercise::Type( ui->bgType->checkedId() ),
+    Exercise::Difficulty( ui->cbDifficulty->itemData( ui->cbDifficulty->currentIndex() ).toInt() ),
+    groups(),
+    ui->cbUseWeight->isChecked(),
+    ui->pteDescription->toPlainText() );
+
+    if ( exercisesModel->index(e).isValid() ) {
+        QMessageBox::critical(this, trUtf8( "Erreur" ),
+                              trUtf8( "L'exercice que vous voulez ajouter existe déjà" ) );
+        return;
+    }
+
+    if ( exercisesModel->addExercise( e ) ) {
+        const QModelIndex index = exercisesModel->index( e );
+        mCurrentId = e.id;
+        ui->lstExercises->setCurrentIndex( index );
+    }
+    else {
+        qWarning() << Q_FUNC_INFO << "Error";
+    }
+}
+
+void ExercisesDialog::on_btnModify_clicked()
+{
+    Exercise e( ui->leName->text(),
+    Exercise::Type( ui->bgType->checkedId() ),
+    Exercise::Difficulty( ui->cbDifficulty->itemData( ui->cbDifficulty->currentIndex() ).toInt() ),
+    groups(),
+    ui->cbUseWeight->isChecked(),
+    ui->pteDescription->toPlainText());
+
+    e.id = mCurrentId;
+    exercisesModel->updateExercise( e );
+}
+
+void ExercisesDialog::on_btnDelete_clicked()
+{
+    const QModelIndex index = ui->lstExercises->selectionModel()->selectedIndexes().value( 0 );
+    exercisesModel->removeRow( index.row() );
 }
 
 QList<qint64> ExercisesDialog::groups() const
