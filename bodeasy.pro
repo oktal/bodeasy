@@ -1,7 +1,7 @@
 XUP.OTHERS_PLATFORM_TARGET_DEFAULT = /media/ramdisk/bodeasy/tst_bodeasyd
 XUP.OTHERS_PLATFORM_TARGET_RELEASE = /media/ramdisk/bodeasy/bodeasy
 XUP.OTHERS_PLATFORM_TARGET_DEBUG = /media/ramdisk/bodeasy/tst_bodeasyd
-XUP.QT_VERSION = Qt System (4.7.2)
+XUP.QT_VERSION = Qt (4.8.0rc1)
 
 #-------------------------------------------------
 #
@@ -20,7 +20,7 @@ unix:exists( $${UNIX_RAM_DISK} ) {
 }
 
 !win32:CONFIG -= warn_on warn_off release debug debug_and_release
-CONFIG *= qt debug warn_on
+CONFIG *= debug warn_on qt
 
 QT = core gui sql
 
