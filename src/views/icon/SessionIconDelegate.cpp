@@ -8,11 +8,13 @@
 #include <QPixmapCache>
 #include <QDebug>
 
-SessionIconDelegate::SessionIconDelegate( QAbstractItemView* parent )
-	: QStyledItemDelegate( parent ), mView( parent ), mEditor( new ExerciseWidget )
+SessionIconDelegate::SessionIconDelegate( QAbstractItemView* parent, SessionIconModel* model )
+	: QStyledItemDelegate( parent ), mView( parent ), mModel( model ), mEditor( new ExerciseWidget )
 {
 	Q_ASSERT( mView );
+	Q_ASSERT( mModel );
     mEditor->setReadOnly( true );
+	mEditor->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 	
 	connect( qApp, SIGNAL( focusChanged( QWidget*, QWidget* ) ), this, SLOT( application_focusChanged( QWidget*, QWidget* ) ) );
 }
@@ -52,6 +54,7 @@ void SessionIconDelegate::setEditorData( QWidget* editor, const QModelIndex& ind
 	
 	if ( ed ) {
 		ed->setData( data );
+		ed->setReadOnly( mModel->isReadOnly() );
 		return;
 	}
 	

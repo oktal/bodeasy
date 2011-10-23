@@ -43,7 +43,6 @@ void ExerciseWidget::setReadOnly(bool readOnly)
     }
 
     ui->wMore->setVisible(!readOnly);
-    ui->scrollArea->setVerticalScrollBarPolicy(readOnly ? Qt::ScrollBarAlwaysOff : Qt::ScrollBarAsNeeded);
 
     mReadOnly = readOnly;
 }
@@ -51,6 +50,11 @@ void ExerciseWidget::setReadOnly(bool readOnly)
 bool ExerciseWidget::isReadOnly() const
 {
     return mReadOnly;
+}
+
+void ExerciseWidget::setVerticalScrollBarPolicy(Qt::ScrollBarPolicy policy)
+{
+    ui->scrollArea->setVerticalScrollBarPolicy(policy);
 }
 
 void ExerciseWidget::on_btnAddSerie_clicked()
