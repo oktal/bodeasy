@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>522</width>
-    <height>488</height>
+    <width>600</width>
+    <height>500</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,9 +17,15 @@
    <iconset resource="ressources.qrc">
     <normaloff>:/images/exercise-icon.png</normaloff>:/images/exercise-icon.png</iconset>
   </property>
-  <layout class="QGridLayout" name="gridLayout" rowstretch="40,40,10,10" columnstretch="40,60">
-   <item row="0" column="0" rowspan="2">
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0" rowspan="4">
     <widget class="QGroupBox" name="groupBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="title">
       <string>Exercices</string>
      </property>
@@ -36,7 +42,7 @@
       <string>Informations</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="0">
+      <item row="0" column="0" colspan="3">
        <widget class="QLabel" name="label">
         <property name="text">
          <string>Nom :</string>
@@ -46,17 +52,14 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1" colspan="2">
-       <widget class="QLineEdit" name="leName"/>
-      </item>
-      <item row="1" column="0">
+      <item row="2" column="0">
        <widget class="QLabel" name="label_2">
         <property name="text">
          <string>Type :</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="2" column="1">
        <widget class="QRadioButton" name="rbRepetition">
         <property name="text">
          <string>Répétition</string>
@@ -69,7 +72,7 @@
         </attribute>
        </widget>
       </item>
-      <item row="1" column="2">
+      <item row="2" column="2">
        <widget class="QRadioButton" name="rbDuration">
         <property name="text">
          <string>Durée</string>
@@ -79,22 +82,25 @@
         </attribute>
        </widget>
       </item>
-      <item row="2" column="0" colspan="3">
+      <item row="3" column="0" colspan="3">
        <widget class="QCheckBox" name="cbUseWeight">
         <property name="text">
          <string>Utilisation de poids</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
+      <item row="4" column="0">
        <widget class="QLabel" name="label_4">
         <property name="text">
          <string>Difficulté :</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1" colspan="2">
+      <item row="4" column="1" colspan="2">
        <widget class="QComboBox" name="cbDifficulty"/>
+      </item>
+      <item row="1" column="0" colspan="3">
+       <widget class="QLineEdit" name="leName"/>
       </item>
      </layout>
     </widget>
@@ -105,15 +111,6 @@
       <string>Groupes musculaires</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
-      <property name="topMargin">
-       <number>5</number>
-      </property>
-      <property name="bottomMargin">
-       <number>5</number>
-      </property>
-      <property name="verticalSpacing">
-       <number>0</number>
-      </property>
       <item row="0" column="0">
        <widget class="QLabel" name="label_5">
         <property name="text">
@@ -123,22 +120,6 @@
       </item>
       <item row="0" column="1">
        <widget class="QComboBox" name="cbGroup1"/>
-      </item>
-      <item row="0" column="2">
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Maximum</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>70</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
       </item>
       <item row="1" column="0">
        <widget class="QCheckBox" name="chkGroup2">
@@ -153,22 +134,6 @@
          <bool>false</bool>
         </property>
        </widget>
-      </item>
-      <item row="1" column="2">
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Maximum</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>70</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
       </item>
       <item row="2" column="0">
        <widget class="QCheckBox" name="chkGroup3">
@@ -187,57 +152,45 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
-       <spacer name="horizontalSpacer_3">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QGroupBox" name="groupBox_4">
+     <property name="title">
+      <string>Description</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QPlainTextEdit" name="pteDescription">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
         </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Maximum</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>70</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
+       </widget>
       </item>
      </layout>
     </widget>
    </item>
-   <item row="2" column="0" rowspan="2">
+   <item row="3" column="1">
     <widget class="QGroupBox" name="groupBox_5">
      <property name="title">
       <string>Actions</string>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_3">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QPushButton" name="btnAdd">
+       <widget class="QPushButton" name="btnDelete">
         <property name="enabled">
          <bool>false</bool>
         </property>
-        <property name="minimumSize">
-         <size>
-          <width>100</width>
-          <height>30</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>125</width>
-          <height>16777215</height>
-         </size>
-        </property>
         <property name="text">
-         <string>Ajouter</string>
+         <string>Supprimer</string>
         </property>
         <property name="icon">
          <iconset resource="ressources.qrc">
-          <normaloff>:/images/add-icon.png</normaloff>:/images/add-icon.png</iconset>
+          <normaloff>:/images/delete-icon.png</normaloff>:/images/delete-icon.png</iconset>
         </property>
        </widget>
       </item>
@@ -245,18 +198,6 @@
        <widget class="QPushButton" name="btnModify">
         <property name="enabled">
          <bool>false</bool>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>100</width>
-          <height>30</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>125</width>
-          <height>16777215</height>
-         </size>
         </property>
         <property name="text">
          <string>Modifier</string>
@@ -268,99 +209,28 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="btnDelete">
+       <widget class="QPushButton" name="btnAdd">
         <property name="enabled">
          <bool>false</bool>
         </property>
-        <property name="minimumSize">
-         <size>
-          <width>100</width>
-          <height>30</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>125</width>
-          <height>16777215</height>
-         </size>
-        </property>
         <property name="text">
-         <string>Supprimer</string>
+         <string>Ajouter</string>
         </property>
         <property name="icon">
          <iconset resource="ressources.qrc">
-          <normaloff>:/images/delete-icon.png</normaloff>:/images/delete-icon.png</iconset>
+          <normaloff>:/images/add-icon.png</normaloff>:/images/add-icon.png</iconset>
         </property>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
-   <item row="2" column="1">
-    <widget class="QGroupBox" name="groupBox_4">
-     <property name="title">
-      <string>Description</string>
+   <item row="4" column="0" colspan="2">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <widget class="QPlainTextEdit" name="pteDescription"/>
-      </item>
-     </layout>
     </widget>
-   </item>
-   <item row="3" column="1">
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <spacer name="horizontalSpacer_4">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::MinimumExpanding</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>98</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="btnHelp">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Aide</string>
-       </property>
-       <property name="icon">
-        <iconset resource="ressources.qrc">
-         <normaloff>:/images/help-icon.png</normaloff>:/images/help-icon.png</iconset>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="btnClose">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>25</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Quitter</string>
-       </property>
-       <property name="icon">
-        <iconset resource="ressources.qrc">
-         <normaloff>:/images/close-icon.png</normaloff>:/images/close-icon.png</iconset>
-       </property>
-      </widget>
-     </item>
-    </layout>
    </item>
   </layout>
  </widget>
@@ -382,12 +252,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>310</x>
-     <y>239</y>
+     <x>363</x>
+     <y>209</y>
     </hint>
     <hint type="destinationlabel">
-     <x>363</x>
-     <y>241</y>
+     <x>480</x>
+     <y>212</y>
     </hint>
    </hints>
   </connection>
@@ -398,12 +268,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>301</x>
-     <y>264</y>
+     <x>363</x>
+     <y>238</y>
     </hint>
     <hint type="destinationlabel">
-     <x>357</x>
-     <y>269</y>
+     <x>480</x>
+     <y>241</y>
     </hint>
    </hints>
   </connection>
@@ -414,28 +284,28 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>288</x>
-     <y>237</y>
+     <x>340</x>
+     <y>192</y>
     </hint>
     <hint type="destinationlabel">
-     <x>289</x>
-     <y>266</y>
+     <x>340</x>
+     <y>224</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>btnClose</sender>
-   <signal>clicked()</signal>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
    <receiver>ExercisesDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>492</x>
-     <y>419</y>
+     <x>540</x>
+     <y>519</y>
     </hint>
     <hint type="destinationlabel">
-     <x>285</x>
-     <y>413</y>
+     <x>728</x>
+     <y>520</y>
     </hint>
    </hints>
   </connection>
