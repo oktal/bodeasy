@@ -16,12 +16,13 @@ SessionsDialog::SessionsDialog(SessionsModel *model, QWidget *parent) :
     
     ui->lstSessions->setModel(sessionsModel);
     ui->lstSessions->setProportionalSectionSizes(Qt::Horizontal, true);
-    ui->lstSessions->setSectionStretchFactor(Qt::Horizontal, 0, 80);
-    ui->lstSessions->setSectionStretchFactor(Qt::Horizontal, 1, 20);
+    ui->lstSessions->header()->setResizeMode(QHeaderView::ResizeToContents);
+    ui->lstSessions->header()->setResizeMode(0, QHeaderView::Stretch);
 
     ui->lstExercises->setModel(sessionExercisesModel);
     ui->lstExercises->setItemDelegate(new SessionExercisesDelegate(this));
-    ui->lstExercises->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    ui->lstExercises->header()->setResizeMode(QHeaderView::ResizeToContents);
+    ui->lstExercises->header()->setResizeMode(0, QHeaderView::Stretch);
 }
 
 SessionsDialog::~SessionsDialog()
@@ -42,7 +43,7 @@ void SessionsDialog::on_btnAdd_clicked()
 
     if (sessionsModel->addSession(s))
     {
-        ui->lstSessions->selectRow(sessionsModel->rowCount());
+        ui->lstSessions->setCurrentIndex(sessionsModel->index(s));
     }
 }
 
