@@ -24,14 +24,15 @@ CONFIG *= debug warn_on qt
 
 QT = core gui sql
 
-# Mac universal build from 10.3 to up to 10.5
+# Mac universal build from 10.3 to up to 10.6
 macx {
     SDK_PATH = $$(MAC_SDKS_PATH)
     isEmpty( SDK_PATH ):SDK_PATH = /Developer/SDKs
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.3
     QMAKE_MAC_SDK = $${SDK_PATH}/MacOSX10.6.sdk
-    CONFIG *= x86 x86_64 app_bundle
-    #CONFIG  *= ppc
+    CONFIG *= x86 x86_64 ppc app_bundle
+    # this link is required for building the ppc port to avoid the undefined __Unwind_Resume symbol
+    CONFIG( ppc ):LIBS *= -lgcc_eh
 }
 
 INCLUDEPATH *= . \
