@@ -51,6 +51,8 @@ private slots:
     void on_graphAction_triggered();
 #endif
 
+    void on_calendarAction_triggered();
+
 private:
     void selectInformations();
     void readSettings();
