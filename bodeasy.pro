@@ -19,7 +19,7 @@ unix:exists( $${UNIX_RAM_DISK} ) {
     DESTDIR = $${BUILD_PATH}
 }
 
-!win32:CONFIG -= warn_on warn_off release debug debug_and_release
+CONFIG -= warn_on warn_off release debug debug_and_release
 CONFIG *= qt debug warn_on
 
 QT = core gui sql
@@ -52,7 +52,7 @@ KDCHART_DIR = $$(KDCHART_DIR)
 
 isEmpty( KDCHART_DIR ) {
     win32 {
-        KDCHART_DIR = C:/KDAB/KDChart-2.4.2
+       KDCHART_DIR = C:/KDAB/KDChart-2.4.3
     }
 }
 
@@ -61,7 +61,7 @@ isEmpty( KDCHART_DIR ) {
     INCLUDEPATH *= $${KDCHART_DIR}/include
     LIBS *= -L$${KDCHART_DIR}/lib -ltesttools
     win32:LIBS *= -lkdchartd
-    else:LIBS *= -lkdchart
+    else:LIBS *= -lkdchart2
 
     HEADERS *= src/graphicsdialog.h \
         src/widgets/charts/activitychart.h \
