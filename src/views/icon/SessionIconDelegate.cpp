@@ -8,10 +8,15 @@
 #include <QPixmapCache>
 #include <QDebug>
 
-SessionIconDelegate::SessionIconDelegate( QObject* parent )
-	: QStyledItemDelegate( parent ), mEditor( new ExerciseWidget )
+SessionIconDelegate::SessionIconDelegate( QAbstractItemView* parent, SessionIconModel* model )
+	: QStyledItemDelegate( parent ), mView( parent ), mModel( model ), mEditor( new ExerciseWidget )
 {
+	Q_ASSERT( mView );
+	Q_ASSERT( mModel );
     mEditor->setReadOnly( true );
+	mEditor->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+	
+	connect( qApp, SIGNAL( focusChanged( QWidget*, QWidget* ) ), this, SLOT( application_focusChanged( QWidget*, QWidget* ) ) );
 }
 
 SessionIconDelegate::~SessionIconDelegate()
@@ -23,7 +28,6 @@ QWidget* SessionIconDelegate::createEditor( QWidget* parent, const QStyleOptionV
 {
 	if ( index.column() == 0 ) {
 		ExerciseWidget* editor = new ExerciseWidget( parent );
-		editor->setFocusPolicy( Qt::StrongFocus );
 		editor->setAutoFillBackground( true );
         QPalette pal = QApplication::palette();
 		pal.setColor( editor->backgroundRole(), pal.color( QPalette::Window ) );
@@ -50,6 +54,7 @@ void SessionIconDelegate::setEditorData( QWidget* editor, const QModelIndex& ind
 	
 	if ( ed ) {
 		ed->setData( data );
+		ed->setReadOnly( mModel->isReadOnly() );
 		return;
 	}
 	
@@ -155,3 +160,24 @@ void SessionIconDelegate::invalidateCachedEditor( const QModelIndex& index ) con
 	QPixmapCache::remove( parts.join( ":" ) );
 }
 
+void SessionIconDelegate::application_focusChanged( QWidget* old, QWidget* now )
+{
+	// got top level editor if possible
+	while ( old && !old->inherits( "ExerciseWidget" ) ) {
+		old = old->parentWidget();
+	}
+	
+	// old selection was not an editor
+	if ( !old || !old->inherits( "ExerciseWidget" ) ) {
+		return;
+	}
+	
+	// check if new focused widget is in editor
+	if ( old->findChildren<QWidget*>().contains( now ) ) {
+		return;
+	}
+	
+	// was an editor and focus goes out, validate data and close editor
+	emit commitData( old );
+	QMetaObject::invokeMethod( mView, "closeEditor", Q_ARG( QWidget*, old ), Q_ARG( QAbstractItemDelegate::EndEditHint, QAbstractItemDelegate::NoHint ) );
+}

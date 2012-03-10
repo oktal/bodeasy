@@ -24,9 +24,13 @@ public:
 	
 	ExerciseWidgetDataList widgetsData() const;
 	void setWidgetsData( const ExerciseWidgetDataList& widgetsData );
+	
+	bool isReadOnly() const;
+	void setReadOnly( bool readOnly );
 
 protected:
 	ExerciseWidgetDataList mData;
+	bool mReadOnly;
 	
 	void clear();
 };
