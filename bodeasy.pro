@@ -1,7 +1,7 @@
 XUP.OTHERS_PLATFORM_TARGET_DEFAULT = /media/ramdisk/bodeasy/tst_bodeasyd
 XUP.OTHERS_PLATFORM_TARGET_RELEASE = /media/ramdisk/bodeasy/bodeasy
 XUP.OTHERS_PLATFORM_TARGET_DEBUG = /media/ramdisk/bodeasy/tst_bodeasyd
-XUP.QT_VERSION = Qt System (4.7.2)
+XUP.QT_VERSION = Qt (4.8.0rc1)
 
 #-------------------------------------------------
 #
@@ -20,9 +20,20 @@ unix:exists( $${UNIX_RAM_DISK} ) {
 }
 
 CONFIG -= warn_on warn_off release debug debug_and_release
-CONFIG *= qt debug warn_on
+CONFIG *= debug warn_on qt
 
 QT = core gui sql
+
+# Mac universal build from 10.3 to up to 10.6
+macx {
+    SDK_PATH = $$(MAC_SDKS_PATH)
+    isEmpty( SDK_PATH ):SDK_PATH = /Developer/SDKs
+    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.3
+    QMAKE_MAC_SDK = $${SDK_PATH}/MacOSX10.6.sdk
+    CONFIG *= x86 x86_64 ppc app_bundle
+    # this link is required for building the ppc port to avoid the undefined __Unwind_Resume symbol
+    CONFIG( ppc ):LIBS *= -lgcc_eh
+}
 
 INCLUDEPATH *= . \
     src

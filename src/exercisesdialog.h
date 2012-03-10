@@ -25,12 +25,13 @@ protected slots:
     void on_btnAdd_clicked();
     void on_btnModify_clicked();
     void on_btnDelete_clicked();
-    void on_lstExercises_clicked( const QModelIndex& index );
 
     void on_chkGroup2_clicked( bool checked );
     void on_chkGroup3_clicked( bool checked );
 
     void on_leName_textEdited( const QString &text );
+    
+    void lstExercises_selectionModel_selectionChanged();
 
 private:
     QList<qint64> groups() const;

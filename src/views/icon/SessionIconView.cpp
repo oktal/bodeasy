@@ -11,7 +11,7 @@ SessionIconView::SessionIconView( SessionProxy* proxy )
 	: QListView( proxy ),
 	mProxy( proxy ),
 	mModel( new SessionIconModel( this ) ),
-	mDelegate( new SessionIconDelegate( this ) ),
+	mDelegate( new SessionIconDelegate( this, mModel ) ),
 	mSeparator( new QFrame( this ) ),
 	mControl( new SessionControlWidget( this ) )
 {
@@ -76,18 +76,14 @@ QString SessionIconView::comment() const
     return mControl->comment();
 }
 
-void SessionIconView::setWidgetsData( const ExerciseWidgetDataList& data, const QString& objective, bool objectiveDone,
-                                      const QString &comment, bool readOnly )
+void SessionIconView::setWidgetsData( const ExerciseWidgetDataList& data, const QString& objective, bool objectiveDone, const QString& comment, bool readOnly )
 {
-	if ( readOnly ) {
-		setEditTriggers( QAbstractItemView::NoEditTriggers );
-	}
-	else {
-		setEditTriggers( QAbstractItemView::DoubleClicked | QAbstractItemView::SelectedClicked );
-	}
+	setEditTriggers( QAbstractItemView::DoubleClicked | QAbstractItemView::SelectedClicked );
+	
+	mModel->setWidgetsData( data );
+	mModel->setReadOnly( readOnly );
 	
 	mDelegate->clearCachedEditors( mModel );
-	mModel->setWidgetsData( data );
 	
 	mControl->setObjectiveText( objective );
     mControl->setObjectiveChecked( objectiveDone );

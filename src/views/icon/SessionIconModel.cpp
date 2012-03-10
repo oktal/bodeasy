@@ -1,7 +1,7 @@
 #include "SessionIconModel.h"
 
 SessionIconModel::SessionIconModel( QObject* parent )
-	: QStringListModel( parent )
+	: QStringListModel( parent ), mReadOnly( false )
 {
 }
 
@@ -66,6 +66,16 @@ void SessionIconModel::setWidgetsData( const ExerciseWidgetDataList& widgetsData
 	beginInsertRows( QModelIndex(), 0, count -1 );
 	mData = widgetsData;
 	endInsertRows();
+}
+
+bool SessionIconModel::isReadOnly() const
+{
+	return mReadOnly;
+}
+
+void SessionIconModel::setReadOnly( bool readOnly )
+{
+	mReadOnly = readOnly;
 }
 
 void SessionIconModel::clear()
