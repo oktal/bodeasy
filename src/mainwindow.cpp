@@ -14,6 +14,7 @@
 #endif
 #include "settingsdialog.h"
 #include "settings.h"
+#include "planningwindow.h"
 #include "sql/SqlHelper.h"
 #include "sql/models/usersmodel.h"
 #include "sql/models/sessionsmodel.h"
@@ -192,6 +193,12 @@ void MainWindow::on_userAction_triggered()
     {
         setUserId(dialog.userId());
     }
+}
+
+void MainWindow::on_calendarAction_triggered()
+{
+    PlanningWindow *window = new PlanningWindow(this);
+    window->show();
 }
 
 void MainWindow::on_cmbSessions_activated(int index)
@@ -405,3 +412,4 @@ void MainWindow::on_graphAction_triggered()
     dialog.exec();
 }
 #endif
+
