@@ -11,7 +11,7 @@ class CalendarView : public QDeclarativeView
     Q_OBJECT
 public:
 
-    enum ViewType { Day, Week, Month };
+    enum ViewType { DayView, WeekView, MonthView };
 
     explicit CalendarView(QWidget *parent = 0);
 
@@ -21,10 +21,23 @@ public:
     void setModel(AbstractCalendarModel *model);
     AbstractCalendarModel *model() const;
 
-    
+    void setDate(const QDate &date);
+
+signals:
+    void clicked(const QModelIndex &index);
+
+public slots:
+    void previous();
+    void next();
+
+private slots:
+     void itemClicked(const QDateTime &dateTime);
+
 private:
+    void fetchTodayModel();
     ViewType mViewType;
     AbstractCalendarModel *mModel;
+    QDate mDate;
     
 };
 

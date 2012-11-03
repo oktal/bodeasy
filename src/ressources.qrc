@@ -52,4 +52,8 @@
         <file alias="script006.sql">../db/sessions.sql</file>
         <file alias="script007.sql">../db/users.sql</file>
     </qresource>
+    <qresource prefix="/qml">
+        <file alias="CalendarView.qml">views/calendar/qml/CalendarView.qml</file>
+        <file alias="GridDelegate.qml">views/calendar/qml/GridDelegate.qml</file>
+    </qresource>
 </RCC>

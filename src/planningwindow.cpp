@@ -13,10 +13,15 @@
 PlanningWindow::PlanningWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::PlanningWindow),
-    mCalendarModel(new BasicCalendarModel(QDate::currentDate(), this))
+    mCalendarModel(new BasicCalendarModel(QDate::currentDate(), QDate::currentDate(), this))
 {
     ui->setupUi(this);
     ui->planningView->setModel(mCalendarModel);
+
+    connect(ui->nextAction, SIGNAL(triggered()), ui->planningView, SLOT(next()));
+    connect(ui->backAction, SIGNAL(triggered()), ui->planningView, SLOT(previous()));
+
+    connect(ui->planningView, SIGNAL(clicked(QModelIndex)), this, SLOT(onItemClicked(QModelIndex)));
 
 }
 
@@ -35,4 +40,12 @@ void PlanningWindow::on_planifyAction_triggered()
         BasicCalendarItem *item = new BasicCalendarItem(date, s.name);
         mCalendarModel->appendItem(item);
     }
+}
+
+void PlanningWindow::onItemClicked(const QModelIndex &index)
+{
+    ui->editAction->setEnabled(true);
+
+    const QDate date = mCalendarModel->dateForIndex(index);
+    qDebug() << date;
 }

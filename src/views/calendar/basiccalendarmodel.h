@@ -10,7 +10,7 @@ class BasicCalendarItem;
 class BasicCalendarModel : public AbstractCalendarModel
 {
 public:
-    BasicCalendarModel(const QDate &date, QObject *parent = 0);
+    BasicCalendarModel(const QDate &startDate, const QDate &endDate, QObject *parent = 0);
     ~BasicCalendarModel();
 
     int itemsCount(const QDate &date) const;
@@ -26,7 +26,6 @@ public:
     QList<BasicCalendarItem *> items(const QDate &date) const;
 
 private:
-    QDate mDate;
     QList<BasicCalendarItem *> mItems;
     QMap<QDate, QList<BasicCalendarItem *> > mMappedItems;
 

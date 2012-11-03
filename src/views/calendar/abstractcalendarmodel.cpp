@@ -7,33 +7,37 @@
 #include <QStringList>
 #include <QDebug>
 
-static const int NumberOfColumns = 7;
-static const int NumberOfRows = 6;
-static const int NumberOfItems = NumberOfColumns * NumberOfRows;
-
 Q_DECLARE_METATYPE(QList<QObject *>)
 
-AbstractCalendarModel::AbstractCalendarModel(const QDate &date, QObject *parent) :
+AbstractCalendarModel::AbstractCalendarModel(const QDate &startDate, const QDate &endDate,
+                                             QObject *parent) :
     QAbstractListModel(parent),
-    mDate(date)
+    mStartDate(startDate),
+    mEndDate(endDate)
 {
     QHash<int, QByteArray> roleNames;
     roleNames[AbstractCalendarModel::DayNumberRole] = "dayNumber";
     roleNames[AbstractCalendarModel::MonthNumberRole] = "monthNumber";
+    roleNames[AbstractCalendarModel::YearNumberRole] = "yearNumber";
     roleNames[AbstractCalendarModel::MonthNameRole] = "monthName";
     roleNames[AbstractCalendarModel::DateRole] = "date";
     roleNames[AbstractCalendarModel::ItemsRole] = "items";
     setRoleNames(roleNames);
 }
 
+AbstractCalendarModel::~AbstractCalendarModel()
+{
+    qDeleteAll(mItems);
+}
+
 int AbstractCalendarModel::rowCount(const QModelIndex &parent) const
 {
-    return parent.isValid() ? 0 : NumberOfItems;
+    return parent.isValid() ? 0 : mStartDate.daysTo(mEndDate);
 }
 
 QVariant AbstractCalendarModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid() || index.row() < 0 || index.row() >= NumberOfItems) {
+    if (!index.isValid() || index.row() < 0 || index.row() >= rowCount()) {
         return QVariant();
     }
 
@@ -44,6 +48,9 @@ QVariant AbstractCalendarModel::data(const QModelIndex &index, int role) const
         return indexDate;
     case AbstractCalendarModel::DayNumberRole:
         return indexDate.day();
+        break;
+    case AbstractCalendarModel::YearNumberRole:
+        return indexDate.year();
         break;
     case AbstractCalendarModel::MonthNameRole:
         return QDate::shortMonthName(indexDate.month());
@@ -57,6 +64,7 @@ QVariant AbstractCalendarModel::data(const QModelIndex &index, int role) const
         const int count = itemsCount(indexDate);
         for (int i = 0; i < count; ++i) {
             CalendarItem *item = new CalendarItem;
+            item->setDate(indexDate);
             item->setSubject(calendarItemData(indexDate, i, SubjectRole).toString());
             item->setStartTime(calendarItemData(indexDate, i, StartTimeRole).toTime());
             item->setEndTime(calendarItemData(indexDate, i, EndTimeRole).toTime());
@@ -64,6 +72,7 @@ QVariant AbstractCalendarModel::data(const QModelIndex &index, int role) const
             item->setForeGroundColor(calendarItemData(indexDate, i, ForegroundRole).value<QColor>());
             items << item;
         }
+        mItems << items;
         return QVariant::fromValue(items);
     }
     }
@@ -71,46 +80,36 @@ QVariant AbstractCalendarModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-
-int AbstractCalendarModel::rowForFirstOfMonth() const
+void AbstractCalendarModel::fetch(const QDate &startDate, const QDate &endDate)
 {
-    const QDate first(mDate.year(), mDate.month(), 1);
-    const int dayOfWeek = first.dayOfWeek();
-
-    return dayOfWeek;
+    Q_ASSERT(startDate <= endDate);
+    beginResetModel();
+    mStartDate = startDate;
+    mEndDate = endDate;
+    endResetModel();
 }
 
-int AbstractCalendarModel::monthDaysCount(int monthNumber) const
+QModelIndex AbstractCalendarModel::index(const QDate &date) const
 {
-    Q_ASSERT(monthNumber >= 1 && monthNumber <= 12);
-
-    QDate date(mDate.year(), monthNumber, 1);
-    return date.daysInMonth();
+    const int row = mStartDate.daysTo(date);
+    return QAbstractListModel::index(row, 0, QModelIndex());
 }
+
+QDate AbstractCalendarModel::startDate() const
+{
+    return mStartDate;
+}
+
+QDate AbstractCalendarModel::endDate() const
+{
+    return mEndDate;
+}
+
 
 QDate AbstractCalendarModel::dateForIndex(const QModelIndex &index) const
 {
     Q_ASSERT(index.isValid());
 
     const int row = index.row();
-    const int first = rowForFirstOfMonth();
-    const int firstRow = first - 1;
-    const int daysInCurrentMonth = monthDaysCount(mDate.month());
-
-    QDate date;
-    if (row < firstRow) {
-        const int previousDaysNumberMonth = monthDaysCount(mDate.month() - 1);
-        const int dayOfMonth = previousDaysNumberMonth - (firstRow - row) + 1;
-        date.setDate(mDate.year(), mDate.month() - 1, dayOfMonth);
-    }
-    else if (row >= daysInCurrentMonth + firstRow) {
-        const int dayOfMonth = row - daysInCurrentMonth - firstRow + 1;
-        date.setDate(mDate.year(), mDate.month() + 1, dayOfMonth);
-    }
-    else
-    {
-        date.setDate(mDate.year(), mDate.month(), (row - firstRow) + 1);
-    }
-
-    return date;
+    return mStartDate.addDays(row);
 }

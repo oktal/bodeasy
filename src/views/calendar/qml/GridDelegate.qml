@@ -7,9 +7,12 @@ Item {
     property int currentMonth
     property bool highlightCurrenytDay
 
+    signal clicked(date d)
+
     function isToday() {
         var today = new Date();
-        return today.getDate() === dayNumber && today.getMonth() === monthNumber - 1;
+        return today.getDate() === dayNumber && today.getMonth() === monthNumber - 1 &&
+                today.getFullYear() === yearNumber;
     }
 
 
@@ -68,13 +71,15 @@ Item {
                     model: items
 
                     Rectangle {
-
                         property color backgroundColor: modelData.backgroundColor
+
+
+                        objectName: "calendarItemRect"
 
                         id: itemRect
                         color: backgroundColor
                         opacity: 0.9
-                        border.color: Qt.darker(color)
+                        border.color: itemRectArea.selected ? "#000000" : Qt.darker(color)
                         border.width: 2
                         radius: 4
                         width: grid.cellWidth - 10
@@ -88,13 +93,21 @@ Item {
                         }
 
                         MouseArea {
+                            id: itemRectArea
                             anchors.fill: parent
                             hoverEnabled: true
+
+                            property bool selected: false
+
                             onEntered: {
                                 itemRect.color = Qt.lighter(backgroundColor)
                             }
                             onExited: {
                                 itemRect.color = backgroundColor
+                            }
+                            onClicked: {
+                                itemRectArea.selected = true
+                                gridDelegate.clicked(modelData.date)
                             }
                         }
                     }

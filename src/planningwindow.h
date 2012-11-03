@@ -2,6 +2,7 @@
 #define PLANNINGWINDOW_H
 
 #include <QMainWindow>
+#include <QModelIndex>
 
 namespace Ui {
 class PlanningWindow;
@@ -19,6 +20,7 @@ public:
     
 private slots:
     void on_planifyAction_triggered();
+    void onItemClicked(const QModelIndex &index);
 
 private:
     Ui::PlanningWindow *ui;

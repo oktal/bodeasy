@@ -1,7 +1,10 @@
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
+//import QtDesktop 0.1
 
-Rectangle {
+Item {
+    signal clicked(date d)
+
     id: root
     width: 1400
     height: 600
@@ -44,10 +47,18 @@ Rectangle {
 
     GridView {
         id: grid
+        objectName: "grid"
         model: calendarModel
         cellHeight: 110
         cellWidth: 150
-        delegate: GridDelegate { currentMonth: currentMonthNumber; highlightCurrenytDay: root.highlightCurrentyDay }
+        delegate: GridDelegate {
+            objectName: "delegate"
+            currentMonth: currentMonthNumber
+            highlightCurrenytDay: root.highlightCurrentyDay
+            onClicked: {
+                root.clicked(d)
+            }
+        }
         anchors { left: parent.left; top: header.bottom; bottom: parent.bottom; right: header.right }
         height: 800
 
@@ -64,6 +75,15 @@ Rectangle {
         var width = (root.width) / 7;
         grid.cellWidth = width <= minimumCellWidth ? minimumCellWidth : width;
     }
+
+    function isoDateString(d){
+       function pad(n){ return n < 10 ? '0' + n : n }
+       return d.getUTCFullYear() + '-'
+          + pad(d.getUTCMonth() + 1) + '-'
+          + pad(d.getUTCDate()) + 'T'
+          + pad(d.getUTCHours()) + ':'
+          + pad(d.getUTCMinutes()) + ':'
+          + pad(d.getUTCSeconds()) + 'Z'}
 
 }
 

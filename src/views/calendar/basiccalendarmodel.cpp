@@ -4,9 +4,8 @@
 #include <QDebug>
 #include <QModelIndex>
 
-BasicCalendarModel::BasicCalendarModel(const QDate &date, QObject *parent) :
-    AbstractCalendarModel(date, parent),
-    mDate(date)
+BasicCalendarModel::BasicCalendarModel(const QDate &startDate, const QDate &endDate, QObject *parent) :
+    AbstractCalendarModel(startDate, endDate, parent)
 {
 }
 
@@ -66,21 +65,7 @@ QModelIndex BasicCalendarModel::indexFromItem(BasicCalendarItem *item) const
 {
     Q_ASSERT(item);
     const QDate date = item->date();
-
-    const QDate first(mDate.year(), mDate.month(), 1);
-    const int dayOfWeek = first.dayOfWeek();
-
-    if (date.month() == mDate.month()) {
-        return index(dayOfWeek + date.day());
-    }
-    else if (date.month() == mDate.month() - 1) {
-        return index(date.day());
-    }
-    else if (date.month() == mDate.month() + 1) {
-        return index(dayOfWeek + first.daysInMonth() + date.day());
-    }
-
-    return QModelIndex();
+    return AbstractCalendarModel::index(date);
 }
 
 BasicCalendarItem *BasicCalendarModel::item(const QDate &date, int row) const
