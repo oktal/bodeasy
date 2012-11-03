@@ -23,6 +23,9 @@ public:
     Session session() const;
     QDate date() const;
     
+private slots:
+    void on_btnToday_clicked();
+
 private:
     Ui::PlanDialog *ui;
     SessionsModel *mSessionsModel;

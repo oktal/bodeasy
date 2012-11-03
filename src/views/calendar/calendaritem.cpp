@@ -14,7 +14,20 @@ CalendarItem::CalendarItem(QObject *parent) : QObject(parent) {
 
 CalendarItem::~CalendarItem()
 {
-    qDebug() << "BLAH";
+
+}
+
+QDate CalendarItem::date() const
+{
+    return mDate;
+}
+
+void CalendarItem::setDate(const QDate &date)
+{
+    if (mDate != date) {
+        mDate = date;
+        emit dateChanged();
+    }
 }
 
 QString CalendarItem::subject() const {

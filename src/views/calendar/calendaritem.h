@@ -8,6 +8,7 @@
 
 class CalendarItem : public QObject {
     Q_OBJECT
+    Q_PROPERTY(QDate date READ date WRITE setDate NOTIFY dateChanged)
     Q_PROPERTY(QString subject READ subject WRITE setSubject NOTIFY subjectChanged)
     Q_PROPERTY(QTime startTime READ startTime WRITE setStartTime NOTIFY startTimeChanged)
     Q_PROPERTY(QTime endTime READ endTime WRITE setEndTime NOTIFY endTimeChanged)
@@ -17,6 +18,10 @@ public:
     CalendarItem(QObject *parent = 0);
     CalendarItem(const QString &subject, QObject *parent = 0);
     ~CalendarItem();
+
+    QDate date() const;
+    void setDate(const QDate &date);
+
     QString subject() const;
     void setSubject(const QString &subject);
 
@@ -33,6 +38,7 @@ public:
     void setForeGroundColor(const QColor &color);
 
 signals:
+    void dateChanged();
     void subjectChanged();
     void startTimeChanged();
     void endTimeChanged();
@@ -40,6 +46,7 @@ signals:
     void foreGroundColorChanged();
 
 private:
+    QDate mDate;
     QString mSubject;
     QTime mStartTime;
     QTime mEndTime;

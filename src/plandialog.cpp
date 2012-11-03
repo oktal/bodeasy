@@ -10,6 +10,7 @@ PlanDialog::PlanDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->cmbTrainings->setModel(mSessionsModel);
+    ui->dateEdit->setDate(QDate::currentDate());
 }
 
 PlanDialog::~PlanDialog()
@@ -26,4 +27,9 @@ Session PlanDialog::session() const
 QDate PlanDialog::date() const
 {
     return ui->dateEdit->date();
+}
+
+void PlanDialog::on_btnToday_clicked()
+{
+    ui->dateEdit->setDate(QDate::currentDate());
 }

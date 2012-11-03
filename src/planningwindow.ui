@@ -61,9 +61,9 @@
    <addaction name="dayViewAction"/>
    <addaction name="weekViewAction"/>
    <addaction name="monthViewAction"/>
-   <addaction name="todayAction"/>
    <addaction name="separator"/>
    <addaction name="backAction"/>
+   <addaction name="todayAction"/>
    <addaction name="nextAction"/>
   </widget>
   <action name="planifyAction">

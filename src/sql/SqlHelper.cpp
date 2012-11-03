@@ -139,7 +139,7 @@ QStringList SqlHelper::initializeScripts()
 
 QString SqlHelper::connectionName()
 {
-	return QLatin1String( "BodEasy DB" );
+    return QLatin1String( "MenuComposer DB" );
 }
 
 QString SqlHelper::databaseLocalFilePath()
