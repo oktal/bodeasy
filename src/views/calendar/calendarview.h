@@ -3,6 +3,7 @@
 
 #include <QDeclarativeView>
 #include <QModelIndex>
+#include <QPersistentModelIndex>
 
 class AbstractCalendarModel;
 
@@ -23,22 +24,24 @@ public:
 
     void setDate(const QDate &date);
 
+    QModelIndex currentIndex() const;
+
 signals:
-    void clicked(const QModelIndex &index);
+    void itemClicked(const QDate &date, int row);
 
 public slots:
     void previous();
     void next();
 
 private slots:
-     void itemClicked(const QDateTime &dateTime);
+     void onClicked(const QDateTime &dateTime, int row);
 
 private:
     void fetchTodayModel();
     ViewType mViewType;
     AbstractCalendarModel *mModel;
     QDate mDate;
-    
+    QPersistentModelIndex mCurrentIndex;
 };
 
 #endif // CALENDARVIEW_H

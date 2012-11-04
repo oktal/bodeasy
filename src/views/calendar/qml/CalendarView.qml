@@ -3,7 +3,7 @@ import QtQuick 1.1
 //import QtDesktop 0.1
 
 Item {
-    signal clicked(date d)
+    signal clicked(date d, int row)
 
     id: root
     width: 1400
@@ -56,7 +56,7 @@ Item {
             currentMonth: currentMonthNumber
             highlightCurrenytDay: root.highlightCurrentyDay
             onClicked: {
-                root.clicked(d)
+                root.clicked(d, row)
             }
         }
         anchors { left: parent.left; top: header.bottom; bottom: parent.bottom; right: header.right }

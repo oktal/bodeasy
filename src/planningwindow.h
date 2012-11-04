@@ -4,11 +4,15 @@
 #include <QMainWindow>
 #include <QModelIndex>
 
+#include "sql/plannedsession.h"
+
 namespace Ui {
 class PlanningWindow;
 }
 
 class BasicCalendarModel;
+class BasicCalendarItem;
+class PlannedSessionsManager;
 
 class PlanningWindow : public QMainWindow
 {
@@ -20,11 +24,17 @@ public:
     
 private slots:
     void on_planifyAction_triggered();
-    void onItemClicked(const QModelIndex &index);
+    void onItemClicked(const QDate &date, int row);
+
+    void on_removeAction_triggered();
 
 private:
     Ui::PlanningWindow *ui;
     BasicCalendarModel *mCalendarModel;
+    PlannedSessionsManager *mManager;
+
+    QMap<BasicCalendarItem *, PlannedSession> mPlannedSessions;
+    BasicCalendarItem *mCurrentItem;
 };
 
 #endif // PLANNINGWINDOW_H
