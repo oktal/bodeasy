@@ -18,15 +18,16 @@ PlanDialog::~PlanDialog()
     delete ui;
 }
 
-Session PlanDialog::session() const
+PlannedSession PlanDialog::plannedSession() const
 {
+    PlannedSession session;
     const int currentIndex = ui->cmbTrainings->currentIndex();
-    return mSessionsModel->session(currentIndex);
-}
+    session.session = mSessionsModel->session(currentIndex);
+    session.date = ui->dateEdit->date();
+    session.startTime = ui->startTimeEdit->time();
+    session.endTime = ui->endTimeEdit->time();
 
-QDate PlanDialog::date() const
-{
-    return ui->dateEdit->date();
+    return session;
 }
 
 void PlanDialog::on_btnToday_clicked()

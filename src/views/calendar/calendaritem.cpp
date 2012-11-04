@@ -8,13 +8,20 @@ CalendarItem::CalendarItem(const QString &subject, QObject *parent) : QObject(pa
 {
 }
 
-CalendarItem::CalendarItem(QObject *parent) : QObject(parent) {
-
+CalendarItem::CalendarItem(int row, QObject *parent) :
+    QObject(parent),
+    mRow(row)
+{
 }
 
 CalendarItem::~CalendarItem()
 {
 
+}
+
+int CalendarItem::row() const
+{
+    return mRow;
 }
 
 QDate CalendarItem::date() const

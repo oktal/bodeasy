@@ -25,6 +25,8 @@ public:
     BasicCalendarItem *item(const QDate &date, int row) const;
     QList<BasicCalendarItem *> items(const QDate &date) const;
 
+    bool removeItem(BasicCalendarItem *item);
+
 private:
     QList<BasicCalendarItem *> mItems;
     QMap<QDate, QList<BasicCalendarItem *> > mMappedItems;

@@ -46,7 +46,7 @@ void CalendarView::setModel(AbstractCalendarModel *model)
     setSource(QUrl::fromLocalFile("src/views/calendar/qml/CalendarView.qml"));
 
     QObject *item = rootObject();
-    connect(item, SIGNAL(clicked(QDateTime)), this, SLOT(itemClicked(QDateTime)));
+    connect(item, SIGNAL(clicked(QDateTime, int)), this, SLOT(onClicked(QDateTime, int)));
 }
 
 AbstractCalendarModel *CalendarView::model() const
@@ -57,6 +57,11 @@ AbstractCalendarModel *CalendarView::model() const
 void CalendarView::setDate(const QDate &date)
 {
     mDate = date;
+}
+
+QModelIndex CalendarView::currentIndex() const
+{
+    return mCurrentIndex;
 }
 
 void CalendarView::previous()
@@ -99,11 +104,11 @@ void CalendarView::next()
     mDate = firstNextMonthDay;
 }
 
-void CalendarView::itemClicked(const QDateTime &dateTime)
+void CalendarView::onClicked(const QDateTime &dateTime, int row)
 {
     const QModelIndex index = mModel->index(dateTime.date());
-    emit clicked(index);
-
+    mCurrentIndex = index;
+    emit itemClicked(dateTime.date(), row);
 }
 
 void CalendarView::fetchTodayModel()

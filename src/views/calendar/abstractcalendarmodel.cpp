@@ -63,7 +63,7 @@ QVariant AbstractCalendarModel::data(const QModelIndex &index, int role) const
         QList<QObject *> items;
         const int count = itemsCount(indexDate);
         for (int i = 0; i < count; ++i) {
-            CalendarItem *item = new CalendarItem;
+            CalendarItem *item = new CalendarItem(i);
             item->setDate(indexDate);
             item->setSubject(calendarItemData(indexDate, i, SubjectRole).toString());
             item->setStartTime(calendarItemData(indexDate, i, StartTimeRole).toTime());

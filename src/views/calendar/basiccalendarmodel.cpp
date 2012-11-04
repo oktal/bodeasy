@@ -78,3 +78,15 @@ QList<BasicCalendarItem *> BasicCalendarModel::items(const QDate &date) const
 {
     return mMappedItems.value(date, QList<BasicCalendarItem *>());
 }
+
+bool BasicCalendarModel::removeItem(BasicCalendarItem *item)
+{
+    emit layoutAboutToBeChanged();
+    mItems.removeOne(item);
+    const QDate date = item->date();
+    QList<BasicCalendarItem *> &mappedItemsList = mMappedItems[date];
+    mappedItemsList.removeOne(item);
+    emit layoutChanged();
+
+    return true;
+}

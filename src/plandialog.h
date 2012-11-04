@@ -10,7 +10,7 @@ class PlanDialog;
 
 class SessionsModel;
 
-#include "sql/session.h"
+#include "sql/plannedsession.h"
 
 class PlanDialog : public QDialog
 {
@@ -20,8 +20,7 @@ public:
     explicit PlanDialog(QWidget *parent = 0);
     ~PlanDialog();
 
-    Session session() const;
-    QDate date() const;
+    PlannedSession plannedSession() const;
     
 private slots:
     void on_btnToday_clicked();

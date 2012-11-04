@@ -7,7 +7,7 @@ Item {
     property int currentMonth
     property bool highlightCurrenytDay
 
-    signal clicked(date d)
+    signal clicked(date d, int row)
 
     function isToday() {
         var today = new Date();
@@ -107,7 +107,7 @@ Item {
                             }
                             onClicked: {
                                 itemRectArea.selected = true
-                                gridDelegate.clicked(modelData.date)
+                                gridDelegate.clicked(modelData.date, modelData.row)
                             }
                         }
                     }
