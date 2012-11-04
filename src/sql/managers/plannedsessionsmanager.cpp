@@ -10,15 +10,16 @@ PlannedSessionsManager::PlannedSessionsManager(QObject *parent) :
 {
 }
 
-bool PlannedSessionsManager::createPlannedSession(PlannedSession &session) const
+bool PlannedSessionsManager::createPlannedSession(PlannedSession &session, qint64 userId) const
 {
     QSqlQuery query = SqlHelper::query();
 
     const bool transaction = SqlHelper::transaction();
 
-    query.prepare("INSERT INTO session_planned(id_session, date, start_time, end_time) "
-                  "VALUES(:id_session, :date, :start_time, :end_time)");
+    query.prepare("INSERT INTO session_planned(id_session, id_user, date, start_time, end_time) "
+                  "VALUES(:id_session, :id_user, :date, :start_time, :end_time)");
     query.bindValue(":id_session", session.session.id);
+    query.bindValue(":id_user", userId);
     query.bindValue(":date", session.date);
     query.bindValue(":start_time", session.startTime);
     query.bindValue(":end_time", session.endTime);
@@ -41,13 +42,15 @@ bool PlannedSessionsManager::createPlannedSession(PlannedSession &session) const
     return false;
 }
 
-QList<PlannedSession> PlannedSessionsManager::selectPlannedSessions() const
+QList<PlannedSession> PlannedSessionsManager::selectPlannedSessions(qint64 userId) const
 {
     QList<PlannedSession> plannedSessions;
     QSqlQuery query = SqlHelper::query();
 
     query.prepare("SELECT s.id_session, s.name, s.objective, sp.id_session_planned, sp.date, sp.start_time, sp.end_time "
-                  "FROM session_planned sp INNER JOIN session s ON sp.id_session=s.id_session");
+                  "FROM session_planned sp INNER JOIN session s ON sp.id_session=s.id_session "
+                  "WHERE id_user=:id_user");
+    query.bindValue(":id_user", userId);
     if (query.exec()) {
         while (query.next()) {
             PlannedSession ps;

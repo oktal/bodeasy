@@ -197,7 +197,7 @@ void MainWindow::on_userAction_triggered()
 
 void MainWindow::on_calendarAction_triggered()
 {
-    PlanningWindow *window = new PlanningWindow(this);
+    PlanningWindow *window = new PlanningWindow(mUserId, this);
     window->show();
 }
 

@@ -2,7 +2,7 @@
 -- Author:        Disk1
 -- Caption:       New Model
 -- Project:       Name of the project
--- Changed:       2012-11-03 18:06
+-- Changed:       2012-11-04 16:40
 -- Created:       2010-12-11 20:09
 PRAGMA foreign_keys = OFF;
 
@@ -161,6 +161,7 @@ CREATE INDEX "session_made_result.fk_session_made_result_exercise_result1" ON "s
 CREATE TABLE "session_planned"(
   "id_session_planned" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   "id_session" INTEGER NOT NULL CHECK("id_session">=0),
+  "id_user" INTEGER NOT NULL CHECK("id_user">=0),
   "date" DATE,
   "start_time" TIME,
   "end_time" TIME,
@@ -168,7 +169,11 @@ CREATE TABLE "session_planned"(
     UNIQUE("id_session_planned"),
   CONSTRAINT "fk_session_planned_session1"
     FOREIGN KEY("id_session")
-    REFERENCES "session"("id_session")
+    REFERENCES "session"("id_session"),
+  CONSTRAINT "fk_session_planned_user1"
+    FOREIGN KEY("id_user")
+    REFERENCES "user"("id_user")
 );
 CREATE INDEX "session_planned.fk_session_planned_session1" ON "session_planned"("id_session");
+CREATE INDEX "session_planned.fk_session_planned_user1" ON "session_planned"("id_user");
 COMMIT;
