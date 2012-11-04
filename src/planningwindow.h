@@ -28,6 +28,8 @@ private slots:
 
     void on_removeAction_triggered();
 
+    void on_editAction_triggered();
+
 private:
     Ui::PlanningWindow *ui;
     BasicCalendarModel *mCalendarModel;

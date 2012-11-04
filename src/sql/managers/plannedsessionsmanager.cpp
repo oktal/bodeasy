@@ -1,6 +1,8 @@
 #include "plannedsessionsmanager.h"
 
 #include <QVariant>
+#include <QDebug>
+#include <QSqlError>
 #include "sql/SqlHelper.h"
 
 PlannedSessionsManager::PlannedSessionsManager(QObject *parent) :
@@ -69,6 +71,31 @@ QList<PlannedSession> PlannedSessionsManager::selectPlannedSessions() const
 
 bool PlannedSessionsManager::updatePlannedSession(const PlannedSession &session) const
 {
+    const bool transaction = SqlHelper::transaction();
+
+    QSqlQuery query = SqlHelper::query();
+    query.prepare("UPDATE session_planned SET "
+                  "date=:date, start_time=:startTime, end_time=:endTime "
+                  "WHERE id_session_planned=:sessionId");
+    query.bindValue(":date", session.date);
+    query.bindValue(":startTime", session.startTime);
+    query.bindValue(":endTime", session.endTime);
+    query.bindValue(":sessionId", session.id);
+
+    if (query.exec()) {
+        if (transaction) {
+            SqlHelper::commit();
+            return true;
+        }
+
+        return false;
+    }
+
+    else if (transaction) {
+        qDebug() << query.lastError();
+        SqlHelper::rollback();
+    }
+
     return false;
 }
 

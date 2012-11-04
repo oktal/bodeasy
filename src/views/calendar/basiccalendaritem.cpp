@@ -7,9 +7,12 @@ BasicCalendarItem::BasicCalendarItem()
 BasicCalendarItem::BasicCalendarItem(const QDate &date, const QString &subject) :
     mDate(date),
     mSubject(subject),
+    mStartTime(0, 0, 0),
+    mEndTime(0, 0, 0),
     mBackgroundColor(Qt::red),
     mForeGroundColor(64, 0, 0)
 {
+
 }
 
 void BasicCalendarItem::setDate(const QDate &date)
@@ -34,7 +37,6 @@ QString BasicCalendarItem::subject() const
 
 void BasicCalendarItem::setStartTime(const QTime &time)
 {
-    Q_ASSERT(time <= mEndTime);
     mStartTime = time;
 }
 
@@ -45,7 +47,6 @@ QTime BasicCalendarItem::startTime() const
 
 void BasicCalendarItem::setEndTime(const QTime &time)
 {
-    Q_ASSERT(mEndTime >= mStartTime);
     mEndTime = time;
 }
 

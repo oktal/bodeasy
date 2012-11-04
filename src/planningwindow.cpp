@@ -30,6 +30,8 @@ PlanningWindow::PlanningWindow(QWidget *parent) :
     QList<BasicCalendarItem *> items;
     foreach (const PlannedSession &ps, planedSessions) {
         BasicCalendarItem *item = new BasicCalendarItem(ps.date, ps.session.name);
+        item->setStartTime(ps.startTime);
+        item->setEndTime(ps.endTime);
         items << item;
         mPlannedSessions[item] = ps;
     }
@@ -50,6 +52,8 @@ void PlanningWindow::on_planifyAction_triggered()
 
         if (mManager->createPlannedSession(ps)) {
             BasicCalendarItem *item = new BasicCalendarItem(ps.date, ps.session.name);
+            item->setStartTime(ps.startTime);
+            item->setEndTime(ps.endTime);
             mCalendarModel->appendItem(item);
 
             mPlannedSessions[item] = ps;
@@ -75,4 +79,25 @@ void PlanningWindow::on_removeAction_triggered()
         ui->editAction->setEnabled(false);
         ui->removeAction->setEnabled(false);
     }
+}
+
+void PlanningWindow::on_editAction_triggered()
+{
+     const PlannedSession &ps = mPlannedSessions.value(mCurrentItem);
+     PlanDialog dialog(ps);
+     if (dialog.exec() == QDialog::Accepted) {
+        const PlannedSession &session = dialog.plannedSession();
+        if (mManager->updatePlannedSession(session)) {
+            mCalendarModel->removeItem(mCurrentItem);
+            BasicCalendarItem *item = new BasicCalendarItem(session.date, session.session.name);
+            item->setStartTime(session.startTime);
+            item->setEndTime(session.endTime);
+
+            mCalendarModel->appendItem(item);
+            mCurrentItem = 0;
+
+            ui->editAction->setEnabled(false);
+            ui->removeAction->setEnabled(false);
+        }
+     }
 }
