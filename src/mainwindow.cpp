@@ -20,6 +20,7 @@
 #include "sql/models/sessionsmodel.h"
 #include "sql/models/sessioncontentmodel.h"
 #include "sql/models/sessionsmademodel.h"
+#include "sql/managers/plannedsessionsmanager.h"
 
 #include <QSqlTableModel>
 
@@ -227,11 +228,16 @@ void MainWindow::on_cmbSessions_activated(int index)
 
 void MainWindow::on_btnStart_clicked()
 {
-    const int index = ui->cmbSessions->currentIndex();
-    const qint64 sessionId = sessionsModel->session(index).id;
-    
-    sessionProxy->setSessionId(sessionId);
-    contentModel->setSessionId(sessionId);
+//    qint64 sessionId = -1;
+//    if (ui->radOtherSession->isChecked()) {
+//        const int index = ui->cmbSessions->currentIndex();
+//        sessionId = sessionsModel->session(index).id;
+//    } else {
+//        sessionId = mTodaySession.session.id;
+//    }
+
+//    sessionProxy->setSessionId(sessionId);
+//    contentModel->setSessionId(sessionId);
     sessionProxy->setRunning(true,SessionProxy::Session,false);
 
 }
@@ -300,6 +306,12 @@ void MainWindow::onTimerTimeout()
     dateTimeLabel->setText(dt);
 }
 
+struct PlannedSessionsSorter {
+    bool operator()(const PlannedSession &lhs, const PlannedSession &rhs) {
+        return lhs.date < rhs.date;
+    }
+};
+
 void MainWindow::selectInformations()
 {
     QSqlQuery q = SqlHelper::query();
@@ -319,7 +331,44 @@ void MainWindow::selectInformations()
         }
     }
 
-    ui->lblNextSeanceDate->setText(trUtf8("Aucune séance planifiée"));
+     ui->lblPlanifiedSession->setText(trUtf8("Aucune séance planifiée"));
+     ui->lblNextSeanceDate->setText(trUtf8("Aucune séance planifiée"));
+
+    PlannedSessionsManager manager;
+    QList<PlannedSession> plannedSessions = manager.selectPlannedSessions(mUserId);
+    qSort(plannedSessions.begin(), plannedSessions.end(), PlannedSessionsSorter());
+    const QDate today = QDate::currentDate();
+    bool isSessionPlanned = false;
+    for (int i = 0; i < plannedSessions.count(); ++i) {
+        const PlannedSession &ps = plannedSessions.at(i);
+        if (ps.date == today) {
+            mTodaySession = ps;
+            sessionProxy->setSessionId(ps.session.id);
+            contentModel->setSessionId(ps.session.id);
+            sessionProxy->setRunning(true,SessionProxy::Session,true);
+            ui->btnStart->setEnabled(true);
+            ui->lblPlanifiedSession->setText(ps.session.name);
+
+            isSessionPlanned = true;
+            if (i < plannedSessions.count() - 1) {
+                const PlannedSession &nextSession = plannedSessions.at(i + 1);
+                ui->lblNextSeanceDate->setText(
+                            QString("%1 - %2").arg(nextSession.session.name)
+                                              .arg(nextSession.date.toString()));
+            }
+            break;
+        }
+    }
+    ui->radPlanifiedSession->setEnabled(isSessionPlanned);
+    ui->radPlanifiedSession->setChecked(isSessionPlanned);
+    ui->lblPlanifiedSession->setEnabled(isSessionPlanned);
+    ui->cmbSessions->setEnabled(!isSessionPlanned);
+
+    if (!isSessionPlanned) {
+        sessionProxy->setSessionId(-1);
+        contentModel->setSessionId(-1);
+        sessionProxy->setRunning(false, SessionProxy::Unknown, false, false);
+    }
 }
 
 void MainWindow::readSettings()
@@ -413,3 +462,12 @@ void MainWindow::on_graphAction_triggered()
 }
 #endif
 
+
+void MainWindow::on_radPlanifiedSession_clicked()
+{
+    sessionProxy->setSessionId(mTodaySession.session.id);
+    contentModel->setSessionId(mTodaySession.session.id);
+    sessionProxy->stop(false);
+    sessionProxy->setRunning(true, SessionProxy::Session,true);
+    ui->btnStart->setEnabled(true);
+}

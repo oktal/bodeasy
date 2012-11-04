@@ -6,6 +6,8 @@
 #include "SessionProxy.h"
 #include "settingsdialog.h"
 
+#include "sql/plannedsession.h"
+
 namespace Ui
 {
     class MainWindow;
@@ -53,6 +55,8 @@ private slots:
 
     void on_calendarAction_triggered();
 
+    void on_radPlanifiedSession_clicked();
+
 private:
     void selectInformations();
     void readSettings();
@@ -72,6 +76,8 @@ private:
     bool mStartChrono;
     bool mResetChrono;
     bool mStopChrono;
+
+    PlannedSession mTodaySession;
 
 protected slots:
     virtual void closeEvent(QCloseEvent* event);
