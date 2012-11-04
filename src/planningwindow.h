@@ -5,6 +5,7 @@
 #include <QModelIndex>
 
 #include "sql/plannedsession.h"
+#include "sql/user.h"
 
 namespace Ui {
 class PlanningWindow;
@@ -19,7 +20,7 @@ class PlanningWindow : public QMainWindow
     Q_OBJECT
     
 public:
-    explicit PlanningWindow(QWidget *parent = 0);
+    explicit PlanningWindow(qint64 userId, QWidget *parent = 0);
     ~PlanningWindow();
     
 private slots:
@@ -32,6 +33,7 @@ private slots:
 
 private:
     Ui::PlanningWindow *ui;
+    qint64 mUserId;
     BasicCalendarModel *mCalendarModel;
     PlannedSessionsManager *mManager;
 

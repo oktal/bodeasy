@@ -12,9 +12,10 @@
 #include <QDebug>
 #include <QTimer>
 
-PlanningWindow::PlanningWindow(QWidget *parent) :
+PlanningWindow::PlanningWindow(qint64 userId, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::PlanningWindow),
+    mUserId(userId),
     mCalendarModel(new BasicCalendarModel(QDate::currentDate(), QDate::currentDate(), this)),
     mManager(new PlannedSessionsManager(this))
 {
@@ -26,7 +27,7 @@ PlanningWindow::PlanningWindow(QWidget *parent) :
 
     connect(ui->planningView, SIGNAL(itemClicked(QDate, int)), this, SLOT(onItemClicked(QDate, int)));
 
-    const QList<PlannedSession> planedSessions = mManager->selectPlannedSessions();
+    const QList<PlannedSession> planedSessions = mManager->selectPlannedSessions(userId);
     QList<BasicCalendarItem *> items;
     foreach (const PlannedSession &ps, planedSessions) {
         BasicCalendarItem *item = new BasicCalendarItem(ps.date, ps.session.name);
@@ -50,7 +51,7 @@ void PlanningWindow::on_planifyAction_triggered()
     if (dialog.exec() == QDialog::Accepted) {
         PlannedSession ps = dialog.plannedSession();
 
-        if (mManager->createPlannedSession(ps)) {
+        if (mManager->createPlannedSession(ps, mUserId)) {
             BasicCalendarItem *item = new BasicCalendarItem(ps.date, ps.session.name);
             item->setStartTime(ps.startTime);
             item->setEndTime(ps.endTime);
