@@ -18,6 +18,7 @@ class PlanDialog : public QDialog
     
 public:
     explicit PlanDialog(QWidget *parent = 0);
+    explicit PlanDialog(const PlannedSession &ps, QWidget *parent = 0);
     ~PlanDialog();
 
     PlannedSession plannedSession() const;
@@ -25,9 +26,18 @@ public:
 private slots:
     void on_btnToday_clicked();
 
+    void on_cmbTrainings_activated(int index);
+
+    void on_dateEdit_dateChanged(const QDate &date);
+
+    void on_startTimeEdit_timeChanged(const QTime &time);
+
+    void on_endTimeEdit_timeChanged(const QTime &time);
+
 private:
     Ui::PlanDialog *ui;
     SessionsModel *mSessionsModel;
+    PlannedSession mPlannedSession;
 };
 
 #endif // PLANDIALOG_H
