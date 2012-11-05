@@ -24,6 +24,7 @@ PlanningWindow::PlanningWindow(qint64 userId, QWidget *parent) :
 
     connect(ui->nextAction, SIGNAL(triggered()), ui->planningView, SLOT(next()));
     connect(ui->backAction, SIGNAL(triggered()), ui->planningView, SLOT(previous()));
+    connect(ui->todayAction, SIGNAL(triggered()), ui->planningView, SLOT(goToday()));
 
     connect(ui->planningView, SIGNAL(itemClicked(QDate, int)), this, SLOT(onItemClicked(QDate, int)));
 

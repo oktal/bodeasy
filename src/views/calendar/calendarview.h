@@ -33,6 +33,8 @@ public slots:
     void previous();
     void next();
 
+    void goToday();
+
 private slots:
      void onClicked(const QDateTime &dateTime, int row);
 

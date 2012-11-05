@@ -104,6 +104,12 @@ void CalendarView::next()
     mDate = firstNextMonthDay;
 }
 
+void CalendarView::goToday()
+{
+    mDate = QDate::currentDate();
+    fetchTodayModel();
+}
+
 void CalendarView::onClicked(const QDateTime &dateTime, int row)
 {
     const QModelIndex index = mModel->index(dateTime.date());
