@@ -20,7 +20,7 @@
      <x>0</x>
      <y>0</y>
      <width>671</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
@@ -350,7 +350,7 @@
   </action>
   <action name="calendarAction">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="ressources.qrc">
@@ -468,6 +468,38 @@
     <hint type="destinationlabel">
      <x>573</x>
      <y>347</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radOtherSession</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>cmbSessions</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>90</x>
+     <y>558</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>135</x>
+     <y>562</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radPlanifiedSession</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>cmbSessions</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>62</x>
+     <y>526</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>249</x>
+     <y>559</y>
     </hint>
    </hints>
   </connection>

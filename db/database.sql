@@ -1,8 +1,8 @@
--- Creator:       MySQL Workbench 5.2.30/ExportSQLite plugin 2009.12.02
+-- Creator:       MySQL Workbench 5.2.38/ExportSQLite plugin 2009.12.02
 -- Author:        Disk1
 -- Caption:       New Model
 -- Project:       Name of the project
--- Changed:       2011-06-07 21:13
+-- Changed:       2012-11-04 16:40
 -- Created:       2010-12-11 20:09
 PRAGMA foreign_keys = OFF;
 
@@ -158,4 +158,22 @@ CREATE TABLE "session_made_result"(
     REFERENCES "exercise_result"("id_result")
 );
 CREATE INDEX "session_made_result.fk_session_made_result_exercise_result1" ON "session_made_result"("id_result");
+CREATE TABLE "session_planned"(
+  "id_session_planned" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  "id_session" INTEGER NOT NULL CHECK("id_session">=0),
+  "id_user" INTEGER NOT NULL CHECK("id_user">=0),
+  "date" DATE,
+  "start_time" TIME,
+  "end_time" TIME,
+  CONSTRAINT "id_session_planned_UNIQUE"
+    UNIQUE("id_session_planned"),
+  CONSTRAINT "fk_session_planned_session1"
+    FOREIGN KEY("id_session")
+    REFERENCES "session"("id_session"),
+  CONSTRAINT "fk_session_planned_user1"
+    FOREIGN KEY("id_user")
+    REFERENCES "user"("id_user")
+);
+CREATE INDEX "session_planned.fk_session_planned_session1" ON "session_planned"("id_session");
+CREATE INDEX "session_planned.fk_session_planned_user1" ON "session_planned"("id_user");
 COMMIT;
