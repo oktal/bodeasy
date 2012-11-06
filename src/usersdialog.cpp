@@ -37,7 +37,7 @@ UsersDialog::~UsersDialog()
 void UsersDialog::on_btnAdd_clicked()
 {
     const QString newUser = ui->txtUser->text().trimmed();
-    const bool hasUser = !m_model->match(m_model->index(0,0),Qt::DisplayRole,newUser,1,Qt::MatchExactly | Qt::MatchRecursive ).isEmpty();
+    const bool hasUser = !m_model->match(m_model->index(0,0),Qt::DisplayRole,newUser,1,Qt::MatchFixedString | Qt::MatchRecursive).isEmpty();
 
     if (hasUser)
     {
