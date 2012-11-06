@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>682</width>
+    <width>712</width>
     <height>574</height>
    </rect>
   </property>
@@ -17,50 +17,49 @@
    <iconset resource="ressources.qrc">
     <normaloff>:/images/measure-icon.png</normaloff>:/images/measure-icon.png</iconset>
   </property>
-  <widget class="QGraphicsView" name="graphicsView">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>10</y>
-     <width>641</width>
-     <height>521</height>
-    </rect>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="sizeConstraint">
+    <enum>QLayout::SetFixedSize</enum>
    </property>
-  </widget>
-  <widget class="QPushButton" name="btnClose">
-   <property name="geometry">
-    <rect>
-     <x>580</x>
-     <y>540</y>
-     <width>81</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Quitter</string>
-   </property>
-   <property name="icon">
-    <iconset resource="ressources.qrc">
-     <normaloff>:/images/close-icon.png</normaloff>:/images/close-icon.png</iconset>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btnHelp">
-   <property name="geometry">
-    <rect>
-     <x>490</x>
-     <y>540</y>
-     <width>81</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Aide</string>
-   </property>
-   <property name="icon">
-    <iconset resource="ressources.qrc">
-     <normaloff>:/images/help-icon.png</normaloff>:/images/help-icon.png</iconset>
-   </property>
-  </widget>
+   <item row="0" column="0" colspan="3">
+    <widget class="QGraphicsView" name="graphicsView"/>
+   </item>
+   <item row="1" column="0">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>529</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="1">
+    <widget class="QPushButton" name="btnHelp">
+     <property name="text">
+      <string>Aide</string>
+     </property>
+     <property name="icon">
+      <iconset resource="ressources.qrc">
+       <normaloff>:/images/help-icon.png</normaloff>:/images/help-icon.png</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QPushButton" name="btnClose">
+     <property name="text">
+      <string>Quitter</string>
+     </property>
+     <property name="icon">
+      <iconset resource="ressources.qrc">
+       <normaloff>:/images/close-icon.png</normaloff>:/images/close-icon.png</iconset>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources>
   <include location="ressources.qrc"/>

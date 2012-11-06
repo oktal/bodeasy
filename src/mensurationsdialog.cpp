@@ -21,10 +21,29 @@
 #include <QLabel>
 #include <QGraphicsTextItem>
 #include <QFontMetrics>
+#include <QSortFilterProxyModel>
 
 #include <QDebug>
 
 static QHash<QWidget *, QGraphicsTextItem *> labelsHash;
+
+class DateProxyModel : public QSortFilterProxyModel {
+public:
+    DateProxyModel(QObject *parent = 0) :
+        QSortFilterProxyModel(parent) {
+
+    }
+
+    QVariant data(const QModelIndex &index, int role) const {
+        if (role == Qt::DisplayRole) {
+            const QDateTime originalDate = sourceModel()->data(index, role).toDateTime();
+            return originalDate.toString(Qt::SystemLocaleLongDate);
+        }
+
+        return QVariant();
+    }
+};
+
 
 MensurationsDialog::MensurationsDialog(quint64 userId, QWidget *parent) :
     QDialog(parent),
@@ -80,8 +99,11 @@ MensurationsDialog::MensurationsDialog(quint64 userId, QWidget *parent) :
     }
 
     mapper->toLast();
-    cmbDates->setModel(model);
+    DateProxyModel *proxyModel = new DateProxyModel(this);
+    proxyModel->setSourceModel(model);
+    cmbDates->setModel(proxyModel);
     cmbDates->setModelColumn(model->fieldIndex("date"));
+
     cmbDates->setCurrentIndex(mapper->currentIndex());
     connect(cmbDates, SIGNAL(currentIndexChanged(int)),
             mapper, SLOT(setCurrentIndex(int)));
@@ -186,46 +208,35 @@ void MensurationsDialog::createWidgets()
 {
     txtThigh = new QLineEdit;
     txtThigh->setFixedWidth(40);
-    txtThigh->move(140, 265);
 
     txtBiceps = new QLineEdit;
     txtBiceps->setFixedWidth(40);
-    txtBiceps->move(30, 50);
 
     txtWaist = new QLineEdit;
     txtWaist->setFixedWidth(40);
-    txtWaist->move(160, 170);
 
     txtPectoral = new QLineEdit;
     txtPectoral->setFixedWidth(40);
-    txtPectoral->move(221, 123);
 
     txtShoulder = new QLineEdit;
     txtShoulder->setFixedWidth(40);
-    txtShoulder->move(95, 57);
 
     txtNeck = new QLineEdit;
     txtNeck->setFixedWidth(40);
-    txtNeck->move(220, 50);
 
     txtCalf = new QLineEdit;
     txtCalf->setFixedWidth(40);
-    txtCalf->move(190, 375);
 
     txtForeArm = new QLineEdit;
     txtForeArm->setFixedWidth(40);
-    txtForeArm->move(360, 70);
 
     txtWrist = new QLineEdit;
     txtWrist->setFixedWidth(40);
-    txtWrist->move(340, 30);
 
     txtAnkle = new QLineEdit;
     txtAnkle->setFixedWidth(40);
-    txtAnkle->move(100, 415);
 
     txtDescription = new QPlainTextEdit;
-    txtDescription->move(300, 320);
     txtDescription->setFixedSize(200, 100);
     txtDescription->setReadOnly(true);
     txtDescription->setStyleSheet("border: 1px solid black;");
@@ -236,7 +247,6 @@ void MensurationsDialog::createWidgets()
     weightText->setZValue(1);
     txtWeight = new QLineEdit;
     txtWeight->setFixedWidth(40);
-    txtWeight->move(390, 195);
     QGraphicsSimpleTextItem *weightUnit = new
             QGraphicsSimpleTextItem(tr("Kg."));
     weightUnit->setPos(435, 200);
@@ -246,64 +256,58 @@ void MensurationsDialog::createWidgets()
     sizeText->setPos(350, 240);
     txtSize = new QLineEdit;
     txtSize->setFixedWidth(40);
-    txtSize->move(390, 235);
     QGraphicsSimpleTextItem *sizeUnit = new
             QGraphicsSimpleTextItem(tr("cm."));
     sizeUnit->setPos(435, 240);
 
     chkRulers = new QCheckBox(trUtf8("Afficher les règles"));
     chkRulers->setChecked(true);
-    chkRulers->move(480, 460);
     connect(chkRulers, SIGNAL(clicked(bool)), this, SLOT(onChkRulersClicked(bool)));
 
     chkDescriptions = new QCheckBox(trUtf8("Afficher les indications"));
     chkDescriptions->setChecked(true);
-    chkDescriptions->move(480, 480);
     connect(chkDescriptions, SIGNAL(clicked(bool)),
             txtDescription, SLOT(setVisible(bool)));
 
     cmbDates = new QComboBox;
-    cmbDates->move(520, 20);
-    cmbDates->setMinimumSize(100, 30);
+    cmbDates->setFixedSize(190, 30);
 
     btnAdd = new QPushButton(QIcon(":/images/plus-icon.png"), tr("Ajouter"));
     btnAdd->setFixedSize(100, 30);
-    btnAdd->move(520, 70);
-    //btnAdd->move(0, 40);
     connect(btnAdd, SIGNAL(clicked()), this, SLOT(onBtnAddClicked()));
 
     btnCancel = new QPushButton(QIcon(":/images/cancel-icon.png"), tr("Annuler"));
     btnCancel->setFixedSize(100, 30);
-    btnCancel->move(520, 105);
     btnCancel->hide();
     connect(btnCancel, SIGNAL(clicked()), this, SLOT(onBtnCancelClicked()));
 
-    QGraphicsTextItem *visualisation = new QGraphicsTextItem(tr("Visualisation"));
-    visualisation->setPos(450, 20);
+    QGraphicsTextItem *visualisation = new QGraphicsTextItem(tr("Visualisation:"));
+    visualisation->setPos(470, 20);
 
     mScene->addItem(visualisation);
-    mScene->addWidget(txtThigh);
-    mScene->addWidget(txtBiceps);
-    mScene->addWidget(txtWaist);
-    mScene->addWidget(txtPectoral);
-    mScene->addWidget(txtShoulder);
-    mScene->addWidget(txtNeck);
-    mScene->addWidget(txtCalf);
-    mScene->addWidget(txtForeArm);
-    mScene->addWidget(txtWrist);
-    mScene->addWidget(txtAnkle);
+    addWidgetInScene(txtThigh, 140, 265);
+    addWidgetInScene(txtBiceps, 30, 50);
+    addWidgetInScene(txtWaist, 160, 170);
+    addWidgetInScene(txtPectoral, 221, 123);
+    addWidgetInScene(txtShoulder, 95, 57);
+    addWidgetInScene(txtNeck, 220, 50);
+    addWidgetInScene(txtCalf, 190, 375);
+    addWidgetInScene(txtForeArm, 360, 70);
+    addWidgetInScene(txtWrist, 340, 30);
+    addWidgetInScene(txtAnkle, 100, 415);
+    addWidgetInScene(txtWeight, 390, 195);
+    addWidgetInScene(txtSize, 390, 235);
+    addWidgetInScene(chkRulers, 480, 460);
+    addWidgetInScene(chkDescriptions, 480, 480);
+    addWidgetInScene(txtDescription, 300, 320);
+    addWidgetInScene(cmbDates, 470, 40);
+    addWidgetInScene(btnAdd, 470, 80);
+    addWidgetInScene(btnCancel, 470, 115);
+
     mScene->addItem(weightText);
     mScene->addItem(weightUnit);
-    mScene->addWidget(txtWeight);
     mScene->addItem(sizeText);
     mScene->addItem(sizeUnit);
-    mScene->addWidget(txtSize);
-    mScene->addWidget(chkRulers);
-    mScene->addWidget(chkDescriptions);
-    mScene->addWidget(cmbDates);
-    mScene->addWidget(btnAdd);
-    mScene->addWidget(btnCancel);
-    mScene->addWidget(txtDescription);
 
 }
 
@@ -510,3 +514,11 @@ void MensurationsDialog::enableEdits(bool enable, bool clear)
         }
     }
 }
+
+QGraphicsProxyWidget *MensurationsDialog::addWidgetInScene(QWidget *widget, int x, int y)
+{
+    QGraphicsProxyWidget *proxyWidget = mScene->addWidget(widget);
+    proxyWidget->setPos(x, y);
+    return proxyWidget;
+}
+

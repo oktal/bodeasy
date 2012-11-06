@@ -20,7 +20,7 @@ unix:exists( $${UNIX_RAM_DISK} ) {
 }
 
 CONFIG -= warn_on warn_off release debug debug_and_release
-CONFIG *= release warn_on qt
+CONFIG *= debug warn_on qt
 
 QT = core gui sql declarative
 

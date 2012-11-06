@@ -55,7 +55,6 @@ QTime CalendarItem::endTime() const
 
 void CalendarItem::setEndTime(const QTime &time)
 {
-    Q_ASSERT(time >= mStartTime);
     if (mEndTime != time) {
         mEndTime = time;
         emit endTimeChanged();
@@ -69,7 +68,6 @@ QTime CalendarItem::startTime() const
 
 void CalendarItem::setStartTime(const QTime &time)
 {
-    Q_ASSERT(time <= mEndTime);
     if (mStartTime != time) {
         mStartTime = time;
         emit startTimeChanged();
