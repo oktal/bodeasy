@@ -33,6 +33,15 @@
         <file>images/palette-icon.png</file>
         <file>images/english.png</file>
         <file>images/french.png</file>
+        <file>images/appointment-new-icon.png</file>
+        <file>images/calendar-day-icon.png</file>
+        <file>images/calendar-month-icon.png</file>
+        <file>images/calendar-week-icon.png</file>
+        <file>images/back-icon.png</file>
+        <file>images/next-icon.png</file>
+        <file>images/event-remove.png</file>
+        <file>images/edit-icon.png</file>
+        <file>images/today-icon.png</file>
     </qresource>
     <qresource prefix="/sql">
         <file alias="script001.sql">../db/database.sql</file>
@@ -42,5 +51,9 @@
         <file alias="script005.sql">../db/exercises.sql</file>
         <file alias="script006.sql">../db/sessions.sql</file>
         <file alias="script007.sql">../db/users.sql</file>
+    </qresource>
+    <qresource prefix="/qml">
+        <file alias="CalendarView.qml">views/calendar/qml/CalendarView.qml</file>
+        <file alias="GridDelegate.qml">views/calendar/qml/GridDelegate.qml</file>
     </qresource>
 </RCC>

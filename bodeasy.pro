@@ -22,7 +22,7 @@ unix:exists( $${UNIX_RAM_DISK} ) {
 CONFIG -= warn_on warn_off release debug debug_and_release
 CONFIG *= debug warn_on qt
 
-QT = core gui sql
+QT = core gui sql declarative
 
 # Mac universal build from 10.3 to up to 10.6
 macx {
@@ -103,7 +103,9 @@ FORMS *= src/usersdialog.ui \
     src/sessionframe.ui \
     src/widgets/sessioncontrolwidget.ui \
     src/settingsdialog.ui \
-    src/graphicsdialog.ui
+    src/graphicsdialog.ui \
+    src/planningwindow.ui \
+    src/plandialog.ui
 
 HEADERS *= src/usersdialog.h \
     src/exercisewidget.h \
@@ -120,10 +122,17 @@ HEADERS *= src/usersdialog.h \
     src/views/icon/SessionIconModel.h \
     src/views/icon/SessionIconDelegate.h \
     src/views/icon/SessionIconView.h \
+    src/views/calendar/abstractcalendarmodel.h \
+    src/views/calendar/basiccalendarmodel.h \
+    src/views/calendar/calendaritem.h \
     src/exercisewidgetdata.h \
     src/widgets/sessioncontrolwidget.h \
     src/settingsdialog.h \
-    src/settings.h
+    src/settings.h \
+    src/planningwindow.h \
+    src/views/calendar/calendarview.h \
+    src/views/calendar/basiccalendaritem.h \
+    src/plandialog.h
 
 SOURCES *= src/main.cpp \
     src/usersdialog.cpp \
@@ -141,5 +150,15 @@ SOURCES *= src/main.cpp \
     src/views/icon/SessionIconModel.cpp \
     src/views/icon/SessionIconDelegate.cpp \
     src/views/icon/SessionIconView.cpp \
+    src/views/calendar/abstractcalendarmodel.cpp \
+    src/views/calendar/basiccalendarmodel.cpp \
+    src/views/calendar/calendaritem.cpp \
     src/widgets/sessioncontrolwidget.cpp \
-    src/settingsdialog.cpp
+    src/settingsdialog.cpp \
+    src/planningwindow.cpp \
+    src/views/calendar/calendarview.cpp \
+    src/views/calendar/basiccalendaritem.cpp \
+    src/plandialog.cpp
+
+OTHER_FILES *= src/views/calendar/qml/CalendarView.qml \
+               src/views/calendar/qml/GridDelegate.qml
