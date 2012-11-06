@@ -312,6 +312,18 @@ struct PlannedSessionsSorter {
     }
 };
 
+struct TodaySessionFinder {
+    bool operator()(const PlannedSession &session) {
+        return session.date == QDate::currentDate();
+    }
+};
+
+struct NextSessionFinder {
+    bool operator()(const PlannedSession &session) {
+        return session.date > QDate::currentDate();
+    }
+};
+
 void MainWindow::selectInformations()
 {
     QSqlQuery q = SqlHelper::query();
@@ -337,28 +349,27 @@ void MainWindow::selectInformations()
     PlannedSessionsManager manager;
     QList<PlannedSession> plannedSessions = manager.selectPlannedSessions(mUserId);
     qSort(plannedSessions.begin(), plannedSessions.end(), PlannedSessionsSorter());
-    const QDate today = QDate::currentDate();
-    bool isSessionPlanned = false;
-    for (int i = 0; i < plannedSessions.count(); ++i) {
-        const PlannedSession &ps = plannedSessions.at(i);
-        if (ps.date == today) {
-            mTodaySession = ps;
-            sessionProxy->setSessionId(ps.session.id);
-            contentModel->setSessionId(ps.session.id);
-            sessionProxy->setRunning(true,SessionProxy::Session,true);
-            ui->btnStart->setEnabled(true);
-            ui->lblPlanifiedSession->setText(ps.session.name);
 
-            isSessionPlanned = true;
-            if (i < plannedSessions.count() - 1) {
-                const PlannedSession &nextSession = plannedSessions.at(i + 1);
-                ui->lblNextSeanceDate->setText(
-                            QString("%1 - %2").arg(nextSession.session.name)
-                                              .arg(nextSession.date.toString()));
-            }
-            break;
-        }
+    QList<PlannedSession>::const_iterator it = std::find_if(plannedSessions.begin(), plannedSessions.end(),
+                                                            TodaySessionFinder());
+    const bool isSessionPlanned = it != plannedSessions.end();
+    if (isSessionPlanned) {
+        mTodaySession = *it;
+        sessionProxy->setSessionId(it->session.id);
+        contentModel->setSessionId(it->session.id);
+        sessionProxy->setRunning(true,SessionProxy::Session,true);
+        ui->btnStart->setEnabled(true);
+        ui->lblPlanifiedSession->setText(it->session.name);
     }
+
+    QList<PlannedSession>::const_iterator nextSession = std::find_if(plannedSessions.begin(), plannedSessions.end(),
+                                                            NextSessionFinder());
+    if (nextSession != plannedSessions.end()) {
+        ui->lblNextSeanceDate->setText(
+                    QString("%1 - %2").arg(nextSession->session.name)
+                    .arg(nextSession->date.toString()));
+    }
+
     ui->radPlanifiedSession->setEnabled(isSessionPlanned);
     ui->radPlanifiedSession->setChecked(isSessionPlanned);
     ui->lblPlanifiedSession->setEnabled(isSessionPlanned);
