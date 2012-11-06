@@ -42,8 +42,8 @@ void UsersDialog::on_btnAdd_clicked()
     if (hasUser)
     {
         QMessageBox::information(this,
-                                 tr("Ajout d'utilisateur"),
-                                 tr("L'utilisateur %1 existe dÃ©jÃ , impossible de l'ajouter Ã  nouveau.")
+                                 trUtf8("Ajout d'utilisateur"),
+                                 trUtf8("L'utilisateur %1 existe déjà , impossible de l'ajouter à nouveau.")
                                  .arg(newUser));
         return;
     }
@@ -64,7 +64,7 @@ void UsersDialog::on_btnDelete_clicked()
 {
     int r = QMessageBox::question(this,
                                   tr("Suppression d'utilisateur"),
-                                  tr("Supprimer définitivement l'utilisateur %1 ?")
+                                  trUtf8("Supprimer définitivement l'utilisateur %1 ?")
                                   .arg(ui->cmbUsers->currentText()),
                                   QMessageBox::Yes, QMessageBox::Cancel);
 
