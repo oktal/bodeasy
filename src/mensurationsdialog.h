@@ -38,6 +38,7 @@ private:
     void createLabels();
     void setupMapper();
     void enableEdits(bool enable, bool clear = false);
+    QGraphicsProxyWidget *addWidgetInScene(QWidget *widget, int x, int y);
 
     quint64 mUserId;
     Ui::MensurationsDialog *ui;
